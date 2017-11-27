@@ -18,7 +18,7 @@ def update_report(page, old_pmid, new_pmid, ):
     if rep in report_text:
         return
     report.text = report_text + rep + u' - ~~~~~'
-    report.save('Bot: Update report to include ' + page.title())
+    report.save('Update report to include ' + page.title())
 
 
 for page in gen:
