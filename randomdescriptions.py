@@ -35,10 +35,10 @@ for page in pagegenerators.RandomPageGenerator(total=num, site=site, namespaces=
             text += "# " + str(page).replace("wikipedia:en:", "") + " - \n"
             blank += 1
     except:
-        text += "# " + str(page).replace("wikipedia:en:", "") + " - ERROR\n"
+        text += "# " + str(page).replace("wikipedia:en:", "") + " - (no Wikidata item)\n"
         error += 1
 
-text += "\n" + str(blank) + " were blank and " + str(error) + " errored out!"
+text += "\n" + str(blank) + " were blank and " + str(error) + " had no Wikidata entry!"
 print text
 
 page = pywikibot.Page(site, u"User:Mike Peel/Wikidata descriptions")
