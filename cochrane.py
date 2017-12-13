@@ -71,6 +71,15 @@ for regex in regexes:
                 if 'WITHDRAWN' in res and re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res):
                     pm = re.findall(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/(\d+?)"', res)[0]
                     checkedpages[str(pmid)] = pm
+                    # Check to make sure that the new paper doesn't also have an updated version...
+                    try:
+                        r2 = requests.get('https://www.ncbi.nlm.nih.gov/pubmed/%s' % pm, timeout=10.0)
+                        res2 = r2.text
+                    except:
+                        continue
+                    if 'WITHDRAWN' in res2 and re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res2):
+                        pm2 = re.findall(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/(\d+?)"', res2)[0]
+                        checkedpages[str(pmid)] = pm2
                 else:
                     checkedpages[str(pmid)] = 0
             else:
