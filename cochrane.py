@@ -5,7 +5,7 @@ import requests
 
 from pywikibot import pagegenerators
 
-debug = True
+debug = False
 
 def update_report(page, old_pmid, new_pmid, ):
     report = pywikibot.Page(site, 'Wikipedia:WikiProject Medicine/Cochrane update/August 2017')
