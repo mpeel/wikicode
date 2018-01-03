@@ -41,9 +41,9 @@ for line in report_text:
 print report_text_new
 print archive_text
 if debug == False:
-    archive.text = archive_text
+    archive.text = archive_text.strip()
     archive.save('Archiving old reports')
-    report.text = report_text_new
+    report.text = report_text_new.strip()
     report.save('Archiving old reports')
 
 regexes = ["insource:/\| journal =.+Cochrane/", "insource:/\| journal=.+Cochrane/", "insource:/\|journal =.+Cochrane/", "insource:/\|journal=.+Cochrane/","insource:/\| title =.+Cochrane/", "title:/\| title=.+Cochrane/", "insource:/\|title =.+Cochrane/", "insource:/\|title=.+Cochrane/"]
