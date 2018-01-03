@@ -2,10 +2,12 @@
 import pywikibot
 import re
 import requests
+import datetime
 
 from pywikibot import pagegenerators
 
 debug = False
+maxnum = 10
 
 def update_report(page, old_pmid, new_pmid, ):
     report = pywikibot.Page(site, 'Wikipedia:WikiProject Medicine/Cochrane update/August 2017')
@@ -46,6 +48,13 @@ if debug == False:
 
 regexes = ["insource:/\| journal =.+Cochrane/", "insource:/\| journal=.+Cochrane/", "insource:/\|journal =.+Cochrane/", "insource:/\|journal=.+Cochrane/","insource:/\| title =.+Cochrane/", "title:/\| title=.+Cochrane/", "insource:/\|title =.+Cochrane/", "insource:/\|title=.+Cochrane/"]
 i = 0
+nummodified = 0
+
+todaysdate = datetime.datetime.now()
+todaysdate.strftime("%B")
+datestr = "|date = " + todaysdate.strftime("%B %Y")
+print datestr
+
 for regex in regexes:
     generator = pagegenerators.SearchPageGenerator(regex, site=site, namespaces=[0])
     gen = pagegenerators.PreloadingGenerator(generator)
@@ -101,11 +110,16 @@ for regex in regexes:
                 if '<!-- No update needed: ' + str(pmid) + ' -->' not in text:
                     up = u'{{Update inline|reason=Updated version https://www.ncbi.nlm.nih.gov/pubmed/' + checkedpages[str(pmid)]
                     if not up in text:
-                        text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\< *?\/ *?ref *?\>)' % pmid,ur'\1%s}}' % up, text, re.DOTALL)
+                        text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\< *?\/ *?ref *?\>)' % pmid,ur'\1%s'+datestr+'}}' % up, text, re.DOTALL)
                     if debug == False:
                         update_report(page, pmid, checkedpages[str(pmid)])
+
         if text != page.text and debug == False:
             page.text = text
             page.save(u'Adding "update inline" template for Cochrane reference')
+            nummodified += 1
+            if nummodified > maxnum - 1:
+                print 'Reached the maximum of ' + str(maxnum) + ' pages modified, quitting!'
+                exit()
 
 print str(i) + " pages checked!"
