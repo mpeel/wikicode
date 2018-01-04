@@ -86,7 +86,7 @@ for regex in regexes:
                         res2 = r2.text
                     except:
                         continue
-                    if '<title>WITHDRAWN:' in res2:
+                    if '<title>WITHDRAWN' in res2:
                         # The new one's been withdrawn: we don't want to report this as an update.
                         checkedpages[str(pmid)] = 0
                     if 'WITHDRAWN' in res2 and re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res2):
@@ -94,7 +94,7 @@ for regex in regexes:
                         try:
                             r3 = requests.get('https://www.ncbi.nlm.nih.gov/pubmed/%s' % pm2, timeout=10.0)
                             res3 = r3.text
-                            if '<title>WITHDRAWN:' in res3:
+                            if '<title>WITHDRAWN' in res3:
                                 # This new one has also been withdrawn, giving up.
                                 checkedpages[str(pmid)] = 0
                             else:
