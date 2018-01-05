@@ -7,7 +7,7 @@ import datetime
 from pywikibot import pagegenerators
 
 debug = False
-maxnum = 10
+maxnum = 500
 
 def update_report(page, old_pmid, new_pmid, ):
     report = pywikibot.Page(site, 'Wikipedia:WikiProject Medicine/Cochrane update/August 2017')
@@ -122,4 +122,4 @@ for regex in regexes:
                 print 'Reached the maximum of ' + str(maxnum) + ' pages modified, quitting!'
                 exit()
 
-print str(i) + " pages checked!"
+print str(i) + " pages checked, " + str(nummodified) + " tagged!"
