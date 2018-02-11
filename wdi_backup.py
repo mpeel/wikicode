@@ -28,15 +28,24 @@ uses = template.embeddedin()
 logpage = pywikibot.Page(site, u"User:Mike Peel/WDI backup")
 
 now = datetime.datetime.now()
-text = u'This page backs up the QIDs used by calls to {{tl|Wikidata Infobox}}. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The source code is available. For any maintenance issues, please leave [[User talk:Mike Peel|Mike Peel]] a note.\n'
+text = u'This page backs up the QIDs used by calls to {{tl|Wikidata Infobox}}. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The [https://bitbucket.org/mikepeel/wikicode/src/master/wdi_backup.py source code is available]. For any maintenance issues, please leave [[User talk:Mike Peel|Mike Peel]] a note.\n'
 
 for page in uses:
-    wd_item = pywikibot.ItemPage.fromPage(page)
-    wd_item.get()
-    wd_id = wd_item.getID()
+    print page.title()
+    try:
+        wd_item = pywikibot.ItemPage.fromPage(page)
+        if wd_item != -1:
+            wd_id = wd_item.getID()
+        else:
+            wd_id = str(-1)
+    except:
+        wd_id = str(-1)
 
-    text = text + ("* [[:" + page.title() + "|" + page.title() + "]] - [[:d:" + wd_id + "|" + wd_id + "]]\n")
+    print "* [[:" + page.title() + "|" + page.title() + "]] - [[:d:" + wd_id + "|" + wd_id + "]]"
+    text = text + "* [[:" + page.title() + "|" + page.title() + "]] - [[:d:" + wd_id + "|" + wd_id + "]]\n"
+
+print text
 
 if text != logpage.text:
     logpage.text = text
-    page.save(u"Updating")
+    logpage.save(u"Updating")
