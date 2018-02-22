@@ -15,7 +15,6 @@ import urllib
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-site = pywikibot.Site('en', 'wikipedia')
 debug = 0
 query = 'SELECT ?item ?commonscat ?sitelink ?name WHERE {'\
 '  ?item wdt:P373 ?commonscat.'\
