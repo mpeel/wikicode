@@ -35,8 +35,10 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
 bad_commonscat_count = 0
 bad_sitelink_count = 0
+interwiki_conflicts = []
 for page in generator:
     item_dict = page.get()
+    qid = page.title()
     sitelink = item_dict['sitelinks']['commonswiki']
     sitelink_redirect = ""
     commonscat_redirect = ""
@@ -85,7 +87,10 @@ for page in generator:
                 if debug:
                     print 'Would change commons sitelink to ' + sitelink_redirect
                 data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + sitelink_redirect}]}
-                page.editEntity(data, summary=u'Update commons sitelink to avoid commons category redirect')
+                try:
+                    page.editEntity(data, summary=u'Update commons sitelink to avoid commons category redirect')
+                except:
+                    interwiki_conflicts.append(qid)
                 nummodified += 1
             if (u"Category:" + commonscat_redirect) == sitelink:
                 if debug:
@@ -123,7 +128,12 @@ for page in generator:
 
             if nummodified >= maxnum:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                print 'Bad commonscats: ' + str(bad_commonscat_count) + ", bad sitelinks:" + str(bad_sitelink_count)
+                print 'Interwiki conflicts in: ' + interwiki_conflicts
                 exit()
 
+print 'Done! Edited ' + str(nummodified) + ' entries'
+print 'Bad commonscats: ' + str(bad_commonscat_count) + ', bad sitelinks: ' + str(bad_sitelink_count)
+print 'Interwiki conflicts in: ' + interwiki_conflicts
             
 # EOF
