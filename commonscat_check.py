@@ -12,6 +12,9 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
+maxnum = 50
+nummodified = 0
+
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -60,9 +63,15 @@ for page in generator:
                 print 'Would change commons sitelink to ' + sitelink_redirect
             data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + sitelink_redirect}]}
             page.editEntity(data, summary=u'Update commons sitelink to avoid commons category redirect')
+            nummodified += 1
         if (u"Category:" + commonscat_redirect) == sitelink:
             if debug:
                 print "Would change P373 to " + commonscat_redirect
             clm.changeTarget(commonscat_redirect, summary=u"Update P373 to avoid commons category redirect")
+            nummodified += 1
+        if nummodified >= maxnum:
+            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            exit()
+
         
 # EOF
