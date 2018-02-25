@@ -135,6 +135,7 @@ for page in generator:
 
 print 'Done! Edited ' + str(nummodified) + ' entries'
 print 'Bad commonscats: ' + str(bad_commonscat_count) + ', bad sitelinks: ' + str(bad_sitelink_count)
-print 'Interwiki conflicts in: ' + interwiki_conflicts
+print 'Interwiki conflicts in: '
+print interwiki_conflicts
             
 # EOF
