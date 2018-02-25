@@ -26,7 +26,7 @@ query = 'SELECT ?item ?commonscat ?sitelink ?name WHERE {'\
 '  FILTER( ?commonscat != SUBSTR(STR(?name), 10) ) .'\
 '}'
 if debug:
-    query = query + " LIMIT 10"
+    query = query + " LIMIT 100"
 print query
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
@@ -82,7 +82,7 @@ for page in generator:
             nummodified += 1
 
         # Sort out the case where the commonscat has been moved, and one of the two hasn't been updated.
-        if bad_sitelink && bad_commonscat == 0:
+        if bad_sitelink and bad_commonscat == 0:
             # We have a bad sitelink
             if commonscat_redirect != "":
                 # ... but the commonscat is a redirect
@@ -95,7 +95,7 @@ for page in generator:
                 data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + commonscat}]}
                 page.editEntity(data, summary=u'Update commons sitelink to avoid missing category')
                 nummodified += 1
-        if bad_commonscat && bad_sitelink == 0:
+        if bad_commonscat and bad_sitelink == 0:
             # We have a bad commonscat
             if sitelink_redirect != "":
                 # ... but the sitelink is a redirect
