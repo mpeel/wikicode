@@ -129,7 +129,7 @@ for page in generator:
             if nummodified >= maxnum:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
                 print 'Bad commonscats: ' + str(bad_commonscat_count) + ", bad sitelinks:" + str(bad_sitelink_count)
-                print 'Interwiki conflicts in: ':
+                print 'Interwiki conflicts in: '
                 print interwiki_conflicts
                 exit()
 
