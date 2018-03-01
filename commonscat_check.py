@@ -63,7 +63,13 @@ for page in generator:
             else:
                 for option in catredirect_templates:
                     if "{{" + option in sitelink_page.text:
-                        sitelink_redirect = (sitelink_page.text.split("{{" + option + "|"))[1].split("}}")[0]
+                        try:
+                            sitelink_redirect = (sitelink_page.text.split("{{" + option + "|"))[1].split("}}")[0]
+                        except:
+                            try:
+                                sitelink_redirect = (sitelink_page.text.split("{{" + option + " |"))[1].split("}}")[0]
+                            except:
+                                print 'Wikitext parsing bug!'
                         sitelink_redirect = sitelink_redirect.replace(u":Category:","")
                         sitelink_redirect = sitelink_redirect.replace(u"Category:","")
             try:
@@ -75,7 +81,13 @@ for page in generator:
             else:
                 for option in catredirect_templates:
                     if "{{" + option in commonscat_page.text:
-                        commonscat_redirect = (commonscat_page.text.split("{{" + option +"|"))[1].split("}}")[0]
+                        try:
+                            commonscat_redirect = (commonscat_page.text.split("{{" + option +"|"))[1].split("}}")[0]
+                        except:
+                            try:
+                                commonscat_redirect = (commonscat_page.text.split("{{" + option +" |"))[1].split("}}")[0]
+                            except:
+                                print 'Wikitext parsing bug!'
                         commonscat_redirect = commonscat_redirect.replace(u":Category:","")
                         commonscat_redirect = commonscat_redirect.replace(u"Category:","")
             
