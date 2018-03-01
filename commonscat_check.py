@@ -39,6 +39,7 @@ interwiki_conflicts = []
 for page in generator:
     item_dict = page.get()
     qid = page.title()
+    print "\n" + qid
     sitelink = item_dict['sitelinks']['commonswiki']
     sitelink_redirect = ""
     commonscat_redirect = ""
