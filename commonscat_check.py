@@ -12,7 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 41
+maxnum = 10000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
