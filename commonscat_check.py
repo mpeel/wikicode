@@ -102,15 +102,17 @@ for page in generator:
                 data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + sitelink_redirect}]}
                 try:
                     page.editEntity(data, summary=u'Update commons sitelink to avoid commons category redirect')
+                    nummodified += 1
                 except:
                     interwiki_conflicts.append(qid)
-                nummodified += 1
             if (u"Category:" + commonscat_redirect) == sitelink:
                 if debug:
                     print "Would change P373 to " + commonscat_redirect
-                clm.changeTarget(commonscat_redirect, summary=u"Update P373 to avoid commons category redirect")
-                nummodified += 1
-
+                try:
+                    clm.changeTarget(commonscat_redirect, summary=u"Update P373 to avoid commons category redirect")
+                    nummodified += 1
+                except:
+                    print '... but there was a problem doing so!'
             # # Sort out the case where the commonscat has been moved, and one of the two hasn't been updated.
             # if bad_sitelink and bad_commonscat == 0:
             #     # We have a bad sitelink
