@@ -62,11 +62,14 @@ for targetcat in targetcats:
                 savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
                 try:
                     p31 = item_dict['claims']['P31']
+                    test = 1
                     for clm in p31:
                         if 'Q4167836' in clm.getTarget().title():
                             # We have a Wikimedia category with no P301, skip it
                             print 'Wikimedia category, no P301'
-                            continue
+                            test = 0
+                    if test == 0:
+                        continue
                 except:
                     print 'P31 not found'
 
