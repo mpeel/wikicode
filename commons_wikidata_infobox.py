@@ -20,11 +20,11 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 
-targetcats = ['Category:Santos']
+targetcats = ['Category:University of São Paulo']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac"] + catredirect_templates
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "{{Institution", "{{institution", "{{Creator", "{{creator"] + catredirect_templates
 templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "PeopleByName"]
 
 for targetcat in targetcats:
