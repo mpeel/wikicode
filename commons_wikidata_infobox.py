@@ -20,7 +20,7 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 
-targetcats = ['Category:Buildings at the University of Manchester']
+targetcats = ['Category:Churches in San Francisco', 'Category:Our Lady of Kazan churches']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -92,14 +92,15 @@ for targetcat in targetcats:
         print target_text
         target.text = target_text
         print savemessage
-        text = raw_input("Save on Commons? ")
-        if text == 'y':
-            try:
-                target.save(savemessage)
-                nummodified += 1
-            except:
-                print "That didn't work!"
+        # text = raw_input("Save on Commons? ")
+        # if text == 'y':
+        try:
+            target.save(savemessage)
+            nummodified += 1
+        except:
+            print "That didn't work!"
 
+        time.sleep(5)
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
