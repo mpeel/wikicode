@@ -20,13 +20,15 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 
-targetcats = ['Category:Churches in San Francisco', 'Category:Our Lady of Kazan churches']
+targetcats = ['Category:Our Lady of Kazan churches in Russia']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
 templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator"] + catredirect_templates
 templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "PeopleByName"]
-templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "On Wikidata", "on Wikidata", "New Testament papyri", "new Testament papyri"]
+templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "On Wikidata", "on Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate"]
+templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark"]
+
 for targetcat in targetcats:
     print "\n" + targetcat
     cat = pywikibot.Category(commons,targetcat)
@@ -76,10 +78,17 @@ for targetcat in targetcats:
         i = 0
         lines = target_text.splitlines()
         insertline = 0
-        for line in lines:
-            i += 1
-            if any(option in line for option in templatestobebelow):
-                insertline = i
+        skip_to_end = 0
+        if any(option in target_text for option in templates_to_skip_to_end):
+            for line in lines:
+                i += 1
+                if "}}" in line:
+                    insertline = i
+        else:
+            for line in lines:
+                i += 1
+                if any(option in line for option in templatestobebelow):
+                    insertline = i
         lines[insertline:insertline] = ["{{Wikidata Infobox}}\n"]
         target_text = "\n".join(lines)
 
@@ -92,15 +101,15 @@ for targetcat in targetcats:
         print target_text
         target.text = target_text
         print savemessage
-        # text = raw_input("Save on Commons? ")
-        # if text == 'y':
-        try:
-            target.save(savemessage)
-            nummodified += 1
-        except:
-            print "That didn't work!"
+        text = raw_input("Save on Commons? ")
+        if text == 'y':
+            try:
+                target.save(savemessage)
+                nummodified += 1
+            except:
+                print "That didn't work!"
 
-        time.sleep(5)
+        # time.sleep(5)
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
