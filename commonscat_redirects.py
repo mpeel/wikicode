@@ -30,15 +30,15 @@ for targetcat in targetcats:
     for target in targets:
         if 'Category:' in target.title():
             redirect = ''
-            print target.title()
             try:
                 wd_item = pywikibot.ItemPage.fromPage(target)
                 wd_item.get()
                 print wd_item.title()
             except:
-                print "That didn't work!"
+                continue
             else:
                 # We have a category that's linked to a Wikidata item, let's find out where it points.
+                print target.title()
                 for option in catredirect_templates:
                     if "{{" + option in target.text:
                         try:
