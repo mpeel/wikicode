@@ -37,8 +37,7 @@ bad_commonscat_count = 0
 bad_sitelink_count = 0
 interwiki_conflicts = []
 for page in generator:
-    # item_dict = page.get()
-    item_dict = page
+    item_dict = page.get()
     qid = page.title()
     print "\n" + qid
     sitelink = item_dict['sitelinks']['commonswiki']
