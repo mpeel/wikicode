@@ -32,12 +32,13 @@ print query
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+generator = pagegenerators.PreloadingItemGenerator(pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site))
 bad_commonscat_count = 0
 bad_sitelink_count = 0
 interwiki_conflicts = []
 for page in generator:
-    item_dict = page.get()
+    # item_dict = page.get()
+    item_dict = page
     qid = page.title()
     print "\n" + qid
     sitelink = item_dict['sitelinks']['commonswiki']
