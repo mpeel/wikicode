@@ -13,6 +13,11 @@ from pywikibot import pagegenerators
 from pywikibot import textlib
 import urllib
 
+import sys
+# sys.setdefaultencoding() does not exist, here!
+reload(sys)  # Reload does the trick!
+sys.setdefaultencoding('UTF8')
+
 maxnum = 100
 nummodified = 0
 
