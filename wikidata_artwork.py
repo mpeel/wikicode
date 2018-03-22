@@ -19,15 +19,17 @@ debug = 0
 
 # Brazil
 collections = ['Q82941','Q510993','Q1954370','Q371803','Q2095209']
+# collections = ["Q1954370", "Q510993"]
 
 for coll in collections:
-    query = 'SELECT ?item ?picture WHERE { ?item wdt:P195 wd:' + coll + ' . ?item wdt:P31 wd:Q3305213 . ?item wdt:P18 ?picture }'
+    query = 'SELECT ?item ?picture WHERE { ?item wdt:P195 wd:' + coll + ' . ?item wdt:P18 ?picture }'
     if debug:
         query = query + " LIMIT 10"
     print query
 
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
     for page in generator:
+        print "\n\n"
         print page
         item_dict = page.get()
         qid = page.title()
@@ -39,9 +41,18 @@ for coll in collections:
             val = clm.getTarget()
             print val.text
             if "{{Artwork" in val.text or "{{artwork" in val.text:
-                if not (("wikidata=") in val.text.replace(" ", "").replace("   ", "") or ("Wikidata=") in val.text.replace(" ", "").replace("   ", "")):
+                if not (("wikidata=Q") in val.text.replace(" ", "").replace("   ", "") or ("Wikidata=Q") in val.text.replace(" ", "").replace("   ", "")):
                     print "Not present!"
-                    val.text = val.text.replace("{{Artwork", "{{Artwork\n| wikidata = " + qid).replace("{{artwork", "{{Artwork\n| wikidata = " + qid)
+                    if "wikidata=" in val.text:
+                        val.text = val.text.replace("wikidata=", "wikidata= " + qid)
+                    elif "Wikidata=" in val.text:
+                        val.text = val.text.replace("Wikidata=", "Wikidata= " + qid)
+                    elif "wikidata =" in val.text:
+                        val.text = val.text.replace("wikidata =", "wikidata = " + qid)
+                    elif "Wikidata =" in val.text:
+                        val.text = val.text.replace("Wikidata =", "Wikidata = " + qid)
+                    else:
+                        val.text = val.text.replace("{{Artwork", "{{Artwork\n|wikidata = " + qid).replace("{{artwork", "{{Artwork\n|wikidata = " + qid)
                     print val.text
                     text = raw_input("Update on Commons? ")
                     if text == 'y':
