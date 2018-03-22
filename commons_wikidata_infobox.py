@@ -1,5 +1,5 @@
-#!/usr/bin/python
-# -*- coding: utf-8  -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # Check for consistency in commons category usage
 # Mike Peel     01-Mar-2018      v1 - start
 
