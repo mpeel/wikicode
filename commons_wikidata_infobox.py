@@ -38,12 +38,15 @@ checkedcats = []
 for targetcat in targetcats:
     print "\n" + targetcat
     cat = pywikibot.Category(commons,targetcat)
-    targets = cat.subcategories(recurse=True);
+    targets = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
     for target in targets:
         # If we've already checked this category in this run, then skip it.
         if target.title() in checkedcats:
             continue
         checkedcats.append(target.title())
+        # See if there are categories in here we want to check
+        # subcat = pywikibot.Category(commons,target)
+        targetcats.append(pagegenerators.SubCategoriesPageGenerator(target))
 
         redirect = ''
         print "\n" + target.title()
