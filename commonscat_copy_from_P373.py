@@ -60,11 +60,17 @@ for page in generator:
     p373_check = 0
     for clm in p373:
         p373_check += 1
-    # Only attempt to do this if there is only one value for P373
-    if p373_check == 1:
+    try:
+        sitelink = item_dict['sitelinks']['commonswiki']
+        sitelink_check = 1
+    except:
+        sitelink_check = 0
+    # Only attempt to do this if there is only one value for P373 and no existing sitelink
+    if p373_check == 1 and sitelink_check == 0:
         for clm in p373:
             val = clm.getTarget()
             commonscat = u"Category:" + val
+            # The commons category must already exist
             try:
                 sitelink_page = pywikibot.Page(commons, commonscat)
             except:
@@ -87,15 +93,6 @@ for page in generator:
                             nummodified += 1
                     except:
                         print 'Edit failed'
-                else:
-                    cat_qid = wd_item.title()
-                    cat_dict = wd_item.get()
-                    try:
-                        if cat_dict['claims']['P301']:
-                            print cat_dict['claims']['P301']
-                    except:
-                        print "That didn't work"
-
 
             if nummodified >= maxnum:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
