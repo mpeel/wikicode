@@ -2,6 +2,7 @@
 # -*- coding: utf-8  -*-
 # Check for consistency in commons category usage
 # Mike Peel     08-Feb-2018      v1 - start
+# Mike Peel     26-Mar-2018      Change recurse to 'False', shouldn't need to look in subcategories.
 
 from __future__ import unicode_literals
 
@@ -26,7 +27,7 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 for targetcat in targetcats:
     print targetcat
     cat = pywikibot.Category(commons,targetcat)
-    targets = cat.members(recurse=True);
+    targets = cat.members(recurse=False);
     for target in targets:
         if 'Category:' in target.title():
             redirect = ''
