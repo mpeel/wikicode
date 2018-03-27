@@ -19,34 +19,37 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 debug = 1
-query = 'SELECT ?item ?commonscat ?commonspage\n'\
+query = 'SELECT ?item\n'\
 'WITH {\n'\
 '   SELECT ?item ?commonscat WHERE {\n'\
 '       ?item wdt:P373 ?commonscat .\n'\
-'  } LIMIT 10000\n'\
+'  }  LIMIT 10000\n'\
 '} AS %cats \n'\
-'WHERE {'\
-'    hint:Query hint:optimizer "None".'\
-'    INCLUDE %cats .'\
-'    BIND(STRLANG(CONCAT("Category:", ?commonscat),"en") AS ?c1) .'\
-'    OPTIONAL {'\
-'         ?commonspage schema:name ?c1 .'\
-'         ?commonspage schema:isPartOf <https://commons.wikimedia.org/> .'\
-'         ?commonspage schema:about [] .'\
-'    }'\
-'    FILTER (!bound(?commonspage)) '\
-'    FILTER NOT EXISTS {?item wdt:P31 wd:Q4167836}'\
-'    OPTIONAL {'\
-'        ?item2 wdt:P373 ?commonscat .'\
-'        ?item2 wdt:P31 wd:Q4167836'\
-'    }'\
-'    FILTER NOT EXISTS {'\
-'        ?item3 wdt:P373 ?commonscat .'\
-'        FILTER (?item3 != ?item) .'\
-'        FILTER (!(bound(?item2) && ?item3 = ?item2))'\
-'    }'\
+'WHERE {\n'\
+'    hint:Query hint:optimizer "None".\n'\
+'    INCLUDE %cats .\n'\
+'    BIND(STRLANG(CONCAT("Category:", ?commonscat),"en") AS ?c1) .\n'\
+'    OPTIONAL {\n'\
+'         ?commonspage schema:name ?c1 .\n'\
+'         ?commonspage schema:isPartOf <https://commons.wikimedia.org/> .\n'\
+'         ?commonspage schema:about [] .\n'\
+'    }\n'\
+'    FILTER (!bound(?commonspage)) \n'\
+'    MINUS {?item wdt:P31 wd:Q4167836}\n'\
+'    MINUS {?item wdt:P31 wd:Q4167410}\n'\
+'    OPTIONAL {\n'\
+'        ?item2 wdt:P373 ?commonscat .\n'\
+'        ?item2 wdt:P31 wd:Q4167836\n'\
+'    }\n'\
+'    FILTER NOT EXISTS {\n'\
+'        ?item3 wdt:P373 ?commonscat .\n'\
+'        FILTER (?item3 != ?item) .\n'\
+'        FILTER (!(bound(?item2) && ?item3 = ?item2))\n'\
+'    }\n'\
+'    MINUS {?commonslink schema:about ?item . ?commonslink schema:isPartOf <https://commons.wikimedia.org/> . } \n'\
+'    MINUS {?item wdt:P910 [] }\n'\
+'    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }\n'\
 '}'
-#'LIMIT 10000'
 
 print query
 
