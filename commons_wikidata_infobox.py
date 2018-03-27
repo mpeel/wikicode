@@ -25,13 +25,13 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 
-targetcats = ['Category:Radio astronomy']
+targetcats = ['Category:Netherlands']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
 templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef"] + catredirect_templates
-templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control"]
-templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "On Wikidata", "on Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
+templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata"]
+templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
 
 # This is the main template
@@ -56,10 +56,12 @@ def addtemplate(target):
         return 0
 
     # Check the Wikidata item to see if we want to skip this.
+    wd_id = 0
     try:
         p301 = item_dict['claims']['P301']
         for clm in p301:
             savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
+            wd_id = clm.getTarget().title()
     except:
         # print 'P301 not found'
         savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
@@ -97,6 +99,14 @@ def addtemplate(target):
     # Remove unneeded templates
     for option in templatestoremove:
         if option in target.text:
+            target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+"|"+wd_id+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"|"+wd_id+"}}", "")
+            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
             target_text = target_text.replace("{{"+option+"}}\n", "")
             target_text = target_text.replace("{{"+option+"}}", "")
 
