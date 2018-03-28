@@ -54,7 +54,6 @@ for i in range(0,numsteps):
     '    }\n'\
     '    MINUS {?commonslink schema:about ?item . ?commonslink schema:isPartOf <https://commons.wikimedia.org/> . } \n'\
     '    MINUS {?item wdt:P910 [] }\n'\
-    '    SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }\n'\
     '}'
 
     print query
