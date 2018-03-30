@@ -18,7 +18,7 @@ import sys
 reload(sys)  # Reload does the trick!
 sys.setdefaultencoding('UTF8')
 
-maxnum = 10
+maxnum = 490
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
