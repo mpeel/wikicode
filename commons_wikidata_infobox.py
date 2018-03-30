@@ -18,14 +18,14 @@ import sys
 reload(sys)  # Reload does the trick!
 sys.setdefaultencoding('UTF8')
 
-maxnum = 100
+maxnum = 10
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 
-targetcats = ['Category:Netherlands']
+targetcats = ['Category:Descalvado']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -101,12 +101,14 @@ def addtemplate(target):
         if option in target.text:
             target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}\n", "")
             target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}", "")
-            target_text = target_text.replace("{{"+option+"|"+wd_id+"}}\n", "")
-            target_text = target_text.replace("{{"+option+"|"+wd_id+"}}", "")
+            if wd_id != 0:
+                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}", "")
             target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}\n", "")
             target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}", "")
-            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}\n", "")
-            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
+            if wd_id != 0:
+                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
             target_text = target_text.replace("{{"+option+"}}\n", "")
             target_text = target_text.replace("{{"+option+"}}", "")
 
@@ -114,17 +116,29 @@ def addtemplate(target):
     print target_text
     target.text = target_text
     print savemessage
-    text = raw_input("Save on Commons? ")
-    if text == 'y':
-        try:
-            target.save(savemessage)
-            return 1
-        except:
-            print "That didn't work!"
-            return 0
-    else:
+    # text = raw_input("Save on Commons? ")
+    # if text == 'y':
+    try:
+        target.save(savemessage)
+        return 1
+    except:
+        print "That didn't work!"
         return 0
+    # else:
+    #     return 0
 
+
+# Pick random categories
+while nummodified < maxnum:
+    targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
+    for target in targets:
+        print target.title()
+        nummodified += addtemplate(target)
+        print nummodified
+        
+        if nummodified >= maxnum:
+            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            break
 
 # Now on to the main part
 checkedcats = []
