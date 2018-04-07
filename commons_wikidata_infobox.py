@@ -24,13 +24,14 @@ nummodified = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
+manual = 1
 
-targetcats = ['Category:Descalvado']
+targetcats = ['Category:Astronomers']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef"] + catredirect_templates
-templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata"]
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation"] + catredirect_templates
+templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "Wikidata", "wikidata"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
 
@@ -114,31 +115,39 @@ def addtemplate(target):
 
     # Time to save it
     print target_text
-    target.text = target_text
+    target.text = target_text.strip()
     print savemessage
-    # text = raw_input("Save on Commons? ")
-    # if text == 'y':
-    try:
-        target.save(savemessage)
-        return 1
-    except:
-        print "That didn't work!"
-        return 0
-    # else:
-    #     return 0
+    text = raw_input("Save on Commons? ")
+    if manual:
+        if text == 'y':
+            try:
+                target.save(savemessage)
+                return 1
+            except:
+                print "That didn't work!"
+                return 0
+        else:
+            return 0
+    else:
+        try:
+            target.save(savemessage)
+            return 1
+        except:
+            print "That didn't work!"
+            return 0
 
 
 # Pick random categories
-while nummodified < maxnum:
-    targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
-    for target in targets:
-        print target.title()
-        nummodified += addtemplate(target)
-        print nummodified
+# while nummodified < maxnum:
+#     targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
+#     for target in targets:
+#         print target.title()
+#         nummodified += addtemplate(target)
+#         print nummodified
         
-        if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-            break
+#         if nummodified >= maxnum:
+#             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+#             break
 
 # Now on to the main part
 checkedcats = []
