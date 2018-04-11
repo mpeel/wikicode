@@ -18,8 +18,8 @@ commons = pywikibot.Site('commons', 'commons')
 debug = 0
 
 # Brazil
-collections = ['Q82941','Q510993','Q1954370','Q371803','Q2095209']
-# collections = ["Q1954370", "Q510993"]
+# collections = ['Q82941','Q510993','Q1954370','Q371803','Q2095209']
+collections = ["Q371803"]
 
 for coll in collections:
     query = 'SELECT ?item ?picture WHERE { ?item wdt:P195 wd:' + coll + ' . ?item wdt:P18 ?picture }'
