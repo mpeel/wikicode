@@ -12,7 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 10
+maxnum = 50
 nummodified = 0
 stepsize =  10000
 maximum = 2000000
@@ -29,7 +29,8 @@ for i in range(0,numsteps):
     'WITH {\n'\
     '   SELECT ?item ?commonscat WHERE {\n'\
     '       ?item wdt:P373 ?commonscat .\n'\
-    '  }  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize) + '\n'\
+    '  }  LIMIT 15 OFFSET ' + str(i*stepsize) + '\n'\
+    # '  }  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize) + '\n'\
     '} AS %cats \n'\
     'WHERE {\n'\
     '    hint:Query hint:optimizer "None".\n'\
