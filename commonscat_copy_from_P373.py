@@ -95,11 +95,11 @@ for i in range(0,numsteps):
                         # That didn't work, add it to the Wikidata entry
                         data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + val}]}
                         try:
-                            print val
-                            text = raw_input("Save? ")
-                            if text == 'y':
-                                page.editEntity(data, summary=u'Copy from P373 to commons sitelink')
-                                nummodified += 1
+                            # print val
+                            # text = raw_input("Save? ")
+                            # if text == 'y':
+                            page.editEntity(data, summary=u'Copy from P373 to commons sitelink')
+                            nummodified += 1
                         except:
                             print 'Edit failed'
 
