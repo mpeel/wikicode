@@ -2,6 +2,7 @@
 # -*- coding: utf-8  -*-
 # Check for consistency in commons category usage
 # Mike Peel     08-Feb-2018      v1 - start
+# Mike Peel     19-Apr-2018      Add in repeat attempts at the query if it returns nothing
 
 from __future__ import unicode_literals
 
