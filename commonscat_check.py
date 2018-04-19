@@ -15,27 +15,39 @@ import urllib
 maxnum = 10000
 nummodified = 0
 
+catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
+
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 debug = 1
-query = 'SELECT ?item ?commonscat ?sitelink ?name WHERE {'\
-'  ?item wdt:P373 ?commonscat.'\
-'  ?sitelink schema:about ?item; schema:isPartOf <https://commons.wikimedia.org/>; schema:name ?name .'\
-'  FILTER( CONTAINS(STR(?sitelink), \'Category:\') = true ) .'\
-'  FILTER( ?commonscat != SUBSTR(STR(?name), 10) ) .'\
-'}'
-# if debug:
-#     query = query + " LIMIT 100"
+numcats = 0
+attempts = 0
+while numcats == 0:
+    if attempts != 0:
+        time.sleep(180)
+    if attempts > 100:
+        break
 
-print query
+    query = 'SELECT ?item ?commonscat ?sitelink ?name WHERE {'\
+    '  ?item wdt:P373 ?commonscat.'\
+    '  ?sitelink schema:about ?item; schema:isPartOf <https://commons.wikimedia.org/>; schema:name ?name .'\
+    '  FILTER( CONTAINS(STR(?sitelink), \'Category:\') = true ) .'\
+    '  FILTER( ?commonscat != SUBSTR(STR(?name), 10) ) .'\
+    '}'
+    # if debug:
+    #     query = query + " LIMIT 100"
 
-catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
+    print query
 
-generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
-bad_commonscat_count = 0
-bad_sitelink_count = 0
-interwiki_conflicts = []
+    generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+    bad_commonscat_count = 0
+    bad_sitelink_count = 0
+    interwiki_conflicts = []
+    numcats = len(list(generator))
+    print numcats
+    attempts += 1
+
 for page in generator:
     item_dict = page.get()
     qid = page.title()
