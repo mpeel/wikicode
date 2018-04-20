@@ -18,15 +18,15 @@ import sys
 reload(sys)  # Reload does the trick!
 sys.setdefaultencoding('UTF8')
 
-maxnum = 490
+maxnum = 5000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
-manual = 1
+manual = False
 
-targetcats = ['Category:Artworks, monuments and memorials at the University of São Paulo']
+targetcats = ['Category:São Paulo (city)']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -117,8 +117,8 @@ def addtemplate(target):
     print target_text
     target.text = target_text.strip()
     print savemessage
-    text = raw_input("Save on Commons? ")
     if manual:
+        text = raw_input("Save on Commons? ")
         if text == 'y':
             try:
                 target.save(savemessage)
