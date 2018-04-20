@@ -24,7 +24,9 @@ commons = pywikibot.Site('commons', 'commons')
 debug = 1
 numcats = 0
 attempts = 0
-while numcats == 0:
+while True:
+    if numcats != 0:
+        break
     if attempts != 0:
         time.sleep(180)
     if attempts > 100:
@@ -49,6 +51,7 @@ while numcats == 0:
     print numcats
     attempts += 1
     if numcats != 0:
+        print 'hello'
         for page in generator:
             item_dict = page.get()
             qid = page.title()
