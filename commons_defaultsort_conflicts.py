@@ -18,13 +18,11 @@ nummodified = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
-manual = 1
+manual = 0
 savemessage = "Disable defaultsort from infobox to avoid conflict"
 
 def fixcat(targetcat):
     target_text = targetcat.get()
-    print target_text
-
     target_text = target_text.replace("{{Wikidata Infobox}}", "{{Wikidata Infobox|defaultsort=no}}")
     target_text = target_text.replace("{{Wikidata infobox}}", "{{Wikidata Infobox|defaultsort=no}}")
     target_text = target_text.replace("{{wikidata Infobox}}", "{{Wikidata Infobox|defaultsort=no}}")
@@ -34,9 +32,8 @@ def fixcat(targetcat):
     if (target_text != targetcat.get()):
         print target_text
         targetcat.text = target_text.strip()
-        print savemessage
-        text = raw_input("Save on Commons? ")
-        if manual:
+        if manual == 1:
+            text = raw_input("Save on Commons? ")
             if text == 'y':
                 try:
                     targetcat.save(savemessage)
