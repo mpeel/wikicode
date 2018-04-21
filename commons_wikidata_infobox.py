@@ -24,7 +24,7 @@ nummodified = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
-manual = False
+manual = True
 
 targetcats = ['Category:Madrid']
 
@@ -63,6 +63,14 @@ def addtemplate(target):
         for clm in p301:
             savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
             wd_id = clm.getTarget().title()
+            # Check to see if it's linked to a list item, and avoid if so
+            test = pywikibot.ItemPage(repo, wd_id)
+            testitem = test.get()
+            test_p31 = testitem['claims']['P31']
+            for clm in test_p31:
+                if 'Q13406463' in clm.getTarget().title():
+                    print 'Category linked to a list item'
+                    return 0
     except:
         # print 'P301 not found'
         savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
