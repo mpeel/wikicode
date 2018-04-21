@@ -162,6 +162,11 @@ checkedcats = []
 for targetcat in targetcats:
     # print "\n" + targetcat
 
+    # If we've already checked this category in this run, then skip it.
+    if targetcat.title() in checkedcats:
+        continue
+    checkedcats.append(targetcat.title())
+
     cat = pywikibot.Category(commons,targetcat)
     nummodified += addtemplate(cat)
     targets = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
@@ -174,7 +179,7 @@ for targetcat in targetcats:
         # subcat = pywikibot.Category(commons,target)
         subcats = pagegenerators.SubCategoriesPageGenerator(target)
         for subcat in subcats:
-            if subcat.title() in checkedcats:
+            if subcat.title() in checkedcats or subcat.title() in targetcats:
                 continue
             else:
                 targetcats.append(subcat.title())
