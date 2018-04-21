@@ -30,7 +30,7 @@ targetcats = ['Category:Madrid']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox"] + catredirect_templates
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "{{Artwork", "{{artwork"] + catredirect_templates
 templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
@@ -159,7 +159,10 @@ def addtemplate(target):
 
 # Now on to the main part
 checkedcats = []
+numchecked = 0
+catschecked = 0
 for targetcat in targetcats:
+    catschecked += 1
     # print "\n" + targetcat
 
     # If we've already checked this category in this run, then skip it.
@@ -169,6 +172,7 @@ for targetcat in targetcats:
 
     cat = pywikibot.Category(commons,targetcat)
     nummodified += addtemplate(cat)
+    numchecked += 1
     targets = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
     for target in targets:
         # If we've already checked this category in this run, then skip it.
@@ -186,7 +190,8 @@ for targetcat in targetcats:
         # print targetcats
 
         nummodified += addtemplate(target)
-        print nummodified
+        numchecked += 1
+        print str(nummodified) + " - " + str(numchecked) + ", " + str(catschecked) + "/" + str(len(targetcats))
         
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
