@@ -24,7 +24,7 @@ nummodified = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
-manual = True
+manual = False
 
 targetcats = ['Category:Madrid']
 
