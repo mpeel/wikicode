@@ -26,7 +26,7 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
 
-targetcats = ['Category:Madrid']
+targetcats = ['Category:Jainism']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -196,6 +196,9 @@ for targetcat in targetcats:
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
+    if nummodified >= maxnum:
+        print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+        break
 
 print 'Done! Edited ' + str(nummodified) + ' entries'
 
