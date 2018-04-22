@@ -26,7 +26,7 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
 
-targetcats = ['Category:Jainism']
+targetcats = ['Category:Greater Manchester']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -81,9 +81,11 @@ def addtemplate(target):
                 if 'Q4167836' in clm.getTarget().title():
                     # We have a Wikimedia category with no P301, skip it
                     print 'Wikimedia category, no P301'
-                    test = 0
-            if test == 0:
-                return 0
+                    return 0
+                if 'Q14204246' in clm.getTarget().title():
+                    # We have a Wikimedia category with no P301, skip it
+                    print 'Wikimedia project page'
+                    return 0
         except:
             print 'P31 not found'
 
@@ -96,6 +98,8 @@ def addtemplate(target):
         for line in lines:
             i += 1
             if "}}" in line:
+                insertline = i
+            if "|}" in line:
                 insertline = i
     else:
         for line in lines:
@@ -173,6 +177,8 @@ for targetcat in targetcats:
     cat = pywikibot.Category(commons,targetcat)
     nummodified += addtemplate(cat)
     numchecked += 1
+    print str(nummodified) + " - " + str(numchecked) + ", " + str(catschecked) + "/" + str(len(targetcats))
+
     targets = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
     for target in targets:
         # If we've already checked this category in this run, then skip it.
