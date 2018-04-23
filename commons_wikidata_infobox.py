@@ -186,7 +186,7 @@ for targetcat in targetcats:
 
     # See if there are subcategories that we want to check
     # subcat = pywikibot.Category(commons,target)
-    targets = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+    subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
     for subcat in subcats:
         # if subcat.title() in checkedcats or subcat.title() in targetcats:
         if subcat.title() in targetcats:
