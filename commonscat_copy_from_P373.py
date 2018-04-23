@@ -99,6 +99,7 @@ for i in range(0,numsteps):
                             # if text == 'y':
                             page.editEntity(data, summary=u'Copy from P373 to commons sitelink')
                             nummodified += 1
+                            print nummodified
                         except:
                             print 'Edit failed'
 
