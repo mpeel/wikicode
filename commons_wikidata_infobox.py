@@ -41,6 +41,12 @@ def addtemplate(target):
     print "\n" + target.title()
     # print target.text
     target_text = target.get()
+
+    # Quick-check for an existing infobox, and skip this if found before doing more processing
+    if "Wikidata Infobox" in target_text:
+        'Already uses Wikidata Infobox!'
+        return 0
+
     try:
         wd_item = pywikibot.ItemPage.fromPage(target)
         item_dict = wd_item.get()
@@ -162,46 +168,32 @@ def addtemplate(target):
 #             break
 
 # Now on to the main part
-checkedcats = []
+# checkedcats = []
 numchecked = 0
 catschecked = 0
 for targetcat in targetcats:
     catschecked += 1
-    # print "\n" + targetcat
 
     # If we've already checked this category in this run, then skip it.
-    if targetcat.title() in checkedcats:
-        continue
-    checkedcats.append(targetcat.title())
+    # if targetcat.title() in checkedcats:
+    #     continue
+    # checkedcats.append(targetcat.title())
 
     cat = pywikibot.Category(commons,targetcat)
     nummodified += addtemplate(cat)
     numchecked += 1
     print str(nummodified) + " - " + str(numchecked) + ", " + str(catschecked) + "/" + str(len(targetcats))
 
+    # See if there are subcategories that we want to check
+    # subcat = pywikibot.Category(commons,target)
     targets = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
-    for target in targets:
-        # If we've already checked this category in this run, then skip it.
-        if target.title() in checkedcats:
+    for subcat in subcats:
+        # if subcat.title() in checkedcats or subcat.title() in targetcats:
+        if subcat.title() in targetcats:
             continue
-        checkedcats.append(target.title())
-        # See if there are categories in here we want to check
-        # subcat = pywikibot.Category(commons,target)
-        subcats = pagegenerators.SubCategoriesPageGenerator(target)
-        for subcat in subcats:
-            if subcat.title() in checkedcats or subcat.title() in targetcats:
-                continue
-            else:
-                targetcats.append(subcat.title())
-        # print targetcats
+        else:
+            targetcats.append(subcat.title())
 
-        nummodified += addtemplate(target)
-        numchecked += 1
-        print str(nummodified) + " - " + str(numchecked) + ", " + str(catschecked) + "/" + str(len(targetcats))
-        
-        if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-            break
     if nummodified >= maxnum:
         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
         break
