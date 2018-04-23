@@ -25,12 +25,11 @@ debug = 1
 for i in range(0,numsteps):
     print 'Starting at ' + str(i*stepsize)
 
-    # '  }  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize) + '\n'\
     query = 'SELECT ?item\n'\
     'WITH {\n'\
     '   SELECT ?item ?commonscat WHERE {\n'\
     '       ?item wdt:P373 ?commonscat .\n'\
-    '  }  LIMIT 15 OFFSET ' + str(i*stepsize) + '\n'\
+    '  }  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize) + '\n'\
     '} AS %cats \n'\
     'WHERE {\n'\
     '    hint:Query hint:optimizer "None".\n'\
