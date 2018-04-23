@@ -172,7 +172,7 @@ def addtemplate(target):
 numchecked = 0
 catschecked = 0
 for targetcat in targetcats:
-    catschecked += 1
+    # catschecked += 1
 
     # If we've already checked this category in this run, then skip it.
     # if targetcat.title() in checkedcats:
@@ -182,7 +182,8 @@ for targetcat in targetcats:
     cat = pywikibot.Category(commons,targetcat)
     nummodified += addtemplate(cat)
     numchecked += 1
-    print str(nummodified) + " - " + str(numchecked) + ", " + str(catschecked) + "/" + str(len(targetcats))
+    # print str(nummodified) + " - " + str(numchecked) + ", " + str(catschecked) + "/" + str(len(targetcats))
+    print str(nummodified) + " - " + str(numchecked) + "/" + str(len(targetcats))
 
     # See if there are subcategories that we want to check
     # subcat = pywikibot.Category(commons,target)
