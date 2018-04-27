@@ -34,6 +34,7 @@ for i in range(0,numsteps):
     'WHERE {\n'\
     '    hint:Query hint:optimizer "None".\n'\
     '    INCLUDE %cats .\n'\
+    '    MINUS {?item wikibase:directClaim [] } . \n'\
     '    BIND(STRLANG(CONCAT("Category:", ?commonscat),"en") AS ?c1) .\n'\
     '    OPTIONAL {\n'\
     '         ?commonspage schema:name ?c1 .\n'\
