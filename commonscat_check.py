@@ -22,14 +22,14 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 debug = 1
-numcats = 0
 attempts = 0
+count = 0
 while True:
-    if numcats != 0:
+    if count != 0:
         break
     if attempts != 0:
         time.sleep(180)
-    if attempts > 100:
+    if attempts > 10:
         break
 
     query = 'SELECT ?item ?commonscat ?sitelink ?name WHERE {'\
@@ -48,6 +48,7 @@ while True:
     bad_sitelink_count = 0
     interwiki_conflicts = []
     for page in generator:
+        count += 1
         item_dict = page.get()
         qid = page.title()
         print "\n" + qid
@@ -158,8 +159,7 @@ while True:
                     print 'Interwiki conflicts in: '
                     print interwiki_conflicts
                     exit()
-    numcats = len(list(generator))
-    print numcats
+    print count
     attempts += 1
 
 
