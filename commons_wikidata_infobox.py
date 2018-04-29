@@ -26,7 +26,7 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
 
-targetcats = ['Category:Greater Manchester']
+targetcats = ['Category:Brazil']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -38,9 +38,13 @@ templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russi
 # This is the main template
 def addtemplate(target):
     redirect = ''
-    print "\n" + target.title()
     # print target.text
-    target_text = target.get()
+    try:
+        print "\n" + target.title()
+        target_text = target.get()
+    except:
+        print 'Error, page not found!'
+        return 0
 
     # Quick-check for an existing infobox, and skip this if found before doing more processing
     if "Wikidata Infobox" in target_text:
