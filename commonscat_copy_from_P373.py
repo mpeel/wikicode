@@ -65,11 +65,15 @@ for i in range(0,numsteps):
             item_dict = page.get()
             qid = page.title()
         except:
-            print 'Huh'
+            print 'Huh - no page found'
             continue
         print "\n" + qid
         print page.labels
-        p373 = item_dict['claims']['P373']
+        try:
+            p373 = item_dict['claims']['P373']
+        except:
+            print 'Huh - no P373 found'
+            continue
         p373_check = 0
         for clm in p373:
             p373_check += 1
