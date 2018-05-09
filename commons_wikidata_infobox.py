@@ -18,7 +18,7 @@ import sys
 reload(sys)  # Reload does the trick!
 sys.setdefaultencoding('UTF8')
 
-maxnum = 5000
+maxnum = 5000000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
@@ -26,7 +26,7 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
 
-targetcats = ['Category:Brazil']
+targetcats = ['Category:Astronomy']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -99,6 +99,22 @@ def addtemplate(target):
         except:
             print 'P31 not found'
 
+    # Remove unneeded templates
+    for option in templatestoremove:
+        if option in target.text:
+            target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}", "")
+            if wd_id != 0:
+                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}", "")
+            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}", "")
+            if wd_id != 0:
+                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
+            target_text = target_text.replace("{{"+option+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"}}", "")
+
     # We're good to go. Look for the best line to add the template in.
     i = 0
     lines = target_text.splitlines()
@@ -118,22 +134,6 @@ def addtemplate(target):
                 insertline = i
     lines[insertline:insertline] = ["{{Wikidata Infobox}}"]
     target_text = "\n".join(lines)
-
-    # Remove unneeded templates
-    for option in templatestoremove:
-        if option in target.text:
-            target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}\n", "")
-            target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}", "")
-            if wd_id != 0:
-                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}\n", "")
-                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}", "")
-            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}\n", "")
-            target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}", "")
-            if wd_id != 0:
-                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}\n", "")
-                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
-            target_text = target_text.replace("{{"+option+"}}\n", "")
-            target_text = target_text.replace("{{"+option+"}}", "")
 
     # Time to save it
     print target_text
