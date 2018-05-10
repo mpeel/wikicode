@@ -37,26 +37,25 @@ templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russi
 
 # This is the main template
 def addtemplate(target):
-    redirect = ''
-    # print target.text
     try:
-        print "\n" + target.title()
         target_text = target.get()
     except:
         print 'Error, page not found!'
         return 0
-
-    # Quick-check for an existing infobox, and skip this if found before doing more processing
-    if "Wikidata Infobox" in target_text:
-        'Already uses Wikidata Infobox!'
-        return 0
-
     try:
         wd_item = pywikibot.ItemPage.fromPage(target)
         item_dict = wd_item.get()
         print wd_item.title()
     except:
         print "No Wikidata sitelink found"
+        return 0
+    
+    redirect = ''
+    print "\n" + target.title()
+
+    # Quick-check for an existing infobox, and skip this if found before doing more processing
+    if "Wikidata Infobox" in target_text:
+        'Already uses Wikidata Infobox!'
         return 0
 
     # We have a category that's linked to a Wikidata item. Check if we want to add the template:
@@ -176,13 +175,6 @@ def addtemplate(target):
 numchecked = 0
 catschecked = 0
 for targetcat in targetcats:
-    # catschecked += 1
-
-    # If we've already checked this category in this run, then skip it.
-    # if targetcat.title() in checkedcats:
-    #     continue
-    # checkedcats.append(targetcat.title())
-
     cat = pywikibot.Category(commons,targetcat)
     nummodified += addtemplate(cat)
     numchecked += 1
