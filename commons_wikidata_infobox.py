@@ -187,7 +187,7 @@ while active:
         cat = pywikibot.Category(commons,item.title())
         nummodified += addtemplate(cat)
         numchecked += 1
-        print str(nummodified) + " - " + str(numchecked) + "/" + str(len(active)) + "/" + str(len(next_active))
+        print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
 
         # See if there are subcategories that we want to check in the future
         for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
