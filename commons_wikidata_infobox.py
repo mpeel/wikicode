@@ -39,10 +39,13 @@ templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russi
 def addtemplate(target):
     try:
         wd_item = pywikibot.ItemPage.fromPage(target)
+    except:
+        # print "No Wikidata sitelink found"
+        return 0
+    try:
         item_dict = wd_item.get()
         print wd_item.title()
     except:
-        # print "No Wikidata sitelink found"
         return 0
     try:
         target_text = target.get()
