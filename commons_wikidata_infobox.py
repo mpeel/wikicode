@@ -38,16 +38,16 @@ templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russi
 # This is the main template
 def addtemplate(target):
     try:
-        target_text = target.get()
-    except:
-        # print 'Error, page not found!'
-        return 0
-    try:
         wd_item = pywikibot.ItemPage.fromPage(target)
         item_dict = wd_item.get()
         print wd_item.title()
     except:
         # print "No Wikidata sitelink found"
+        return 0
+    try:
+        target_text = target.get()
+    except:
+        # print 'Error, page not found!'
         return 0
 
     redirect = ''
