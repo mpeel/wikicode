@@ -40,16 +40,16 @@ def addtemplate(target):
     try:
         target_text = target.get()
     except:
-        print 'Error, page not found!'
+        # print 'Error, page not found!'
         return 0
     try:
         wd_item = pywikibot.ItemPage.fromPage(target)
         item_dict = wd_item.get()
         print wd_item.title()
     except:
-        print "No Wikidata sitelink found"
+        # print "No Wikidata sitelink found"
         return 0
-    
+
     redirect = ''
     print "\n" + target.title()
 
@@ -178,7 +178,6 @@ for targetcat in targetcats:
     cat = pywikibot.Category(commons,targetcat)
     nummodified += addtemplate(cat)
     numchecked += 1
-    # print str(nummodified) + " - " + str(numchecked) + ", " + str(catschecked) + "/" + str(len(targetcats))
     print str(nummodified) + " - " + str(numchecked) + "/" + str(len(targetcats))
 
     # See if there are subcategories that we want to check
