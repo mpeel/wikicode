@@ -183,11 +183,9 @@ for targetcat in targetcats:
     numchecked += 1
     print str(nummodified) + " - " + str(numchecked) + "/" + str(len(targetcats))
 
-    # See if there are subcategories that we want to check
-    # subcat = pywikibot.Category(commons,target)
+    # See if there are subcategories that we want to check in the future
     subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
     for subcat in subcats:
-        # if subcat.title() in checkedcats or subcat.title() in targetcats:
         if subcat.title() in targetcats:
             continue
         else:
