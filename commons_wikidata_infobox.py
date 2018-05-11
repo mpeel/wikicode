@@ -26,7 +26,7 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
 
-targetcats = ['Category:Women by name']
+targetcats = ['Category:CommonsRoot']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -185,41 +185,41 @@ catschecked = 0
 seen   = set(targetcats)
 active = set(targetcats)
 
-# while active:
-#     next_active = set()
-#     for item in active:
-#         cat = pywikibot.Category(commons,item.title())
-#         nummodified += addtemplate(cat)
-#         numchecked += 1
-#         print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
+while active:
+    next_active = set()
+    for item in active:
+        cat = pywikibot.Category(commons,item)
+        nummodified += addtemplate(cat)
+        numchecked += 1
+        print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
 
-#         # See if there are subcategories that we want to check in the future
-#         for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
-#             if result not in seen:
-#                 seen.add(result)
-#                 next_active.add(result)
-#     active = next_active
-#     if nummodified >= maxnum:
-#         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-#         break
-
-for targetcat in targetcats:
-    cat = pywikibot.Category(commons,targetcat)
-    nummodified += addtemplate(cat)
-    numchecked += 1
-    print str(nummodified) + " - " + str(numchecked) + "/" + str(len(targetcats))
-
-    # See if there are subcategories that we want to check in the future
-    subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
-    for subcat in subcats:
-        if subcat.title() in targetcats:
-            continue
-        else:
-            targetcats.append(subcat.title())
-
+        # See if there are subcategories that we want to check in the future
+        for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
+            if result.title() not in seen:
+                seen.add(result.title())
+                next_active.add(result.title())
+    active = next_active
     if nummodified >= maxnum:
         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
         break
+
+# for targetcat in targetcats:
+#     cat = pywikibot.Category(commons,targetcat)
+#     nummodified += addtemplate(cat)
+#     numchecked += 1
+#     print str(nummodified) + " - " + str(numchecked) + "/" + str(len(targetcats))
+
+#     # See if there are subcategories that we want to check in the future
+#     subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+#     for subcat in subcats:
+#         if subcat.title() in targetcats:
+#             continue
+#         else:
+#             targetcats.append(subcat.title())
+
+#     if nummodified >= maxnum:
+#         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+#         break
 
 print 'Done! Edited ' + str(nummodified) + ' entries'
 
