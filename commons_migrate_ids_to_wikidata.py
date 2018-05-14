@@ -22,7 +22,7 @@ category = 'Category:Listed buildings in England with known IDs'
 templates = ['Listed building England', 'listed building England']
 properties = ['P1216', 'P1216']
 others = ['{{mainw}}','{{Mainw}}', '{{Interwiki from Wikidata}}', '{{interwiki from Wikidata}}']
-enwp = ['mainw', 'Mainw']
+enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Trim information provided through the Wikidata Infobox"
 wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata"]
 
