@@ -76,7 +76,8 @@ def migratecat(targetcat):
     # Only remove whitespace if we're making another change
     if (target_text != targetcat.get()):
         target_text = target_text.replace('\n\n\n','\n')
-        target_text = target_text.replace('\n\n','\n')
+        target_text = target_text.replace('\n\n\n','\n')
+        # target_text = target_text.replace('\n\n','\n')
 
     # Time to save it
     if (target_text != targetcat.get()):
