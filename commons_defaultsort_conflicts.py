@@ -12,7 +12,13 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 1000
+import sys
+# sys.setdefaultencoding() does not exist, here!
+reload(sys)  # Reload does the trick!
+sys.setdefaultencoding('UTF8')
+
+
+maxnum = 10000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
