@@ -17,7 +17,7 @@ nummodified = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
-manual = True
+manual = False
 category = 'Category:Listed buildings in England with known IDs'
 templates = ['Listed building England', 'listed building England']
 properties = ['P1216', 'P1216']
@@ -80,12 +80,12 @@ def checkid(targetcat):
                     print id_val
                     print item_dict['labels']['en']
                     print data
-                    text = raw_input("Save? ")
-                    if text == 'y':
-                        page.editEntity(data, summary=u'Add commons sitelink based on NHLE ID')
-                        return 1
-                    else:
-                        return 0
+                    # text = raw_input("Save? ")
+                    # if text == 'y':
+                    page.editEntity(data, summary=u'Add commons sitelink based on NHLE ID')
+                    return 1
+                    # else:
+                    #     return 0
                 except:
                     print 'Edit failed'
                     return 0
