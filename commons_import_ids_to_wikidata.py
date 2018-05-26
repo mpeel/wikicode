@@ -32,6 +32,7 @@ def checkid(targetcat):
         item_dict = wd_item.get()
     except:
         print "No Wikidata sitelink found"
+        return 0
 
     id_val = 0
     for i in range(0,len(templates)):
@@ -93,12 +94,12 @@ def checkid(targetcat):
             stringclaim = pywikibot.Claim(repo, properties)
             stringclaim.setTarget(id_val)
             print stringclaim
-            text = raw_input("Save? ")
-            if text == 'y':
-                wd_item.addClaim(stringclaim, summary=u'Copying ID value from Commons')
-                return 1
-            else:
-                return 0
+            # text = raw_input("Save? ")
+            # if text == 'y':
+            wd_item.addClaim(stringclaim, summary=u'Copying ID value from Commons')
+            return 1
+            # else:
+            #     return 0
             # except:
             #     print 'Edit failed'
             #     return 0
