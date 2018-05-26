@@ -18,10 +18,14 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
-category = 'Category:Listed buildings in England with known IDs'
-templates = ['Listed building England', 'listed building England']
-properties = ['P1216', 'P1216']
-others = ['{{mainw}}','{{Mainw}}', '{{Interwiki from Wikidata}}', '{{interwiki from Wikidata}}']
+category = 'Category:HPIP with known IDs' #'Category:Listed buildings in England with known IDs'
+templates = ['HPIP']#['Listed building England', 'listed building England']
+properties = ['P5094']#['P1216', 'P1216']
+
+# category = 'Category:Listed buildings in England with known IDs'
+# templates = ['Listed building England', 'listed building England']
+# properties = ['P1216', 'P1216']
+others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label']
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Trim information provided through the Wikidata Infobox"
 wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata"]
@@ -58,7 +62,8 @@ def migratecat(targetcat):
 
     # Remove other templates
     for i in range(0,len(others)):
-        target_text = target_text.replace(others[i], "")
+        target_text = target_text.replace("{{"+others[i]+"}}", "")
+        target_text = target_text.replace("{{" + others[i] + "|" + clm.getTarget() + "}}", "")
 
     try:
         enwp_link = item_dict['sitelinks']['enwiki']
