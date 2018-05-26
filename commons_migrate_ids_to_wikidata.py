@@ -18,13 +18,12 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = False
-category = 'Category:HPIP with known IDs' #'Category:Listed buildings in England with known IDs'
-templates = ['HPIP']#['Listed building England', 'listed building England']
-properties = ['P5094']#['P1216', 'P1216']
-
-# category = 'Category:Listed buildings in England with known IDs'
-# templates = ['Listed building England', 'listed building England']
-# properties = ['P1216', 'P1216']
+# category = 'Category:HPIP with known IDs'
+# templates = ['HPIP']
+# properties = ['P5094']
+category = 'Category:Listed buildings in England with known IDs'
+templates = ['Listed building England', 'listed building England']
+properties = ['P1216', 'P1216']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label']
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Trim information provided through the Wikidata Infobox"
