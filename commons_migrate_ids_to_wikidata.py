@@ -79,12 +79,12 @@ def migratecat(targetcat):
 
     # Only remove whitespace if we're making another change
     if (target_text != targetcat.get()):
+        for i in range(0,len(wikidatainfobox)):
+            target_text = target_text.replace("{{"+wikidatainfobox[i],'{{Wikidata Infobox')
+
         target_text = target_text.replace('\n\n\n','\n')
         target_text = target_text.replace('\n\n\n','\n')
-        target_text = target_text.replace('\n\n{{Wikidata infobox','\n{{Wikidata infobox')
-        target_text = target_text.replace('\n\n{{wikidata infobox','\n{{wikidata infobox')
         target_text = target_text.replace('\n\n{{Wikidata Infobox','\n{{Wikidata Infobox')
-        target_text = target_text.replace('\n\n{{wikidata Infobox','\n{{wikidata Infobox')
         # target_text = target_text.replace('\n\n','\n')
 
     # Time to save it
