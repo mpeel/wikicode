@@ -18,10 +18,10 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
-category = 'Category:HPIP with known IDs'#'Category:Listed buildings in England with known IDs'
-templates = ['HPIP']#['Listed building England', 'listed building England']
-properties = ['P5094']#['P1216', 'P1216']
-shortname = 'HPIP'
+category = 'Category:SIPA with known IDs'#'Category:Listed buildings in England with known IDs'
+templates = ['SIPA']#['Listed building England', 'listed building England']
+properties = ['P1700']#['P1216', 'P1216']
+shortname = 'SIPA'
 
 def checkid(targetcat):
     # print targetcat
@@ -34,6 +34,13 @@ def checkid(targetcat):
 
         id_val = 0
         for i in range(0,len(templates)):
+            try:
+                value = (target_text.split("{{"+templates[i]+"|"))[1].split("|")[0]
+                if value and id_val == 0:
+                    id_val = value
+            except:
+                null = 1
+                # print '1'
             try:
                 value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
                 if value and id_val == 0:
