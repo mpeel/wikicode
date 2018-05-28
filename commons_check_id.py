@@ -18,9 +18,10 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
-category = 'Category:Listed buildings in England with known IDs'
-templates = ['Listed building England', 'listed building England']
-properties = ['P1216', 'P1216']
+category = 'Category:HPIP with known IDs'#'Category:Listed buildings in England with known IDs'
+templates = ['HPIP']#['Listed building England', 'listed building England']
+properties = ['P5094']#['P1216', 'P1216']
+shortname = 'HPIP'
 
 def checkid(targetcat):
     # print targetcat
@@ -54,7 +55,7 @@ def checkid(targetcat):
             except:
                 null = 3
                 # print '3'
-        # print id_val
+        print id_val
 
         if id_val != 0:
             try:
@@ -69,7 +70,7 @@ def checkid(targetcat):
             for testpage in generator:
                 page = testpage
                 count+=1
-            del generator
+            print count
             if count == 1:
                 try:
                     item_dict = page.get()
@@ -85,14 +86,14 @@ def checkid(targetcat):
                         print "\n\n"
                         print qid
                         print id_val
-                        print item_dict['labels']['en']
+                        print item_dict['labels']
                         print data
-                        text = raw_input("Save? ")
-                        if text == 'y':
-                            page.editEntity(data, summary=u'Add commons sitelink based on HPIP ID')
-                            return 1
-                        else:
-                            return 0
+                        # text = raw_input("Save? ")
+                        # if text == 'y':
+                        page.editEntity(data, summary=u'Add commons sitelink based on '+shortname+' ID')
+                        return 1
+                        # else:
+                        #     return 0
                     except:
                         print 'Edit failed'
                         return 0
@@ -104,9 +105,14 @@ def checkid(targetcat):
 
 
 # Start the category walker
-cat = pywikibot.Category(commons,category)
+# cat = pywikibot.Category(commons,category)
 # nummodified += checkid(cat)
-targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+# targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+
+template = pywikibot.Page(commons, 'Template:'+templates[0])
+
+targetcats = template.embeddedin(namespaces='14')
+
 
 i = 0
 for targetcat in targetcats:
