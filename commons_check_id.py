@@ -34,12 +34,12 @@ def checkid(targetcat):
 
         id_val = 0
         for i in range(0,len(templates)):
-            try:
-                value = (target_text.split("{{"+templates[i]+"|"))[1].split("|")[0]
-                if value and id_val == 0:
-                    id_val = value
-            except:
-                null = 1
+            # try:
+            #     value = (target_text.split("{{"+templates[i]+"|"))[1].split("|")[0]
+            #     if value and id_val == 0:
+            #         id_val = value
+            # except:
+            #     null = 1
                 # print '1'
             try:
                 value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
