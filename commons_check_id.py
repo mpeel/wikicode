@@ -17,7 +17,7 @@ nummodified = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
-manual = False
+manual = True
 category = 'Category:Listed buildings in England with known IDs'
 templates = ['Listed building England', 'listed building England']
 properties = ['P1216', 'P1216']
@@ -56,9 +56,14 @@ def checkid(targetcat):
                 # print '3'
         # print id_val
 
-        query = 'SELECT ?item WHERE { ?item wdt:'+str(properties[0])+' ?id . FILTER (?id = "'+str(id_val)+'") . }'
-        # print query
-        generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
+        try:
+            query = 'SELECT ?item WHERE { ?item wdt:'+str(properties[0])+' ?id . FILTER (?id = "'+str(id_val)+'") . }'
+            # print query
+            generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
+        except:
+            print 'Unable to run the query! Skipping this one.'
+            wait(3)
+            return 0
         count = 0
         for testpage in generator:
             page = testpage
@@ -80,12 +85,12 @@ def checkid(targetcat):
                     print id_val
                     print item_dict['labels']['en']
                     print data
-                    # text = raw_input("Save? ")
-                    # if text == 'y':
-                    page.editEntity(data, summary=u'Add commons sitelink based on NHLE ID')
-                    return 1
-                    # else:
-                    #     return 0
+                    text = raw_input("Save? ")
+                    if text == 'y':
+                        page.editEntity(data, summary=u'Add commons sitelink based on HPIP ID')
+                        return 1
+                    else:
+                        return 0
                 except:
                     print 'Edit failed'
                     return 0
