@@ -69,6 +69,7 @@ def checkid(targetcat):
             for testpage in generator:
                 page = testpage
                 count+=1
+            del generator
             if count == 1:
                 try:
                     item_dict = page.get()
