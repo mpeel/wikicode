@@ -24,13 +24,13 @@ properties = ['P1216', 'P1216']
 
 def checkid(targetcat):
     # print targetcat
-    target_text = targetcat.get()
     # print target_text
-
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
     except:
         print "No Wikidata sitelink found"
+        target_text = targetcat.get()
+
         id_val = 0
         for i in range(0,len(templates)):
             try:
@@ -107,12 +107,14 @@ cat = pywikibot.Category(commons,category)
 # nummodified += checkid(cat)
 targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
+i = 0
 for targetcat in targetcats:
     # print targetcat
     # print "\n" + targetcat.title()
     # print target.text
     nummodified += checkid(targetcat)
-    print nummodified
+    print str(nummodified) + "/" + str(i)
+    i += 1
     if nummodified >= maxnum:
         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
         exit()
