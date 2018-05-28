@@ -11,7 +11,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 1000
+maxnum = 100000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
@@ -56,46 +56,47 @@ def checkid(targetcat):
                 # print '3'
         # print id_val
 
-        try:
-            query = 'SELECT ?item WHERE { ?item wdt:'+str(properties[0])+' ?id . FILTER (?id = "'+str(id_val)+'") . }'
-            # print query
-            generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
-        except:
-            print 'Unable to run the query! Skipping this one.'
-            wait(3)
-            return 0
-        count = 0
-        for testpage in generator:
-            page = testpage
-            count+=1
-        if count == 1:
+        if id_val != 0:
             try:
-                item_dict = page.get()
-                qid = page.title()
+                query = 'SELECT ?item WHERE { ?item wdt:'+str(properties[0])+' ?id . FILTER (?id = "'+str(id_val)+'") . } LIMIT 10'
+                # print query
+                generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
             except:
-                print 'Huh - no page found'
-            try:
-                sitelink = item_dict['sitelinks']['commonswiki']
-            except:
-                # No existing sitelink found, add the new one
-                data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
+                print 'Unable to run the query! Skipping this one.'
+                wait(3)
+                return 0
+            count = 0
+            for testpage in generator:
+                page = testpage
+                count+=1
+            if count == 1:
                 try:
-                    print "\n\n"
-                    print qid
-                    print id_val
-                    print item_dict['labels']['en']
-                    print data
-                    text = raw_input("Save? ")
-                    if text == 'y':
-                        page.editEntity(data, summary=u'Add commons sitelink based on HPIP ID')
-                        return 1
-                    else:
-                        return 0
+                    item_dict = page.get()
+                    qid = page.title()
                 except:
-                    print 'Edit failed'
-                    return 0
+                    print 'Huh - no page found'
+                try:
+                    sitelink = item_dict['sitelinks']['commonswiki']
+                except:
+                    # No existing sitelink found, add the new one
+                    data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
+                    try:
+                        print "\n\n"
+                        print qid
+                        print id_val
+                        print item_dict['labels']['en']
+                        print data
+                        text = raw_input("Save? ")
+                        if text == 'y':
+                            page.editEntity(data, summary=u'Add commons sitelink based on HPIP ID')
+                            return 1
+                        else:
+                            return 0
+                    except:
+                        print 'Edit failed'
+                        return 0
 
-            return 0
+                return 0
 
     return 0
 
@@ -111,7 +112,7 @@ for targetcat in targetcats:
     # print "\n" + targetcat.title()
     # print target.text
     nummodified += checkid(targetcat)
-
+    print nummodified
     if nummodified >= maxnum:
         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
         exit()
