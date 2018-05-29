@@ -177,8 +177,8 @@ while nummodified < maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
 
-Now on to the main part
-checkedcats = []
+# Now on to the main part
+# checkedcats = []
 
 exit()
 
