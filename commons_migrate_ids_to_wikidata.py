@@ -63,6 +63,7 @@ def migratecat(targetcat):
     for i in range(0,len(others)):
         target_text = target_text.replace("{{"+others[i]+"}}", "")
         target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + "}}", "")
+        target_text = target_text.replace("{{" + others[i] + wd_item.title() + "}}", "")
 
     try:
         enwp_link = item_dict['sitelinks']['enwiki']
