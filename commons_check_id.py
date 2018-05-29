@@ -126,9 +126,8 @@ for targetcat in targetcats:
     # print targetcat
     # print "\n" + targetcat.title()
     # print target.text
-    if i > 10000:
-        nummodified += checkid(targetcat)
-        print str(nummodified) + "/" + str(i)
+    nummodified += checkid(targetcat)
+    print str(nummodified) + "/" + str(i)
     i += 1
     if nummodified >= maxnum:
         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
