@@ -166,19 +166,22 @@ def addtemplate(target):
 
 
 # Pick random categories
-# while nummodified < maxnum:
-#     targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
-#     for target in targets:
-#         print target.title()
-#         nummodified += addtemplate(target)
-#         print nummodified
+while nummodified < maxnum:
+    targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
+    for target in targets:
+        print target.title()
+        nummodified += addtemplate(target)
+        print nummodified
         
-#         if nummodified >= maxnum:
-#             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-#             break
+        if nummodified >= maxnum:
+            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            break
 
-# Now on to the main part
-# checkedcats = []
+Now on to the main part
+checkedcats = []
+
+exit()
+
 numchecked = 0
 catschecked = 0
 
