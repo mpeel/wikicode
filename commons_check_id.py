@@ -71,7 +71,7 @@ def checkid(targetcat):
                 generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
             except:
                 print 'Unable to run the query! Skipping this one.'
-                wait(3)
+                time.sleep(3)
                 return 0
             count = 0
             for testpage in generator:
@@ -126,8 +126,9 @@ for targetcat in targetcats:
     # print targetcat
     # print "\n" + targetcat.title()
     # print target.text
-    nummodified += checkid(targetcat)
-    print str(nummodified) + "/" + str(i)
+    if i > 10000:
+        nummodified += checkid(targetcat)
+        print str(nummodified) + "/" + str(i)
     i += 1
     if nummodified >= maxnum:
         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
