@@ -21,9 +21,9 @@ manual = False
 # category = 'Category:HPIP with known IDs'
 # templates = ['HPIP']
 # properties = ['P5094']
-category = 'Category:Buildings of Madrid with COAM Register number'#'Category:Listed buildings in England with known IDs'
-templates = ['COAM']#['Listed building England', 'listed building England']
-properties = ['P2917']#['P1216', 'P1216']
+category = 'Category:Listed buildings in England with known IDs'
+templates = ['Listed building England', 'listed building England']
+properties = ['P1216', 'P1216']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Trim information provided through the Wikidata Infobox"
