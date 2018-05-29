@@ -25,7 +25,7 @@ category = 'Category:Buildings of Madrid with COAM Register number'#'Category:Li
 templates = ['COAM']#['Listed building England', 'listed building England']
 properties = ['P2917']#['P1216', 'P1216']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label']
-enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
+enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=', 'object location|wikidata=', 'Object location|wikidata=']
 savemessage="Trim information provided through the Wikidata Infobox"
 wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata"]
 
