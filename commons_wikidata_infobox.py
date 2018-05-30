@@ -26,7 +26,7 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
 
-targetcats = ['Category:Macclesfield']
+targetcats = ['Category:CommonsRoot']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
