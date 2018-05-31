@@ -37,7 +37,7 @@ def checkid(targetcat):
     id_val = 0
     for i in range(0,len(templates)):
         try:
-            value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
+            value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0].strip()
             if value and id_val == 0:
                 id_val = value
             elif id_val != 0:
@@ -47,7 +47,7 @@ def checkid(targetcat):
             null = 1
             # print '1'
         try:
-            value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0]
+            value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0].strip()
             if value and id_val == 0:
                 id_val = value
             elif id_val != 0:
@@ -57,7 +57,7 @@ def checkid(targetcat):
             null = 2
             # print '2'
         try:
-            value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0]
+            value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0].strip()
             if value and id_val == 0:
                 id_val = value
             elif id_val != 0:
@@ -67,7 +67,7 @@ def checkid(targetcat):
             null = 3
             # print '3'
     print id_val
-    id_val = id_val.strip()
+
     query = 'SELECT ?item WHERE { ?item wdt:'+str(properties)+' ?id . FILTER (?id = "'+str(id_val)+'") . }'
     # print query
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
