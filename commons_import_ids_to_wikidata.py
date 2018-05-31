@@ -18,9 +18,9 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
-category = 'Category:HPIP with known IDs' #'Category:Listed buildings in England with known IDs'
-templates = ['HPIP']#['Listed building England', 'listed building England']
-properties = u'P5094'#['P1216', 'P1216']
+category = 'Category:Buildings of Madrid with COAM Register number' #'Category:Listed buildings in England with known IDs'
+templates = ['COAM']#['Listed building England', 'listed building England']
+properties = u'P2917'#['P1216', 'P1216']
 
 def checkid(targetcat):
     print targetcat
