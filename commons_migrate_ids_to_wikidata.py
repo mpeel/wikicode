@@ -116,7 +116,7 @@ def migratecat(targetcat):
     else:
         return 0
 
-template = pywikibot.Page(site, 'Template:'+templates[0])
+template = pywikibot.Page(commons, 'Template:'+templates[0])
 targetcats = template.embeddedin(namespaces='14')
 
 # Start the category walker
