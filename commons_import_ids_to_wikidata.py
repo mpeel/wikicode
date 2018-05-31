@@ -67,7 +67,7 @@ def checkid(targetcat):
             null = 3
             # print '3'
     print id_val
-
+    id_val = id_val.strip()
     query = 'SELECT ?item WHERE { ?item wdt:'+str(properties)+' ?id . FILTER (?id = "'+str(id_val)+'") . }'
     # print query
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
