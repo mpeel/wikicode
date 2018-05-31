@@ -18,15 +18,15 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = False
-# category = 'Category:HPIP with known IDs'
-# templates = ['HPIP']
-# properties = ['P5094']
-category = 'Category:Listed buildings in England with known IDs'
-templates = ['Listed building England', 'listed building England']
-properties = ['P1216', 'P1216']
-category = 'Category:Buildings of Madrid with COAM Register number'
-templates = ['COAM']
-properties = ['P2917']
+category = 'Category:HPIP with known IDs'
+templates = ['HPIP']
+properties = ['P5094']
+# category = 'Category:Listed buildings in England with known IDs'
+# templates = ['Listed building England', 'listed building England']
+# properties = ['P1216', 'P1216']
+# category = 'Category:Buildings of Madrid with COAM Register number'
+# templates = ['COAM']
+# properties = ['P2917']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Trim information provided through the Wikidata Infobox"
@@ -116,10 +116,13 @@ def migratecat(targetcat):
     else:
         return 0
 
+template = pywikibot.Page(site, 'Template:'+templates[0])
+targetcats = template.embeddedin(namespaces='14')
+
 # Start the category walker
-cat = pywikibot.Category(commons,category)
-nummodified += migratecat(cat)
-targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+# cat = pywikibot.Category(commons,category)
+# nummodified += migratecat(cat)
+# targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
 for targetcat in targetcats:
     print targetcat
