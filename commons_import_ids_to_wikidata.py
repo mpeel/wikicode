@@ -18,9 +18,9 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
-category = 'Category:HPIP with known IDs' #'Category:Listed buildings in England with known IDs'
-templates = ['HPIP']#['Listed building England', 'listed building England']
-properties = u'P5094'#['P1216', 'P1216']
+category = 'Category:Listed buildings in England with known IDs'
+templates = ['Listed building England', 'listed building England']
+properties = u'P1216'
 
 def checkid(targetcat):
     print targetcat
@@ -109,11 +109,13 @@ def checkid(targetcat):
     return 0
 
 
+template = pywikibot.Page(commons, 'Template:'+templates[0])
+targetcats = template.embeddedin(namespaces='14')
 
 # Start the category walker
-cat = pywikibot.Category(commons,category)
+# cat = pywikibot.Category(commons,category)
 # nummodified += checkid(cat)
-targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+# targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
 for targetcat in targetcats:
     # print targetcat
