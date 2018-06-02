@@ -18,10 +18,10 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
-category = 'Category:Listed buildings in Wales with known IDs'#'Category:Listed buildings in England with known IDs'
-templates = ['Listed building Wales', 'listed building Wales']#['Listed building England', 'listed building England']
-properties = ['P1459']#['P1216', 'P1216']
-shortname = 'CADW'
+category = 'Category:Cultural heritage monuments in Austria with known IDs'#'Category:Listed buildings in Wales with known IDs'#'Category:Listed buildings in England with known IDs'
+templates = ['Denkmalgeschütztes Objekt Österreich','denkmalgeschütztes Objekt Österreich', 'doo', 'Doo']#['Listed building Wales', 'listed building Wales']#['Listed building England', 'listed building England']
+properties = ['P2951']#['P1216', 'P1216']
+shortname = 'Austria ObjektID'
 
 def checkid(targetcat):
     # print targetcat
@@ -97,7 +97,7 @@ def checkid(targetcat):
                         print data
                         # text = raw_input("Save? ")
                         # if text == 'y':
-                        page.editEntity(data, summary=u'Add commons sitelink based on '+shortname+' ID')
+                        page.editEntity(data, summary=u'Add commons sitelink based on '+shortname+'')
                         return 1
                         # else:
                         #     return 0
