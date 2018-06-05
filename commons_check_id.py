@@ -21,10 +21,15 @@ manual = True
 #category = 'Category:Cultural heritage monuments in Austria with known IDs'#'Category:Listed buildings in Wales with known IDs'#'Category:Listed buildings in England with known IDs'
 #templates = ['Denkmalgeschütztes Objekt Österreich','denkmalgeschütztes Objekt Österreich', 'doo', 'Doo']#['Listed building Wales', 'listed building Wales']#['Listed building England', 'listed building England']
 #properties = ['P2951']#['P1216', 'P1216']
-category = 'Category:Rijksmonumenten with known IDs'
-templates = ['Rijksmonument','rijksmonument',]
-properties = ['P359']
-shortname = 'Rijksmonument ID'
+# category = 'Category:Rijksmonumenten with known IDs'
+# templates = ['Rijksmonument','rijksmonument',]
+# properties = ['P359']
+# shortname = 'Rijksmonument ID'
+category = 'Category:National Register of Historic Places with known IDs'
+templates = ['NRHP']
+properties = ['P649']
+shortname = 'NRHP ID'
+
 
 def checkid(targetcat):
     # print targetcat
