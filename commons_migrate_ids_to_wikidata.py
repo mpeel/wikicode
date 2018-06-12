@@ -27,7 +27,7 @@ properties = ['P5094']
 # category = 'Category:Buildings of Madrid with COAM Register number'
 # templates = ['COAM']
 # properties = ['P2917']
-others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
+others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en"]
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Trim information provided through the Wikidata Infobox"
 wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata"]
@@ -67,6 +67,8 @@ def migratecat(targetcat):
         target_text = target_text.replace("{{"+others[i]+"}}", "")
         target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + "}}", "")
         target_text = target_text.replace("{{" + others[i] + wd_item.title() + "}}", "")
+        target_text = target_text.replace("{{" + others[i] + "| }}", "")
+        target_text = target_text.replace("{{" + others[i] + " | }}", "")
 
     try:
         enwp_link = item_dict['sitelinks']['enwiki']
