@@ -103,6 +103,10 @@ def addtemplate(target):
                     # We have a Wikimedia category with no P301, skip it
                     print 'Wikimedia list page'
                     return 0
+                if 'Q4167410' in clm.getTarget().title():
+                    # We have a Wikimedia category with no P301, skip it
+                    print 'Wikimedia disambiguation page'
+                    return 0
         except:
             print 'P31 not found'
 
