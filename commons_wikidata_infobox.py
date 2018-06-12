@@ -25,12 +25,13 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
+random = False
 
 targetcats = ['Category:Places']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", "{{Artwork", "{{artwork", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera'] + catredirect_templates
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", "{{Artwork", "{{artwork", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai'] + catredirect_templates
 templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
@@ -164,47 +165,42 @@ def addtemplate(target):
             print "That didn't work!"
             return 0
 
+if random:
+    # Pick random categories
+    while nummodified < maxnum:
+        targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
+        for target in targets:
+            print target.title()
+            nummodified += addtemplate(target)
+            print nummodified
+            
+            if nummodified >= maxnum:
+                print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                break
+else:
+    numchecked = 0
+    catschecked = 0
 
-# # Pick random categories
-# while nummodified < maxnum:
-#     targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
-#     for target in targets:
-#         print target.title()
-#         nummodified += addtemplate(target)
-#         print nummodified
-        
-#         if nummodified >= maxnum:
-#             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-#             break
+    seen   = set(targetcats)
+    active = set(targetcats)
 
-# # Now on to the main part
-# # checkedcats = []
+    while active:
+        next_active = set()
+        for item in active:
+            cat = pywikibot.Category(commons,item)
+            nummodified += addtemplate(cat)
+            numchecked += 1
+            print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
 
-# exit()
-
-numchecked = 0
-catschecked = 0
-
-seen   = set(targetcats)
-active = set(targetcats)
-
-while active:
-    next_active = set()
-    for item in active:
-        cat = pywikibot.Category(commons,item)
-        nummodified += addtemplate(cat)
-        numchecked += 1
-        print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
-
-        # See if there are subcategories that we want to check in the future
-        for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
-            if result.title() not in seen:
-                seen.add(result.title())
-                next_active.add(result.title())
-    active = next_active
-    if nummodified >= maxnum:
-        print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-        break
+            # See if there are subcategories that we want to check in the future
+            for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
+                if result.title() not in seen:
+                    seen.add(result.title())
+                    next_active.add(result.title())
+        active = next_active
+        if nummodified >= maxnum:
+            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            break
 
 # for targetcat in targetcats:
 #     cat = pywikibot.Category(commons,targetcat)
