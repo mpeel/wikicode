@@ -13,10 +13,10 @@ from pywikibot import pagegenerators
 import urllib
 import csv
 
-maxnum = 47
+maxnum = 100000
 nummodified = 0
 stepsize =  1000
-maximum = 2000
+maximum = 1000000
 numsteps = int(maximum / stepsize)
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
@@ -25,7 +25,7 @@ commons = pywikibot.Site('commons', 'commons')
 debug = 1
 
 # Read in the family names database
-with open('populate_family_names_cache_test.csv', mode='r') as infile:
+with open('populate_family_names_cache.csv', mode='r') as infile:
     reader = csv.reader(infile)
     with open('coors_new.csv', mode='w') as outfile:
         writer = csv.writer(outfile)
