@@ -18,9 +18,12 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = False
-category = 'Category:HPIP with known IDs'
-templates = ['HPIP']
-properties = ['P5094']
+category = 'Category:World Heritage Sites by name'
+templates = ['World Heritage Site']
+properties = ['P757']
+# category = 'Category:HPIP with known IDs'
+# templates = ['HPIP']
+# properties = ['P5094']
 # category = 'Category:Listed buildings in England with known IDs'
 # templates = ['Listed building England', 'listed building England']
 # properties = ['P1216', 'P1216']
@@ -58,6 +61,19 @@ def migratecat(targetcat):
             for clm in ID:
                 if count == 0:
                     target_text = target_text.replace("{{" + templates[i] + "|" + clm.getTarget() + "}}", "")
+                count += 1
+        except:
+            continue
+    for i in range(0,len(properties)):
+        try:
+            ID = item_dict['claims'][properties[i]]
+            enwp_link = item_dict['sitelinks']['enwiki']
+            enwp_link2 = enwp_link[0].lower() + enwp_link[1:]
+            for clm in ID:
+                if count == 0:
+                    target_text = target_text.replace("{{" + templates[i] + "|" + clm.getTarget() + "|"+enwp_link
+                        +"}}", "")
+                    target_text = target_text.replace("{{" + templates[i] + "|" + clm.getTarget() + "|"+enwp_link2+"}}", "")
                 count += 1
         except:
             continue
