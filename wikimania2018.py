@@ -2,10 +2,7 @@
 # -*- coding: utf-8  -*-
 # 
 # Script to fetch Guardian obit RSS feed, and cross-compare with Wikidata
-# Mike Peel    26 Feb 2017    Started
-# Mike Peel    18 Mar 2017    Bug fixes (catch more titles in nameattempt, unicode issue)
-# Mike Peel    14 Apr 2017    Tweaks (split on ':')
-# Mike Peel     2 Jul 2017    Bug fix (catch blank nameattempt)
+# Mike Peel    13 Jun 2018    Started
 import datetime
 import pywikibot
 import sys
