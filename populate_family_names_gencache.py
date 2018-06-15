@@ -14,7 +14,7 @@ import urllib
 from pywikibot.data.sparql import SparqlQuery
 import codecs
 stepsize =  1000
-maximum = 500000
+maximum = 5000000
 numsteps = int(maximum / stepsize)
 outputfile = codecs.open('populate_family_names_cache.csv', "w", "utf-8")
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
@@ -24,11 +24,14 @@ debug = 1
 for i in range(0,numsteps):
     print 'Starting at ' + str(i*stepsize)
 
-    query = 'SELECT ?item ?itemLabel WHERE {\n'\
-    '  ?item wdt:P31 wd:Q101352 .\n'\
-    'SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". } . \n'\
-    '}  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize)
-    print query
+    query = 'SELECT ?item ?itemLabel WITH {\n'\
+    '  SELECT DISTINCT ?item WHERE {\n'\
+    '    ?item wdt:P31 wd:Q101352 .\n'\
+    '  } OFFSET ' + str(i*stepsize) + ' LIMIT ' + str(stepsize) + ' \n'\
+    '} AS %s WHERE {\n'\
+    '  INCLUDE %s .\n'\
+    '  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en" }\n'\
+    '}'
 
     sq = SparqlQuery()
     queryresult = sq.query(query)
