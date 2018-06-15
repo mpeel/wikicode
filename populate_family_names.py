@@ -92,6 +92,8 @@ for i in range(0,numsteps):
                 if len(familyname_attempt) < 4:
                     print 'Name too short - not attempting this one!'
                     continue
+                if "Saint" in familyname_attempt:
+                    "Avoiding Saint"
 
                 print new_qid
                 stringclaim = pywikibot.Claim(repo, 'P734')
