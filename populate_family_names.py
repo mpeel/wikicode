@@ -102,7 +102,10 @@ for i in range(0,numsteps):
                 print stringclaim
                 # text = raw_input("Save? ")
                 # if text == 'y':
-                page.addClaim(stringclaim, summary=u'Adding family name based on the label minus P735')
+                try:
+                    page.addClaim(stringclaim, summary=u'Adding family name based on the label minus P735')
+                except:
+                    print "That didn't work!"
                 nummodified += 1
                 print nummodified
             else:
