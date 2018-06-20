@@ -11,7 +11,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 10000
+maxnum = 10
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
