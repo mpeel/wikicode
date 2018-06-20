@@ -56,6 +56,8 @@ def migratecat(targetcat):
     for i in range(0,len(others)):
         target_text = target_text.replace("{{"+others[i]+"}}", "")
         target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + "}}", "")
+        target_text = target_text.replace("{{" + others[i] + "|Wikidata=" + wd_item.title() + "}}", "")
+        target_text = target_text.replace("{{" + others[i] + "|wikidata=" + wd_item.title() + "}}", "")
         target_text = target_text.replace("{{" + others[i] + wd_item.title() + "}}", "")
         target_text = target_text.replace("{{" + others[i] + "| }}", "")
         target_text = target_text.replace("{{" + others[i] + " | }}", "")
