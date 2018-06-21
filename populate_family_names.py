@@ -13,10 +13,10 @@ from pywikibot import pagegenerators
 import urllib
 import csv
 
-maxnum = 100000
+maxnum = 1000000
 nummodified = 0
 stepsize =  1000
-maximum = 1000000
+maximum = 50000000
 numsteps = int(maximum / stepsize)
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
@@ -32,7 +32,7 @@ with open('populate_family_names_cache.csv', mode='r') as infile:
         names = {rows[1]:rows[0] for rows in reader}
 # print names
 
-for i in range(0,numsteps):
+for i in range(220,numsteps):
     print 'Starting at ' + str(i*stepsize)
 
     query = 'SELECT ?item ?givenname ?commonscat WHERE {\n'\
