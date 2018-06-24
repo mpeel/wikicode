@@ -53,7 +53,7 @@ for i in range(0,numsteps):
     '    MINUS {?item wdt:P734 ?familyname.}\n'\
     '}'
     print query
-    exit()
+    # exit()
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
     for page in generator:
         try:
