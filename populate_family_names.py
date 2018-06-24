@@ -15,8 +15,8 @@ import csv
 
 maxnum = 1000000
 nummodified = 0
-stepsize =  1000
-maximum = 50000000
+stepsize =  10000
+maximum = 10000000
 numsteps = int(maximum / stepsize)
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
@@ -32,16 +32,28 @@ with open('populate_family_names_cache.csv', mode='r') as infile:
         names = {rows[1]:rows[0] for rows in reader}
 # print names
 
-for i in range(220,numsteps):
+for i in range(0,numsteps):
     print 'Starting at ' + str(i*stepsize)
 
-    query = 'SELECT ?item ?givenname ?commonscat WHERE {\n'\
-    '  ?item wdt:P31 wd:Q5 .\n'\
-    '  ?item wdt:P735 ?givenname .\n'\
-    '  MINUS {?item wdt:P734 ?familyname.}\n'\
-    '}  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize)
-    print query
+    # query = 'SELECT ?item WHERE {\n'\
+    # '  ?item wdt:P31 wd:Q5 .\n'\
+    # '  ?item wdt:P735 ?givenname .\n'\
+    # '  MINUS {?item wdt:P734 ?familyname.}\n'\
+    # '}  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize)
 
+    query = 'SELECT ?item\n'\
+    'WITH {\n'\
+    '   SELECT ?item WHERE {\n'\
+    '       ?item wdt:P31 wd:Q5 .\n'\
+    '  }  LIMIT ' + str(stepsize) + ' OFFSET ' + str(i*stepsize) + '\n'\
+    '} AS %humans \n'\
+    'WHERE {\n'\
+    '    INCLUDE %humans .\n'\
+    '    FILTER EXISTS {?item wdt:P735 ?givenname.}.\n'\
+    '    MINUS {?item wdt:P734 ?familyname.}\n'\
+    '}'
+    print query
+    exit()
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
     for page in generator:
         try:
