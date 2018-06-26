@@ -211,7 +211,7 @@ elif usequery:
         '  ?cat wdt:P971 ?item .\n'\
         '  ?item wdt:P373 ?itemCat .\n'\
         '} GROUP BY ?item ?itemCat \n'\
-        'ORDER BY DESC (?count) LIMIT 10'
+        'ORDER BY DESC (?count)'
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
     for page in generator:
         try:
