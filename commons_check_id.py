@@ -42,11 +42,11 @@ shortname = 'Mérimée ID'
 
 
 def checkid(targetcat):
-    # print targetcat
+    print targetcat
     # print target_text
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
-        print targetcat + "is already on Wikidata"
+        # print targetcat + "is already on Wikidata"
     except:
         print "No Wikidata sitelink found"
         target_text = targetcat.get()
