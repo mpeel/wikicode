@@ -28,6 +28,7 @@ debug = 1
 manual = False
 random = False
 usequery = True
+useimport = 'import.csv'
 newstyle = False
 database = True
 
@@ -206,6 +207,16 @@ if random:
             if nummodified >= maxnum:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
                 break
+elif useimport:
+    with open(useimport, mode='r') as infile:
+        reader = csv.reader(infile)
+        targets = {rows[0] for rows in reader}
+    for target in targets:
+        cat = pywikibot.Category(commons,target)
+        if cat.title() not in existing_uses:
+            nummodified += addtemplate(cat)
+        else:
+            print 'Already in database'
 elif usequery:
     query = 'SELECT (COUNT(DISTINCT ?cat) AS ?count) ?item ?itemCat WHERE {\n'\
         '  ?cat wdt:P971 ?item .\n'\
