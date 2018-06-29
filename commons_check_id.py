@@ -25,10 +25,20 @@ manual = True
 # templates = ['Rijksmonument','rijksmonument',]
 # properties = ['P359']
 # shortname = 'Rijksmonument ID'
-category = 'Category:National Register of Historic Places with known IDs'
-templates = ['NRHP']
-properties = ['P649']
-shortname = 'NRHP ID'
+# category = 'Category:National Register of Historic Places with known IDs'
+# templates = ['NRHP']
+# properties = ['P649']
+# shortname = 'NRHP ID'
+# category = 'Category:National Register of Historic Places with known IDs'
+# templates = ['Zabytek nieruchomy', 'zabytek nieruchomy']
+# properties = ['P649']
+# shortname = 'NRHP ID'
+category = 'Category:Base Mérimée'
+templates = ['Mérimée', 'Merimee']
+properties = ['P380']
+shortname = 'Mérimée ID'
+
+
 
 
 def checkid(targetcat):
@@ -49,6 +59,21 @@ def checkid(targetcat):
             # except:
             #     null = 1
                 # print '1'
+            # Special for Mirimee
+            try:
+                value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
+                print value
+                values = (value.split("|"))
+                if "type" not in values[0]:
+                    value = values[0]
+                if "type" not in values[1]:
+                    value = values[1]
+                print value
+                if value and id_val == 0:
+                    id_val = value
+            except:
+                null = 1
+
             try:
                 value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0]
                 if value and id_val == 0:
@@ -71,7 +96,7 @@ def checkid(targetcat):
                 null = 1
                 # print '1'
         print id_val
-
+        # exit()
         if id_val != 0:
             try:
                 query = 'SELECT ?item WHERE { ?item wdt:'+str(properties[0])+' ?id . FILTER (?id = "'+str(id_val)+'") . } LIMIT 10'
