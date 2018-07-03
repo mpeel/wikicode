@@ -16,7 +16,7 @@ import urllib
 maxnum = 100000
 nummodified = 0
 reportpage = 'User:Mike Peel/Commons redirects with Wikidata items'
-skipto = 'Category:Augustinerkirche in Korneuburg'
+skipto = 'Category:Austrobaileyaceae'
 trap = 1
 
 commons = pywikibot.Site('commons', 'commons')
@@ -38,6 +38,7 @@ for targetcat in targetcats:
         if trap == 1:
             if target.title() == skipto:
                 trap = 0
+                continue
             else:
                 print target.title()
                 continue
@@ -76,7 +77,7 @@ for targetcat in targetcats:
                     except:
                         print "That didn't work!"
                         report_text = report.get()
-                        report.text = report_text + "* [[:"+target.title()+"]] -> [[:Category:"+redirect+"]]\n"
+                        report.text = report_text + "\n* [[:"+target.title()+"]] -> [[:Category:"+redirect+"]]\n"
                         report.save('+1')
             
         if nummodified >= maxnum:
