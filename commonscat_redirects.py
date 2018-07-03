@@ -19,14 +19,14 @@ reportpage = 'User:Mike Peel/Commons redirects with Wikidata items'
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-report = pywikibot.Page(site, reportpage)
+report = pywikibot.Page(commons, reportpage)
 report.text = ''
 report.save('Blanking to restart logging')
 debug = 1
 
-targetcats = ['Category:Acidonia','Category:Redirects connected to a Wikidata item', 'Category:Category redirects']
+targetcats = ['Category:Redirects connected to a Wikidata item', 'Category:Category redirects']
 
-catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
+catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect", "Monotypic taxon category redirect"]
 
 for targetcat in targetcats:
     print targetcat
@@ -47,12 +47,15 @@ for targetcat in targetcats:
                 for option in catredirect_templates:
                     if "{{" + option in target.text:
                         try:
-                            redirect = (target.text.split("{{" + option + "|"))[1].split("}}").split("|")[0]
+                            redirect = (target.text.split("{{" + option + "|"))[1].split("}}")[0].split("|")[0]
                         except:
                             try:
-                                redirect = (target.text.split("{{" + option + " |"))[1].split("}}").split("|")[0]
+                                redirect = (target.text.split("{{" + option + " |"))[1].split("}}")[0].split("|")[0]
                             except:
-                                print 'Wikitext parsing bug!'
+                                try:
+                                    redirect = (target.text.split(option + " |"))[1].split("}}")[0].split("|")[0]
+                                except:
+                                    print 'Wikitext parsing bug!'
                         redirect = redirect.replace(u":Category:","")
                         redirect = redirect.replace(u"Category:","")
                 if redirect:
@@ -65,9 +68,9 @@ for targetcat in targetcats:
                     except:
                         print "That didn't work!"
                         report_text = report.get()
-                        report.text = report_text + "[[:"+target.title()+"]] -> [[:"+redirect+"]]"
+                        report.text = report_text + "[[:"+target.title()+"]] -> [[:Category:"+redirect+"]]"
                         report.save('+1')
-
+            exit()
 
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
