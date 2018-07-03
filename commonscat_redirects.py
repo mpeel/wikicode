@@ -70,8 +70,7 @@ for targetcat in targetcats:
                         report_text = report.get()
                         report.text = report_text + "[[:"+target.title()+"]] -> [[:Category:"+redirect+"]]"
                         report.save('+1')
-            exit()
-
+            
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             exit()
