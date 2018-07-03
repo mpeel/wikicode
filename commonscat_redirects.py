@@ -16,19 +16,27 @@ import urllib
 maxnum = 100000
 nummodified = 0
 reportpage = 'User:Mike Peel/Commons redirects with Wikidata items'
+skipto = 'Category:Augustinerkirche in Korneuburg'
+trap = 1
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 report = pywikibot.Page(commons, reportpage)
-report.text = ''
-report.save('Blanking to restart logging')
+if trap != 1:
+    report.text = ''
+    report.save('Blanking to restart logging')
 debug = 1
 
 targetcats = ['Category:Redirects connected to a Wikidata item', 'Category:Category redirects']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect", "Monotypic taxon category redirect"]
-
 for targetcat in targetcats:
+    if trap == 1:
+        if target.title() == skipto:
+            trap = 0
+        else:
+            print target.title()
+            continue
     print targetcat
     cat = pywikibot.Category(commons,targetcat)
     targets = cat.members(recurse=False);
@@ -68,7 +76,7 @@ for targetcat in targetcats:
                     except:
                         print "That didn't work!"
                         report_text = report.get()
-                        report.text = report_text + "[[:"+target.title()+"]] -> [[:Category:"+redirect+"]]"
+                        report.text = report_text + "* [[:"+target.title()+"]] -> [[:Category:"+redirect+"]]\n"
                         report.save('+1')
             
         if nummodified >= maxnum:
