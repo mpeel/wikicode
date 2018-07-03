@@ -31,16 +31,16 @@ targetcats = ['Category:Redirects connected to a Wikidata item', 'Category:Categ
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect", "Monotypic taxon category redirect"]
 for targetcat in targetcats:
-    if trap == 1:
-        if target.title() == skipto:
-            trap = 0
-        else:
-            print target.title()
-            continue
     print targetcat
     cat = pywikibot.Category(commons,targetcat)
     targets = cat.members(recurse=False);
     for target in targets:
+        if trap == 1:
+            if target.title() == skipto:
+                trap = 0
+            else:
+                print target.title()
+                continue
         if 'Category:' in target.title():
             redirect = ''
             try:
