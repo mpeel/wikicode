@@ -11,6 +11,8 @@ import csv
 import numpy as np
 import datetime
 
+exit()
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
@@ -85,17 +87,18 @@ infile = open('/Users/mpeel/Desktop/Wikimania/Conference Program-Entire Schedule
 reader = csv.reader(infile)
 
 i = 0
-page = pywikibot.Page(site, u"User:Mike Peel/Test")
-text = '__NOTOC__'
+# page = pywikibot.Page(site, u"User:Mike Peel/Test")
+# text = '__NOTOC__'
 for row in reader:
     i+=1
     if i < 2:
         continue
     # print row
-    # page = pywikibot.Page(site, u"Program/" + row[0])
-    #text = ''
+    title = row[0].replace('[','- ').replace(']','').strip()
+    page = pywikibot.Page(site, u"Program/" + title)
+    text = ''
     text += "{{Session\n"
-    text += "| title = " + row[0] + "\n"
+    text += "| title = " + title + "\n"
     text += "| slides = Placeholder.png\n"
     if 'Workshop' in row[10]:
         text += "| workshop=yes\n"
@@ -176,12 +179,12 @@ for row in reader:
     text += "==Signup==\n"
     text += "* <add your username here if you are interested in attending>\n"
 
-    text += '</div><br style="clear:both;" />\n\n'
-    # page.text = text
-    # page.save(u"Test edit")
+    # text += '</div><br style="clear:both;" />\n\n'
+    page.text = text
+    page.save(u"Creating session page")
 
-print text
-page.text = text
-page.save(u"Test edit")
+# print text
+# page.text = text
+# page.save(u"Test edit")
 
 
