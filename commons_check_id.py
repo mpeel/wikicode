@@ -33,13 +33,14 @@ manual = True
 # templates = ['Zabytek nieruchomy', 'zabytek nieruchomy']
 # properties = ['P649']
 # shortname = 'NRHP ID'
-category = 'Category:Mérimée ID without linked Wikidata'#'Category:Base Mérimée'
-templates = ['Mérimée', 'Merimee','mérimée', 'merimee']
-properties = ['P380']
-shortname = 'Mérimée ID'
-
-
-
+# category = 'Category:Mérimée ID without linked Wikidata'#'Category:Base Mérimée'
+# templates = ['Mérimée', 'Merimee','mérimée', 'merimee']
+# properties = ['P380']
+# shortname = 'Mérimée ID'
+category = 'Category:Protected areas with known WDPA-ID'#'Category:Base Mérimée'
+templates = ['WDPA']
+properties = ['P809']
+shortname = 'WDPA ID'
 
 def checkid(targetcat):
     print targetcat
