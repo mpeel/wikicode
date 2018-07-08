@@ -17,13 +17,16 @@ nummodified = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
-manual = False
-category = 'Category:World Heritage Sites by name'
-templates = ['World Heritage Site']
-properties = ['P757']
+manual = True
+# category = 'Category:World Heritage Sites by name'
+# templates = ['World Heritage Site']
+# properties = ['P757']
 # category = 'Category:HPIP with known IDs'
 # templates = ['HPIP']
 # properties = ['P5094']
+category = 'Category:Protected areas with known WDPA-ID'
+templates = ['WDPA']
+properties = ['P809']
 # category = 'Category:Listed buildings in England with known IDs'
 # templates = ['Listed building England', 'listed building England']
 # properties = ['P1216', 'P1216']
@@ -52,6 +55,15 @@ def migratecat(targetcat):
     except:
         print 'No Wikidata ID'
         return 0
+
+    # Or in the main topic
+    try:
+        p301 = target_dict['claims']['P301']
+        for clm2 in p301:
+            wd_item = clm2.getTarget()
+            item_dict = wd_item.get()
+    except:
+        null = 1
 
     # Look for replacements
     count = 0
