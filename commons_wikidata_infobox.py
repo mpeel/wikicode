@@ -28,6 +28,7 @@ debug = 1
 manual = False
 random = False
 usequery = True
+usequarry = 'quarry.csv'
 useimport = 'import.csv'
 newstyle = False
 database = True
@@ -207,6 +208,17 @@ if random:
             if nummodified >= maxnum:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
                 break
+elif usequarry:
+    with open(usequarry, mode='r') as infile:
+        reader = csv.reader(infile)
+        targets = {rows[1] for rows in reader}
+    for target in targets:
+        print target
+        cat = pywikibot.Category(commons,'Category:'+target)
+        if cat.title() not in existing_uses:
+            nummodified += addtemplate(cat)
+        else:
+            print 'Already in database'
 elif useimport:
     with open(useimport, mode='r') as infile:
         reader = csv.reader(infile)
