@@ -21,9 +21,12 @@ manual = True
 # category = 'Category:Listed buildings in England with known IDs'
 # templates = ['Listed building England', 'listed building England']
 # properties = u'P1216'
-category = 'Protected areas with known WDPA-ID'
-templates = ['WDPA']
-properties = u'P809'
+# category = 'Protected areas with known WDPA-ID'
+# templates = ['WDPA']
+# properties = u'P809'
+templates = ['South African Heritage Site']
+properties = u'P3759'
+toremove = ['/', '|']
 
 def checkid(targetcat):
     print targetcat
@@ -33,42 +36,67 @@ def checkid(targetcat):
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
         item_dict = wd_item.get()
+        print wd_item.title()
+
+        try:
+            existing_id = item_dict['claims']['P301']
+            print 'P301 exists, following that.'
+            for clm2 in existing_id:
+                wd_item = clm2.getTarget()
+                item_dict = wd_item.get()
+                print wd_item.title()
+        except:
+            null = 0
     except:
         print "No Wikidata sitelink found"
         return 0
 
     id_val = 0
     for i in range(0,len(templates)):
+        # Special for SAHRA
         try:
-            value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0].strip()
+            value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
+            print value
+            values = (value.split("|"))
+            value = values[0]
+            print value
             if value and id_val == 0:
                 id_val = value
-            elif id_val != 0:
-                print 'Found multiple IDs, aborting'
-                return 0
         except:
             null = 1
-            # print '1'
-        try:
-            value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0].strip()
-            if value and id_val == 0:
-                id_val = value
-            elif id_val != 0:
-                print 'Found multiple IDs, aborting'
-                return 0
-        except:
-            null = 2
-            # print '2'
-        try:
-            value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0].strip()
-            if value and id_val == 0:
-                id_val = value
-            elif id_val != 0:
-                print 'Found multiple IDs, aborting'
-                return 0
-        except:
-            null = 3
-            # print '3'
+            try:
+                value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0].strip()
+                if value and id_val == 0:
+                    id_val = value
+                elif id_val != 0:
+                    print 'Found multiple IDs, aborting'
+                    return 0
+            except:
+                null = 1
+                # print '1'
+            try:
+                value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0].strip()
+                if value and id_val == 0:
+                    id_val = value
+                elif id_val != 0:
+                    print 'Found multiple IDs, aborting'
+                    return 0
+            except:
+                null = 2
+                # print '2'
+            try:
+                value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0].strip()
+                if value and id_val == 0:
+                    id_val = value
+                elif id_val != 0:
+                    print 'Found multiple IDs, aborting'
+                    return 0
+            except:
+                null = 3
+                # print '3'
+    print id_val
+    for i in range(0,len(toremove)):
+        id_val = id_val.replace(toremove[i], '')
     print id_val
 
     query = 'SELECT ?item WHERE { ?item wdt:'+str(properties)+' ?id . FILTER (?id = "'+str(id_val)+'") . }'
@@ -79,12 +107,6 @@ def checkid(targetcat):
         page = testpage
         count+=1
     if count == 0 and id_val != 0:
-        try:
-            existing_id = item_dict['claims']['P301']
-            print 'P301 exists, aborting'
-            return 0
-        except:
-            null = 0
         try:
             existing_id = item_dict['claims'][properties]
         except:
@@ -99,7 +121,7 @@ def checkid(targetcat):
             print stringclaim
             # text = raw_input("Save? ")
             # if text == 'y':
-            wd_item.addClaim(stringclaim, summary=u'Copying ID value from Commons')
+            wd_item.addClaim(stringclaim, summary=u'Copying ' + templates[0] + ' ID value from Commons')
             return 1
             # else:
             #     return 0
