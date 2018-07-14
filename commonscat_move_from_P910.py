@@ -99,6 +99,7 @@ for page in generator:
             print data
             # text = raw_input("Save? ")
             # if text == 'y':
+            print 'Saving!'
             page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item (' + str(wd_id) + ')')
             val.editEntity(data, summary=u'Moving commons category sitelink from main item (' + str(qid) + ')')
             nummodified += 1
