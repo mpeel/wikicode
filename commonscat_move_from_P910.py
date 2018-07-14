@@ -12,7 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 10
+maxnum = 1000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
@@ -34,8 +34,12 @@ for page in generator:
     item_dict = page.get()
     qid = page.title()
     print "\n" + qid
-    sitelink = item_dict['sitelinks']['commonswiki']
-    print sitelink
+    try:
+        sitelink = item_dict['sitelinks']['commonswiki']
+        print sitelink
+    except:
+        print 'No sitelink found in main item! Skipping!'
+        continue
     # Get the value for P910
     try:
         p910 = item_dict['claims']['P910']
@@ -93,11 +97,11 @@ for page in generator:
         data = {'sitelinks': [{'site': 'commonswiki', 'title': sitelink}]}
         try:
             print data
-            text = raw_input("Save? ")
-            if text == 'y':
-                page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item (' + str(wd_id) + ')')
-                val.editEntity(data, summary=u'Moving commons category sitelink from main item (' + str(qid) + ')')
-                nummodified += 1
+            # text = raw_input("Save? ")
+            # if text == 'y':
+            page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item (' + str(wd_id) + ')')
+            val.editEntity(data, summary=u'Moving commons category sitelink from main item (' + str(qid) + ')')
+            nummodified += 1
         except:
             print 'Edit failed!'
 
@@ -106,9 +110,12 @@ for page in generator:
             label = val.labels['en']
             print label
         except:
-            text = raw_input("Save? ")
-            if text == 'y':
+            # text = raw_input("Save? ")
+            # if text == 'y':
+            try:
                 val.editLabels(labels={'en': sitelink}, summary=u'Add en label to match Commons sitelink')
+            except:
+                print 'Unable to save label edit on Wikidata!'
 
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
