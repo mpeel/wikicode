@@ -28,7 +28,7 @@ debug = 1
 manual = False
 random = False
 usequery = True
-usequarry = 'quarry.csv'
+usequarry = 'quarry3.csv'
 useimport = 'import.csv'
 newstyle = False
 database = True
@@ -195,6 +195,7 @@ def addtemplate(target):
 
 nummodified = 0
 numchecked = 0
+test = 0
 if random:
     # Pick random categories
     while nummodified < maxnum:
@@ -213,6 +214,10 @@ elif usequarry:
         reader = csv.reader(infile)
         targets = {rows[1] for rows in reader}
     for target in targets:
+        if test == 0 and 'Toyota JPN' not in target:
+            continue
+        else:
+            test = 1
         print target
         cat = pywikibot.Category(commons,'Category:'+target)
         if cat.title() not in existing_uses:
