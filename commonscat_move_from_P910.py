@@ -18,10 +18,10 @@ nummodified = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-debug = 0
+debug = 1
 query = 'SELECT ?item ?categoryitem ?commonscategory WHERE { ?item wdt:P910 ?categoryitem . ?commonscategory schema:about ?item . ?commonscategory schema:isPartOf <https://commons.wikimedia.org/> . FILTER REGEX(STR(?commonscategory), "https://commons.wikimedia.org/wiki/Category:") . }'
 if debug:
-    query = query + " LIMIT 100"
+    query = query + " LIMIT 10000"
 
 print query
 
