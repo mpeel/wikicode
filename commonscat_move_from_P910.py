@@ -80,8 +80,22 @@ for i in range(0,numsteps):
             except:
                 print 'Unable to get target!'
                 continue
-
             print wd_id
+
+            try:
+                p31 = target_dict['claims']['P31']
+                print p31
+            except:
+                print 'No P31 in target - skipping!'
+                continue
+            test_p31 = 0
+            for clm in p31:
+                if 'Q4167836' in clm.getTarget().title():
+                    test_p31 = 1
+            if test_p31 != 1:
+                print 'Target is not a category item - skipping!'
+                continue
+                
             try:
                 sitelink = target_dict['sitelinks']['commonswiki']
                 print sitelink
