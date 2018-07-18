@@ -32,7 +32,7 @@ with open('populate_family_names_cache.csv', mode='r') as infile:
         names = {rows[1]:rows[0] for rows in reader}
 # print names
 
-for i in range(0,numsteps):
+for i in range(200,numsteps):
     print 'Starting at ' + str(i*stepsize)
 
     # query = 'SELECT ?item WHERE {\n'\
@@ -108,6 +108,53 @@ for i in range(0,numsteps):
                     print "Avoiding Saint"
                     continue
 
+                # Double-check the native names
+                nativename = ''
+                nativelang = ''
+                try:
+                    print 'Hello!'
+                    nativename_item = item_dict['claims']['P1559']
+                    count = 0
+                    for clm in nativename_item:
+                        if count == 0:
+                            # print clm
+                            val = clm.getTarget()
+                            print val
+                            nativename = val.text
+                            nativelang = val.language
+                            count += 1
+                except:
+                    print 'Native name not found!'
+                if nativename != '' and nativelang != 'en':
+                    print 'Hello again!'
+                    familynativename = ''
+                    try:
+                        familyname_item = pywikibot.ItemPage(repo, new_qid)
+                        familyname_item_dict = familyname_q.get()
+                        familyname_native = familyname_item_dict['claims']['P1705']
+                        count = 0
+                        for clm in familyname_native:
+                            if count == 0:
+                                # print clm
+                                val = clm.getTarget()
+                                print val
+                                familynativename = val.text
+                                familynativelang = val.language
+                                count += 1
+                    except:
+                        print 'Family name has no native name'
+                    if familynativename != '' and nativename != '':
+                        if familynativename not in name:
+                            print 'Family native name not in name'
+                            text = raw_input("Pay attention. ")
+                            if familynativename not in nativename:
+                                print 'Family native name not in native name!'
+                                text = raw_input("Save? ")
+                                continue
+                            else:
+                                print '... but it is in the native name.'
+
+                # OK, if we're here then we're probably good to go.
                 print new_qid
                 stringclaim = pywikibot.Claim(repo, 'P734')
                 stringclaim.setTarget(pywikibot.ItemPage(repo, new_qid))
