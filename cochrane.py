@@ -60,13 +60,17 @@ for regex in regexes:
     gen = pagegenerators.PreloadingGenerator(generator)
 
     for page in gen:
+        if i > 2:
+            exit()
         # print checkedpages
         # print page
+        page = pywikibot.Page(site, "Alzheimer's disease")
         i += 1
         try:
             text = page.get()
         except:
             continue
+        print text
         pmids = re.findall(r'\|\s*?pmid\s*?\=\s*?(\d+?)\s*?\|', text)
         print len(pmids)
         for pmid in pmids:
@@ -77,8 +81,10 @@ for regex in regexes:
                     res = r.text
                 except:
                     continue
-                if 'WITHDRAWN' in res and re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res):
+                # if 'WITHDRAWN' in res and re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res):
+                if re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res):
                     pm = re.findall(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/(\d+?)"', res)[0]
+                    print pm
                     checkedpages[str(pmid)] = pm
                     # Check to make sure that the new paper doesn't also have an updated version...
                     try:
@@ -105,7 +111,7 @@ for regex in regexes:
                     checkedpages[str(pmid)] = 0
             else:
                 print 'using cache for ' + str(pmid)
-
+            print checkedpages[str(pmid)]
             if checkedpages[str(pmid)] != 0:
                 if '<!-- No update needed: ' + str(pmid) + ' -->' not in text:
                     up = u'{{Update inline|reason=Updated version https://www.ncbi.nlm.nih.gov/pubmed/' + checkedpages[str(pmid)]
@@ -113,7 +119,6 @@ for regex in regexes:
                         text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\< *?\/ *?ref *?\>)' % pmid,ur'\1%s}}' % (up+str(datestr)), text, re.DOTALL)
                     if debug == False:
                         update_report(page, pmid, checkedpages[str(pmid)])
-
         if text != page.text and debug == False:
             page.text = text
             page.save(u'Adding "update inline" template for Cochrane reference')
