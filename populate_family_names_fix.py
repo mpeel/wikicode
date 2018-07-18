@@ -20,7 +20,7 @@ maximum = 10000000
 numsteps = int(maximum / stepsize)
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
-    repo = wikidata_site.data_repository()  # this is a DataSite object
+repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 debug = 1
 
