@@ -10,7 +10,7 @@ debug = False
 maxnum = 500
 
 def update_report(page, old_pmid, new_pmid, ):
-    report = pywikibot.Page(site, 'Wikipedia:WikiProject Medicine/Cochrane update/August 2017')
+    report = pywikibot.Page(site, 'Wikipedia:WikiProject_Medicine/Cochrane_update')
     report_text = report.get()
     rep = u'\n*Article [[%s]] ([{{fullurl:%s|action=edit}} edit]) old review [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s] new review [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s]' % (page.title(), page.title(),old_pmid, old_pmid, new_pmid, new_pmid)
     if rep in report_text:
@@ -19,7 +19,7 @@ def update_report(page, old_pmid, new_pmid, ):
     report.save('Update report to include ' + page.title())
 
 checkedpages = {}
-reportpage = 'Wikipedia:WikiProject Medicine/Cochrane update/August 2017'
+reportpage = 'Wikipedia:WikiProject_Medicine/Cochrane_update'
 
 site = pywikibot.Site('en', 'wikipedia')
 
@@ -27,7 +27,7 @@ site = pywikibot.Site('en', 'wikipedia')
 report = pywikibot.Page(site, reportpage)
 report_text = report.get()
 report_text = report_text.splitlines()
-archive = pywikibot.Page(site, reportpage+"/Archive")
+archive = pywikibot.Page(site, reportpage+"/Archive_1")
 archive_text = archive.get()
 report_text_new = ''
 # print report_text
