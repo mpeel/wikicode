@@ -60,17 +60,14 @@ for regex in regexes:
     gen = pagegenerators.PreloadingGenerator(generator)
 
     for page in gen:
-        if i > 2:
-            exit()
         # print checkedpages
         # print page
-        page = pywikibot.Page(site, "Alzheimer's disease")
+        # page = pywikibot.Page(site, "Alzheimer's disease")
         i += 1
         try:
             text = page.get()
         except:
             continue
-        print text
         pmids = re.findall(r'\|\s*?pmid\s*?\=\s*?(\d+?)\s*?\|', text)
         print len(pmids)
         for pmid in pmids:
