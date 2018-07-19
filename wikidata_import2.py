@@ -51,29 +51,30 @@ for targetcat in targetcats:
         null = 0
 
     print id_val
-    try:
-        candidate_item = pywikibot.ItemPage(repo, id_val)
-        candidate_item_dict = candidate_item.get()
-    except:
-        print 'Huh - no page found'
-    try:
-        sitelink = candidate_item_dict['sitelinks']['commonswiki']
-    except:
-        # No existing sitelink found, add the new one
-        data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
+    if id_val != 0:
         try:
-            print "\n\n"
-            print id_val
-            prettyPrint(candidate_item_dict)
-            print data
-            # text = raw_input("Save? ")
-            # if text == 'y':
-            candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
-            # continue
-            # else:
-            # continue
+            candidate_item = pywikibot.ItemPage(repo, id_val)
+            candidate_item_dict = candidate_item.get()
         except:
-            print 'Edit failed'
+            print 'Huh - no page found'
+        try:
+            sitelink = candidate_item_dict['sitelinks']['commonswiki']
+        except:
+            # No existing sitelink found, add the new one
+            data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
+            try:
+                print "\n\n"
+                print id_val
+                prettyPrint(candidate_item_dict)
+                print data
+                # text = raw_input("Save? ")
+                # if text == 'y':
+                candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
+                # continue
+                # else:
+                # continue
+            except:
+                print 'Edit failed'
 
     # if nummodified >= maxnum:
     #     print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
