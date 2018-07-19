@@ -66,12 +66,12 @@ for targetcat in targetcats:
             print id_val
             prettyPrint(candidate_item_dict)
             print data
-            text = raw_input("Save? ")
-            if text == 'y':
-                candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
-                continue
-            else:
-                continue
+            # text = raw_input("Save? ")
+            # if text == 'y':
+            candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
+            # continue
+            # else:
+            # continue
         except:
             print 'Edit failed'
 
