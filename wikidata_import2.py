@@ -14,6 +14,8 @@ from pywikibot import pagegenerators
 import urllib
 import pprint
 
+templates = ["On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
+
 def prettyPrint(variable):
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(variable)
@@ -28,28 +30,31 @@ targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
 for targetcat in targetcats:
     print targetcat.title()
-    text = targetcat.get()
+    target_text = targetcat.get()
+
     id_val = 0
-
-    try:
-        value = (text.split("{{On Wikidata|1="))[1].split("}}")[0]
-        if value and id_val == 0:
-            id_val = value
-    except:
-        null = 0
-    try:
-        value = (text.split("{{On Wikidata|"))[1].split("}}")[0]
-        if value and id_val == 0:
-            id_val = value
-    except:
-        null = 0
-    try:
-        value = (text.split("{{Wikidata|"))[1].split("}}")[0]
-        if value and id_val == 0:
-            id_val = value
-    except:
-        null = 0
-
+    for i in range(0,len(templates)):
+        try:
+            value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0]
+            if value and id_val == 0:
+                id_val = value
+        except:
+            null = 2
+            # print '2'
+        try:
+            value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0]
+            if value and id_val == 0:
+                id_val = value
+        except:
+            null = 3
+            # print '3'
+        try:
+            value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
+            if value and id_val == 0:
+                id_val = value
+        except:
+            null = 1
+            # print '1'
     print id_val
     if id_val != 0:
         try:
@@ -67,12 +72,12 @@ for targetcat in targetcats:
                 print id_val
                 prettyPrint(candidate_item_dict)
                 print data
-                # text = raw_input("Save? ")
-                # if text == 'y':
-                candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
+                text = raw_input("Save? ")
+                if text == 'y':
+                    candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
                 # continue
-                # else:
-                # continue
+                else:
+                    continue
             except:
                 print 'Edit failed'
 
