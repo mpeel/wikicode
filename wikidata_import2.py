@@ -14,7 +14,7 @@ from pywikibot import pagegenerators
 import urllib
 import pprint
 
-templates = ["On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
+templates = ["Wikidata person", "wikidata person", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
 
 def prettyPrint(variable):
     pp = pprint.PrettyPrinter(indent=4)
@@ -24,9 +24,17 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 
-category = 'Category:Categories with Wikidata link'
-cat = pywikibot.Category(commons,category)
-targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+usetemplate = 1
+if usetemplate:
+    templates_to_search = ['Wikidata person']
+    template = pywikibot.Page(commons, 'Template:'+templates_to_search[0])
+    targetcats = template.embeddedin(namespaces='14')
+else:
+    category = 'Category:Categories with Wikidata link'
+    # category = 'Category:Uses of Wikidata Infobox with problems'
+    cat = pywikibot.Category(commons,category)
+    targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+
 
 for targetcat in targetcats:
     print targetcat.title()
@@ -36,6 +44,10 @@ for targetcat in targetcats:
     for i in range(0,len(templates)):
         try:
             value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0]
+            try:
+                value = value.split('|')[0]
+            except:
+                null = 1
             if value and id_val == 0:
                 id_val = value
         except:
@@ -43,6 +55,10 @@ for targetcat in targetcats:
             # print '2'
         try:
             value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0]
+            try:
+                value = value.split('|')[0]
+            except:
+                null = 1
             if value and id_val == 0:
                 id_val = value
         except:
@@ -50,6 +66,10 @@ for targetcat in targetcats:
             # print '3'
         try:
             value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
+            try:
+                value = value.split('|')[0]
+            except:
+                null = 1
             if value and id_val == 0:
                 id_val = value
         except:
@@ -62,24 +82,37 @@ for targetcat in targetcats:
             candidate_item_dict = candidate_item.get()
         except:
             print 'Huh - no page found'
+
         try:
             sitelink = candidate_item_dict['sitelinks']['commonswiki']
         except:
-            # No existing sitelink found, add the new one
-            data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
             try:
+                existing_id = candidate_item_dict['claims']['P910']
+                print 'P910 exists, following that.'
+                for clm2 in existing_id:
+                    candidate_item = clm2.getTarget()
+                    candidate_item_dict = candidate_item.get()
+                    print candidate_item.title()
+            except:
+                null = 0
+            try:
+                sitelink = candidate_item_dict['sitelinks']['commonswiki']
+            except:
+                # No existing sitelink found, add the new one
+                data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
+                # try:
                 print "\n\n"
                 print id_val
                 prettyPrint(candidate_item_dict)
                 print data
-                # text = raw_input("Save? ")
-                # if text == 'y':
-                candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
-                # continue
-                # else:
-                #     continue
-            except:
-                print 'Edit failed'
+                text = raw_input("Save? ")
+                if text == 'y':
+                    candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
+                    continue
+                else:
+                    continue
+                # except:
+                #     print 'Edit failed'
 
     # if nummodified >= maxnum:
     #     print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
