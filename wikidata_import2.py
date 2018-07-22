@@ -100,19 +100,19 @@ for targetcat in targetcats:
             except:
                 # No existing sitelink found, add the new one
                 data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
-                # try:
-                print "\n\n"
-                print id_val
-                prettyPrint(candidate_item_dict)
-                print data
-                text = raw_input("Save? ")
-                if text == 'y':
+                try:
+                    print "\n\n"
+                    print id_val
+                    prettyPrint(candidate_item_dict)
+                    print data
+                    # text = raw_input("Save? ")
+                    # if text == 'y':
                     candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
-                    continue
-                else:
-                    continue
-                # except:
-                #     print 'Edit failed'
+                    #     continue
+                    # else:
+                    #     continue
+                except:
+                    print 'Edit failed'
 
     # if nummodified >= maxnum:
     #     print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
