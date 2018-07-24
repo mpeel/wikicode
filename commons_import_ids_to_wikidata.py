@@ -11,7 +11,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 1000
+maxnum = 1
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
@@ -24,8 +24,10 @@ manual = True
 # category = 'Protected areas with known WDPA-ID'
 # templates = ['WDPA']
 # properties = u'P809'
-templates = ['South African Heritage Site']
-properties = u'P3759'
+# templates = ['South African Heritage Site']
+# properties = u'P3759'
+templates = ['Cultural Heritage Brazil']
+properties = u'P5500'
 toremove = ['/', '|']
 
 def checkid(targetcat):
@@ -50,6 +52,17 @@ def checkid(targetcat):
     except:
         print "No Wikidata sitelink found"
         return 0
+
+    # try:
+    # print item_dict['claims']['P1435']
+    if u'45823285' in str(item_dict['claims']['P1435']):
+        print 'IPHAN found'
+    else:
+        print 'IPHAN not found'
+        return 0
+    # except:
+    #     print 'P1435 not found, continuing'
+    #     return 0
 
     id_val = 0
     for i in range(0,len(templates)):
@@ -122,7 +135,7 @@ def checkid(targetcat):
             # text = raw_input("Save? ")
             # if text == 'y':
             wd_item.addClaim(stringclaim, summary=u'Copying ' + templates[0] + ' ID value from Commons')
-            return 1
+                return 1
             # else:
             #     return 0
             # except:
