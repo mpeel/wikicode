@@ -28,7 +28,8 @@ manual = True
 # properties = u'P3759'
 templates = ['Cultural Heritage Brazil']
 properties = u'P5500'
-toremove = ['/', '|']
+# toremove = ['/', '|']
+toremove = []
 
 def checkid(targetcat):
     print targetcat
