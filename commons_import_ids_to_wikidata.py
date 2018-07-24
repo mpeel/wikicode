@@ -53,16 +53,16 @@ def checkid(targetcat):
         print "No Wikidata sitelink found"
         return 0
 
-    # try:
-    # print item_dict['claims']['P1435']
-    if u'45823285' in str(item_dict['claims']['P1435']):
-        print 'IPHAN found'
-    else:
-        print 'IPHAN not found'
+    try:
+        # print item_dict['claims']['P1435']
+        if u'45823285' in str(item_dict['claims']['P1435']):
+            print 'IPHAN found'
+        else:
+            print 'IPHAN not found'
+            return 0
+    except:
+        print 'P1435 not found, continuing'
         return 0
-    # except:
-    #     print 'P1435 not found, continuing'
-    #     return 0
 
     id_val = 0
     for i in range(0,len(templates)):
