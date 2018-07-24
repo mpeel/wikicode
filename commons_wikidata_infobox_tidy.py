@@ -22,7 +22,7 @@ templates = ['Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en"]
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Tidy Wikidata Infobox call"
-wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox"]
+wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox"]
 
 def migratecat(targetcat):
     print targetcat
@@ -84,11 +84,11 @@ def migratecat(targetcat):
     i = 0
     j = 0
     for line in lines:
-        j += 1
         if '{{Wikidata Infobox}}' in line:
             i += 1
             if i != 1:
-                lines[j] = lines[j].replace('{{Wikidata Infobox}}')
+                lines[j] = lines[j].replace('{{Wikidata Infobox}}', '')
+        j += 1
     target_text = "\n".join(lines)
 
     # Only remove whitespace if we're making another change
@@ -123,19 +123,25 @@ def migratecat(targetcat):
     else:
         return 0
 
-for i in range(0,len(templates)):
-    template = pywikibot.Page(commons, 'Template:'+templates[i])
-    targetcats = template.embeddedin(namespaces='14')
+category = 'Category:Pages with malformed coordinate tags'
+# category = 'Category:Uses of Wikidata Infobox with problems'
+cat = pywikibot.Category(commons,category)
+targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
-    for targetcat in targetcats:
-        print targetcat
-        print "\n" + targetcat.title()
-        nummodified += migratecat(targetcat)
 
-        if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-            exit()
+# for i in range(0,len(templates)):
+#     template = pywikibot.Page(commons, 'Template:'+templates[i])
+#     targetcats = template.embeddedin(namespaces='14')
 
-    print 'Done! Edited ' + str(nummodified) + ' entries'
-                    
+for targetcat in targetcats:
+    print targetcat
+    print "\n" + targetcat.title()
+    nummodified += migratecat(targetcat)
+
+    if nummodified >= maxnum:
+        print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+        exit()
+
+print 'Done! Edited ' + str(nummodified) + ' entries'
+                
 # EOF
