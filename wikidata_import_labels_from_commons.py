@@ -12,7 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 2
+maxnum = 1
 nummodified = 0
 stepsize =  10000
 maximum = 2000000
@@ -48,6 +48,16 @@ for i in range(0,numsteps):
         item_dict = page.get()
         qid = page.title()
         print "\n" + qid
+
+        # Check that it hasn't already got an en label
+        try:
+            label = item_dict['labels']['en']
+            print label
+            print "That shouldn't have worked, continuing"
+            continue
+        except:
+            print 'No English label'
+
         # Get the value for P373
         try:
             p373 = item_dict['claims']['P373']
@@ -60,6 +70,14 @@ for i in range(0,numsteps):
         # Only attempt to do this if there is only one value for P373
         if p373_check != 1:
             print 'More than one P373 value found! Skipping...'
+
+        # Make sure that we have a sitelink, and that it's the same as P373
+        try:
+            sitelink = item_dict['sitelinks']['commonswiki']
+            sitelink = sitelink.replace('Category:','')
+        except:
+            print 'No sitelink'
+            continue
 
         # Check to see if we're looking at a category item
         catitem = 0
@@ -74,8 +92,12 @@ for i in range(0,numsteps):
 
         for clm in p373:
             new_label = clm.getTarget()
+            if sitelink != new_label:
+                print "Sitelink and P373 don't match, skipping"
+                continue
             if catitem:
                 new_label = 'Category:' + new_label
+
             # if we don't have an English language label, add it.
             try:
                 label = val.labels['en']
