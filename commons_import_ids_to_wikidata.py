@@ -135,7 +135,7 @@ def checkid(targetcat):
             # text = raw_input("Save? ")
             # if text == 'y':
             wd_item.addClaim(stringclaim, summary=u'Copying ' + templates[0] + ' ID value from Commons')
-                return 1
+            return 1
             # else:
             #     return 0
             # except:
