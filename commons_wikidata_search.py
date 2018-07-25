@@ -16,7 +16,8 @@ import pprint
 import csv
 
 database = True
-manual = True
+manual = False
+maxnum = 100
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -139,8 +140,8 @@ if database:
     print 'Database loaded!'
 
 usetemplate = 0
+usecategory = 0
 nummodified = 0
-maxnum = 1000
 if usetemplate:
     templates = ['South African Heritage Site']
     template = pywikibot.Page(commons, 'Template:'+templates[0])
@@ -154,7 +155,7 @@ if usetemplate:
             continue
         else:
             runimport(targetcat)
-else:
+elif usecategory:
     targetcats = ['Category:Long Island']
     # New style of category walker
     numchecked = 0
@@ -183,5 +184,18 @@ else:
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
+else:
+    # Pick random categories
+    while nummodified < maxnum:
+        targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
+        for target in targets:
+            print target.title()
+            if target.title() not in existing_uses:
+                nummodified += runimport(target)
+                print nummodified
+            
+            if nummodified >= maxnum:
+                print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                break
 
 # EOF
