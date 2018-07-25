@@ -61,28 +61,30 @@ def runimport(targetcat):
     if wikidataEntries['search'] != []:
         results = wikidataEntries['search']
         prettyPrint(results)
-        print len(results)
-        qid = results[0]['id']
-        try:
-            candidate_item = pywikibot.ItemPage(repo, qid)
-            candidate_item_dict = candidate_item.get()
-        except:
-            print 'Huh - no page found'
+        numresults = len(results)
+        for i in reversed(range(0,numresults)):
+            qid = results[i]['id']
+            try:
+                candidate_item = pywikibot.ItemPage(repo, qid)
+                candidate_item_dict = candidate_item.get()
+            except:
+                print 'Huh - no page found'
 
-        incat = 0
-        try:
-            p18 = candidate_item_dict['claims']['P18']
-            for clm in p18:
-                title = clm.getTarget()
-                print title.title()
-                page = pywikibot.Page(commons, title.title())
-                test = page.get()
-                if '[['+targetcat.title()+']]' in test:
-                    incat = 1
-                else:
-                    incat = 2
-        except:
-            print 'No image found'
+            incat = 0
+            try:
+                p18 = candidate_item_dict['claims']['P18']
+                for clm in p18:
+                    title = clm.getTarget()
+                    print title.title()
+                    page = pywikibot.Page(commons, title.title())
+                    test = page.get()
+                    if '[['+targetcat.title()+']]' in test:
+                        incat = 1
+                        continue
+                    else:
+                        incat = 2
+            except:
+                print 'No image found'
         try:
             sitelink = candidate_item_dict['sitelinks']['commonswiki']
         except:
