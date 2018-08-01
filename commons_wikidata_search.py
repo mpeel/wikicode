@@ -158,7 +158,7 @@ if usetemplate:
         else:
             runimport(targetcat)
 elif usecategory:
-    targetcats = ['Category:São Paulo (city)']
+    targetcats = ['Category:Uses of Wikidata Infobox with problems']
     # targetcats = ['Category:Long Island']
     # New style of category walker
     numchecked = 0
