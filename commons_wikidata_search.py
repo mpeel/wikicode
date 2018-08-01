@@ -159,7 +159,7 @@ if usetemplate:
             runimport(targetcat)
 elif usecategory:
     targetcats = ['Category:São Paulo (city)']
-    # targetcats = ['Category:Long Island']
+    targetcats = ['Category:Long Island']
     # New style of category walker
     numchecked = 0
     catschecked = 0
