@@ -163,11 +163,12 @@ elif usecategory:
     # New style of category walker
     numchecked = 0
     catschecked = 0
-
+    i = 0
     seen   = set(targetcats)
     active = set(targetcats)
 
     while active:
+        i++
         next_active = set()
         for item in active:
             cat = pywikibot.Category(commons,item)
@@ -179,10 +180,11 @@ elif usecategory:
             print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
 
             # See if there are subcategories that we want to check in the future
-            # for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
-                # if result.title() not in seen:
-                    # seen.add(result.title())
-                    # next_active.add(result.title())
+            if i == 1:
+                for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
+                    if result.title() not in seen:
+                        seen.add(result.title())
+                        next_active.add(result.title())
         active = next_active
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
