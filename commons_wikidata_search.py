@@ -17,7 +17,7 @@ import csv
 
 database = True
 manual = False
-maxnum = 100
+maxnum = 1000
 usetemplate = 0
 usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
@@ -113,20 +113,20 @@ def runimport(targetcat):
                         print qid
                         print targetcat.title()
                         if incat == 1:
-                            print 'Image is used in category'
+                            print 'Image is in category'
                         elif incat == 2:
                             print 'Image not in category'
                         else:
                             print 'No image'
                         text = raw_input("Save? ")
                         if text == 'y':
-                            candidate_item.editEntity(data, summary=u'Add commons sitelink')
+                            candidate_item.editEntity(data, summary=u'Add commons sitelink based on label and image')
                             return 1
                         else:
                             return 0
                     else:
                         if incat == 1:
-                            candidate_item.editEntity(data, summary=u'Add commons sitelink')
+                            candidate_item.editEntity(data, summary=u'Add commons sitelink based on label and image')
                             return 1
                         else:
                             return 0
