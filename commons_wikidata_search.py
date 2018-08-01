@@ -18,6 +18,8 @@ import csv
 database = True
 manual = False
 maxnum = 100
+usetemplate = 0
+usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -141,8 +143,6 @@ if database:
         existing_uses = {rows[0] for rows in reader}
     print 'Database loaded!'
 
-usetemplate = 0
-usecategory = 0
 nummodified = 0
 if usetemplate:
     templates = ['South African Heritage Site']
@@ -158,7 +158,8 @@ if usetemplate:
         else:
             runimport(targetcat)
 elif usecategory:
-    targetcats = ['Category:Long Island']
+    targetcats = ['Category:São Paulo (city)']
+    # targetcats = ['Category:Long Island']
     # New style of category walker
     numchecked = 0
     catschecked = 0
