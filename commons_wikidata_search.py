@@ -17,7 +17,7 @@ import csv
 
 database = True
 manual = False
-maxnum = 10000
+maxnum = 1000000
 usetemplate = 0
 usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
@@ -159,7 +159,7 @@ if usetemplate:
             runimport(targetcat)
 elif usecategory:
     #targetcats = ['Category:Uses of Wikidata Infobox with problems']
-    targetcats = ['Category:Brazil']
+    targetcats = ['Category:CommonsRoot']
     # New style of category walker
     numchecked = 0
     catschecked = 0
