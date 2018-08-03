@@ -36,6 +36,8 @@ for line in report_text:
     # exit()
     if "{{done}}" in line:
         archive_text = archive_text + "\n" + line
+    elif "{{Done}}" in line:
+        archive_text = archive_text + "\n" + line
     else:
         report_text_new = report_text_new + "\n" + line
 print report_text_new
