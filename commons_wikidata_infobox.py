@@ -211,13 +211,11 @@ if random:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
                 break
 elif usequarry:
-
     quarry_ref = []
     if quarry_reference != '':
-    with open(quarry_reference, mode='r') as infile:
-        reader = csv.reader(infile)
-        quarry_ref = {rows[1] for rows in reader}
-
+        with open(quarry_reference, mode='r') as infile:
+            reader = csv.reader(infile)
+            quarry_ref = {rows[1] for rows in reader}
     with open(usequarry, mode='r') as infile:
         reader = csv.reader(infile)
         targets = {rows[1] for rows in reader}
