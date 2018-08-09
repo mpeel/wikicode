@@ -27,8 +27,9 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = 1
 manual = False
 random = False
-usequery = True
-usequarry = 'quarry3.csv'
+usequery = False
+usequarry = 'quarry5.csv'
+quarry_reference = 'quarry5.csv'
 useimport = 'import.csv'
 newstyle = False
 database = True
@@ -210,14 +211,22 @@ if random:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
                 break
 elif usequarry:
+
+    quarry_ref = []
+    if quarry_reference != '':
+    with open(quarry_reference, mode='r') as infile:
+        reader = csv.reader(infile)
+        quarry_ref = {rows[1] for rows in reader}
+
     with open(usequarry, mode='r') as infile:
         reader = csv.reader(infile)
         targets = {rows[1] for rows in reader}
     for target in targets:
-        if test == 0 and 'Toyota JPN' not in target:
+        # if test == 0 and 'Toyota JPN' not in target:
+        if target in quarry_ref:
             continue
-        else:
-            test = 1
+        # else:
+            # test = 1
         print target
         cat = pywikibot.Category(commons,'Category:'+target)
         if cat.title() not in existing_uses:
