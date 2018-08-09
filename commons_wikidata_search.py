@@ -62,7 +62,7 @@ def runimport(targetcat):
     searchname = searchname.split('(', 1)[0]
     wikidataEntries = search_entities(wikidata_site, searchname)
     prettyPrint(wikidataEntries)
-    if wikidataEntries['search'] == []:
+    if wikidataEntries['search'] != []:
         results = wikidataEntries['search']
         prettyPrint(results)
         numresults = len(results)
