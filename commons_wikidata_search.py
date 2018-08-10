@@ -16,10 +16,10 @@ import pprint
 import csv
 
 database = True
-manual = False
+manual = True
 maxnum = 1000
 usetemplate = 0
-usecategory = 0
+usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -59,7 +59,9 @@ def runimport(targetcat):
         print 'No existing link'
 
     searchname = targetcat.title().replace('Category:','')
-    searchname = searchname.split('(', 1)[0]
+    searchname2 = searchname.split('(', 1)[0]
+    if searchname2 != '':
+        searchname = searchname2
     wikidataEntries = search_entities(wikidata_site, searchname)
     prettyPrint(wikidataEntries)
     if wikidataEntries['search'] != []:
@@ -161,7 +163,7 @@ if usetemplate:
             runimport(targetcat)
 elif usecategory:
     #targetcats = ['Category:Uses of Wikidata Infobox with problems']
-    targetcats = ['Category:Cape Town']
+    targetcats = ['Category:São Paulo']
     # New style of category walker
     numchecked = 0
     catschecked = 0
