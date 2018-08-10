@@ -16,10 +16,10 @@ import pprint
 import csv
 
 database = True
-manual = True
-maxnum = 1000
+manual = False
+maxnum = 1000000
 usetemplate = 0
-usecategory = 1
+usecategory = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
