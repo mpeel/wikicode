@@ -26,7 +26,7 @@ commons = pywikibot.Site('commons', 'commons')
 
 usetemplate = 1
 if usetemplate:
-    templates_to_search = ['Wikidata person']
+    templates_to_search = ['On Wikidata']
     template = pywikibot.Page(commons, 'Template:'+templates_to_search[0])
     targetcats = template.embeddedin(namespaces='14')
 else:
