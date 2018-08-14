@@ -54,8 +54,9 @@ for i in range(0,numsteps):
     '        FILTER (!(bound(?item2) && ?item3 = ?item2))\n'\
     '    }\n'\
     '    MINUS {?commonslink schema:about ?item . ?commonslink schema:isPartOf <https://commons.wikimedia.org/> . } \n'\
-    '    MINUS {?item wdt:P910 [] }\n'\
     '}'
+    # '    MINUS {?item wdt:P910 [] }\n'\
+    # '}'
 
     print query
 
@@ -67,6 +68,8 @@ for i in range(0,numsteps):
         except:
             print 'Huh - no page found'
             continue
+
+
         print "\n" + qid
         print page.labels
         try:
@@ -77,6 +80,19 @@ for i in range(0,numsteps):
         p373_check = 0
         for clm in p373:
             p373_check += 1
+
+        # If we have a P910 value, switch to using that item
+        try:
+            existing_id = item_dict['claims']['P910']
+            print 'P910 exists, following that.'
+            for clm2 in existing_id:
+                page = clm2.getTarget()
+                item_dict = page.get()
+                print page.title()
+        except:
+            null = 0
+
+        # Double-check that we don't already have a sitelink
         try:
             sitelink = item_dict['sitelinks']['commonswiki']
             sitelink_check = 1
@@ -100,6 +116,7 @@ for i in range(0,numsteps):
                         wd_item = pywikibot.ItemPage.fromPage(commonscat_page)
                         wd_item.get()
                     except:
+
                         # That didn't work, add it to the Wikidata entry
                         data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + val}]}
                         try:
