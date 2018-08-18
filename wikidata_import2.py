@@ -94,35 +94,32 @@ for targetcat in targetcats:
             print 'Huh - no page found'
 
         try:
+            existing_id = candidate_item_dict['claims']['P910']
+            print 'P910 exists, following that.'
+            for clm2 in existing_id:
+                candidate_item = clm2.getTarget()
+                candidate_item_dict = candidate_item.get()
+                print candidate_item.title()
+        except:
+            null = 0
+        try:
             sitelink = candidate_item_dict['sitelinks']['commonswiki']
         except:
+            # No existing sitelink found, add the new one
+            data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
             try:
-                existing_id = candidate_item_dict['claims']['P910']
-                print 'P910 exists, following that.'
-                for clm2 in existing_id:
-                    candidate_item = clm2.getTarget()
-                    candidate_item_dict = candidate_item.get()
-                    print candidate_item.title()
+                print "\n\n"
+                print id_val
+                prettyPrint(candidate_item_dict)
+                print data
+                # text = raw_input("Save? ")
+                # if text == 'y':
+                candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
+                #     continue
+                # else:
+                #     continue
             except:
-                null = 0
-            try:
-                sitelink = candidate_item_dict['sitelinks']['commonswiki']
-            except:
-                # No existing sitelink found, add the new one
-                data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
-                try:
-                    print "\n\n"
-                    print id_val
-                    prettyPrint(candidate_item_dict)
-                    print data
-                    # text = raw_input("Save? ")
-                    # if text == 'y':
-                    candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
-                    #     continue
-                    # else:
-                    #     continue
-                except:
-                    print 'Edit failed'
+                print 'Edit failed'
 
     # if nummodified >= maxnum:
     #     print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
