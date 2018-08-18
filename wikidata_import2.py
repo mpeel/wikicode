@@ -41,6 +41,7 @@ for targetcat in targetcats:
     target_text = targetcat.get()
 
     id_val = 0
+    value = 0
     for i in range(0,len(templates)):
         try:
             value = (target_text.split("{{"+templates[i]+"|Wikidata="))[1].split("}}")[0]
@@ -48,7 +49,7 @@ for targetcat in targetcats:
                 value = value.split('|')[0]
             except:
                 null = 1
-            if value and id_val == 0:
+            if value != 0 and id_val == 0:
                 id_val = value
         except:
             null = 1
@@ -59,7 +60,7 @@ for targetcat in targetcats:
                 value = value.split('|')[0]
             except:
                 null = 1
-            if value and id_val == 0:
+            if value != 0 and id_val == 0:
                 id_val = value
         except:
             null = 2
@@ -67,7 +68,7 @@ for targetcat in targetcats:
         try:
             value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0]
             try:
-                value = value.split('|')[0]
+                value != 0 = value.split('|')[0]
             except:
                 null = 1
             if value and id_val == 0:
@@ -78,7 +79,7 @@ for targetcat in targetcats:
         try:
             value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
             try:
-                value = value.split('|')[0]
+                value != 0 = value.split('|')[0]
             except:
                 null = 1
             if value and id_val == 0:
