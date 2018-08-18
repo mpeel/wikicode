@@ -14,7 +14,7 @@ from pywikibot import pagegenerators
 import urllib
 import pprint
 
-templates = ["Wikidata person", "wikidata person", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata"]
+templates = ["Wikidata person", "wikidata person", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Authority control", "authority control", "Ac", "ac"]
 
 def prettyPrint(variable):
     pp = pprint.PrettyPrinter(indent=4)
@@ -26,7 +26,7 @@ commons = pywikibot.Site('commons', 'commons')
 
 usetemplate = 1
 if usetemplate:
-    templates_to_search = ['On Wikidata']
+    templates_to_search = ['Authority control']
     template = pywikibot.Page(commons, 'Template:'+templates_to_search[0])
     targetcats = template.embeddedin(namespaces='14')
 else:
@@ -42,6 +42,17 @@ for targetcat in targetcats:
 
     id_val = 0
     for i in range(0,len(templates)):
+        try:
+            value = (target_text.split("{{"+templates[i]+"|Wikidata="))[1].split("}}")[0]
+            try:
+                value = value.split('|')[0]
+            except:
+                null = 1
+            if value and id_val == 0:
+                id_val = value
+        except:
+            null = 1
+            # print '1'
         try:
             value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0]
             try:
@@ -74,7 +85,6 @@ for targetcat in targetcats:
                 id_val = value
         except:
             null = 1
-            # print '1'
     print id_val
     if id_val != 0:
         try:
