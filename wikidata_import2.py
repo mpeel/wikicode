@@ -13,6 +13,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 import pprint
+import csv
 
 templates = ["Wikidata person", "wikidata person", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Authority control", "authority control", "Ac", "ac"]
 
@@ -23,6 +24,16 @@ def prettyPrint(variable):
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+
+database = 1
+existing_uses = {}
+if database:
+    print 'Loading database...'
+    with open('commons_wikidata_infobox_uses.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        existing_uses = {rows[0] for rows in reader}
+    print 'Database loaded!'
+
 
 usetemplate = 1
 if usetemplate:
@@ -37,6 +48,10 @@ else:
 
 
 for targetcat in targetcats:
+    if targetcat.title() in existing_uses:
+        print 'In database'
+        continue
+
     print targetcat.title()
     target_text = targetcat.get()
 
@@ -68,10 +83,10 @@ for targetcat in targetcats:
         try:
             value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0]
             try:
-                value != 0 = value.split('|')[0]
+                value = value.split('|')[0]
             except:
                 null = 1
-            if value and id_val == 0:
+            if value != 0 and id_val == 0:
                 id_val = value
         except:
             null = 3
@@ -79,10 +94,10 @@ for targetcat in targetcats:
         try:
             value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
             try:
-                value != 0 = value.split('|')[0]
+                value = value.split('|')[0]
             except:
                 null = 1
-            if value and id_val == 0:
+            if value != 0 and id_val == 0:
                 id_val = value
         except:
             null = 1
