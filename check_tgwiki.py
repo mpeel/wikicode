@@ -25,23 +25,19 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 debug = 1
 
-def update_report(qid):
-    report = pywikibot.Page(wikidata_site, 'User:Mike Peel/tgwiki sitelink problems')
+def update_report(qid, tgwp, empty=False):
+    report = pywikibot.Page(wikidata_site, 'User:Mike Peel/tgwiki sitelink fixes')
     report_text = report.get()
     rep = u'\n*{{Q|'+str(qid)+'}}'
+    if empty:
+        rep = u"\n*'''{{Q|"+str(qid)+"}} - [[:tg:" + tgwp + "]] - EMPTY'''"
+    else:
+        rep = u'\n*{{Q|'+str(qid)+'}} - [[:tg:' + tgwp + ']]'
     if rep in report_text:
         return
     report.text = report_text + rep
     report.save('Update report to include ' + qid)
     return
-
-# # Read in the family names database
-# with open('populate_family_names_cache.csv', mode='r') as infile:
-#     reader = csv.reader(infile)
-#     with open('coors_new.csv', mode='w') as outfile:
-#         writer = csv.writer(outfile)
-#         names = {rows[1]:rows[0] for rows in reader}
-# print names
 
 for i in range(0,numsteps):
     print 'Starting at ' + str(i*stepsize)
@@ -75,7 +71,6 @@ for i in range(0,numsteps):
 
         print tgwp.decode('utf-8')
 
-
         url = u'https://tg.wikipedia.org/wiki/'+tgwp.replace(' ','_')
         url = urllib.quote(url.encode('utf8'), ':/')
         print url
@@ -86,6 +81,17 @@ for i in range(0,numsteps):
         code = a.getcode()
         print code
         if code == 404:
-            update_report(qid)
+            page.removeSitelink(site='tgwiki', summary=u'Removing broken sitelink to tgwiki')
+            item_dict = page.get()
+            print item_dict['sitelinks']
+            print len(item_dict['sitelinks'])
+            if len(item_dict['sitelinks']) == 0:
+                update_report(qid, tgwp, empty=True)
+            else:
+                update_report(qid, tgwp)
+            exit()
+
+
+
 
 # EOF
