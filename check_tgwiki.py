@@ -89,7 +89,7 @@ for i in range(0,numsteps):
                 update_report(qid, tgwp, empty=True)
             else:
                 update_report(qid, tgwp)
-            exit()
+            # exit()
 
 
 
