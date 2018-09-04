@@ -36,7 +36,10 @@ def update_report(qid, tgwp, empty=False):
     if rep in report_text:
         return
     report.text = report_text + rep
-    report.save('Update report to include ' + qid)
+    try:
+        report.save('Update report to include ' + qid)
+    except:
+        print 'Could not save report!'
     return
 
 for i in range(0,numsteps):
