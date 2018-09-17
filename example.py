@@ -6,6 +6,7 @@
 # Import modules
 import pywikibot
 from pywikibot import pagegenerators
+from pywikibot.data import api
 import numpy as np
 import requests
 
@@ -105,11 +106,24 @@ def parsesite(url):
             print 'Museum: ' + item.split("strong>Museu:</strong><span itemprop='publisher'>")[1].split("</span>")[0].strip() + "\n"
     return 0
 
+# From https://gist.github.com/ettorerizza/7eaebbd731781b6007d9bdd9ddd22713
+def search_entities(site, itemtitle):
+     params = { 'action' :'wbsearchentities', 
+                'format' : 'json',
+                'language' : 'en',
+                'type' : 'item',
+                'search': itemtitle}
+     request = api.Request(site=site, parameters=params)
+     return request.submit()
+
 # Page must exist already!
 page = pywikibot.Page(ptwiki, 'Usuário(a):Mike_Peel/teste')
 test = editarticle(page)
 print test
 test = editarticle2(page)
+
+page = pywikibot.ItemPage(ptwiki_repo, 'Q511405')
+test = printwikidata(page)
 
 sparql = "SELECT ?item WHERE { ?item wdt:P31 wd:Q184356 } LIMIT 10"
 generator = pagegenerators.WikidataSPARQLPageGenerator(sparql, site=ptwiki_repo)
@@ -134,6 +148,15 @@ for target in targets:
 targets = pagegenerators.RandomPageGenerator(total=10, site=ptwiki, namespaces='14')
 for target in targets:
     print target.title()
+
+wikidataEntries = search_entities(ptwiki_repo, "Neuromat")
+if wikidataEntries['search'] != []:
+    results = wikidataEntries['search']
+    numresults = len(results)
+    for i in range(0,numresults):
+        qid = results[i]['id']
+        label = results[i]['label']
+        print qid + " - " + label
 
 # Do a test edit to Wikidata
 testqid = 'Q4115189' # Wikidata sandbox
