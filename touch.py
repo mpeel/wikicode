@@ -5,11 +5,14 @@
 
 # Import modules
 import pywikibot
+from pywikibot import pagegenerators
 
 # Connect to commons
 commons = pywikibot.Site('commons', 'commons')
 
 catname = 'Category:Uses of Wikidata Infobox with no instance of'
+#catname = 'Category:Uses of Wikidata Infobox with no family name'
+#catname = 'Category:Uses of Wikidata Infobox with no given name'
 cat = pywikibot.Category(commons,catname)
 
 i = 0
