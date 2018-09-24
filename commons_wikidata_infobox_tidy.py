@@ -19,9 +19,9 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = False
 templates = ['Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata']
-others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en"]
+others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en", 'Individual aircraft', 'individual aircraft']
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
-savemessage="Tidy Wikidata Infobox call"
+savemessage="Tidy Wikidata Infobox call"# (trimming [[Template:Individual aircraft]] as all info is now in the infobox)"
 wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox"]
 
 def migratecat(targetcat):
@@ -123,15 +123,15 @@ def migratecat(targetcat):
     else:
         return 0
 
-category = 'Category:Pages with malformed coordinate tags'
+category = 'Category:Uses of Wikidata Infobox with manual qid'#'Category:Pages with malformed coordinate tags'
 # category = 'Category:Uses of Wikidata Infobox with problems'
 cat = pywikibot.Category(commons,category)
 targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
 
 # for i in range(0,len(templates)):
-#     template = pywikibot.Page(commons, 'Template:'+templates[i])
-#     targetcats = template.embeddedin(namespaces='14')
+# template = pywikibot.Page(commons, 'Template:Individual aircraft')#+templates[i])
+# targetcats = template.embeddedin(namespaces='14')
 
 for targetcat in targetcats:
     print targetcat
