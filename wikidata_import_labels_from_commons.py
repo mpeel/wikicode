@@ -12,7 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 1
+maxnum = 10000
 nummodified = 0
 stepsize =  10000
 maximum = 2000000

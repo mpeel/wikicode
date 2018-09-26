@@ -17,7 +17,7 @@ maxnum = 100000
 nummodified = 0
 reportpage = 'User:Mike Peel/Commons redirects with Wikidata items'
 skipto = 'Category:Austrobaileyaceae'
-trap = 1
+trap = 0
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
