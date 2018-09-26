@@ -18,7 +18,7 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
-templates = ['Finlandyear', 'Finlandyear-Sweden']
+templates = ['AirDisasters','Finlandyear', 'Finlandyear-Sweden']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en"]
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Removing Wikidata Infobox as it is included in Finlandyear"

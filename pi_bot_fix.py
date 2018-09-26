@@ -24,7 +24,7 @@ commons = pywikibot.Site('commons', 'commons')
 
 user = pywikibot.User(wikidata_site,'Pi bot')
 targetcats = user.contributions(total=30000);
-trip = 0
+trip = 1
 for targetcat in targetcats:
 	if editsummary in targetcat[3]:
 		if targetcat[0].title() not in seen:

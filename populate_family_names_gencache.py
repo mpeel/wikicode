@@ -14,7 +14,7 @@ import urllib
 from pywikibot.data.sparql import SparqlQuery
 import codecs
 stepsize =  1000
-maximum = 5000000
+maximum = 250000
 numsteps = int(maximum / stepsize)
 outputfile = codecs.open('populate_family_names_cache.csv', "w", "utf-8")
 wikidata_site = pywikibot.Site("wikidata", "wikidata")

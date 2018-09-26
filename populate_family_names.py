@@ -32,7 +32,7 @@ with open('populate_family_names_cache.csv', mode='r') as infile:
         names = {rows[1]:rows[0] for rows in reader}
 # print names
 
-for i in range(200,numsteps):
+for i in range(0,numsteps):
     print 'Starting at ' + str(i*stepsize)
 
     # query = 'SELECT ?item WHERE {\n'\
