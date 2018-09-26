@@ -32,7 +32,7 @@ usequarry = 'quarry15.csv'
 quarry_reference = ''#'quarry5.csv'
 useimport = 'import.csv'
 newstyle = False
-database = True
+database = False
 
 existing_uses = {}
 if database:
