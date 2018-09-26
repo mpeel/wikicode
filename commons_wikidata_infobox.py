@@ -24,12 +24,12 @@ nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-debug = 1
 manual = False
 random = False
 usequery = False
-usequarry = 'quarry4.csv'
-quarry_reference = 'quarry5.csv'
+usetemplate = ''#'Individual aircraft'
+usequarry = 'quarry15.csv'
+quarry_reference = ''#'quarry5.csv'
 useimport = 'import.csv'
 newstyle = False
 database = True
@@ -46,8 +46,8 @@ targetcats = ['Category:CommonsRoot']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", "{{Artwork", "{{artwork", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai', 'Finlandyear', 'finlandyear', 'Finlandyear-Sweden', 'finlandyear-Sweden'] + catredirect_templates
-templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw", "en", "En"]
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", "{{Artwork", "{{artwork", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai', 'Finlandyear', 'finlandyear', 'Finlandyear-Sweden', 'finlandyear-Sweden', 'AirDisasters', 'airDisasters'] + catredirect_templates
+templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw", "en", "En", "individual aircraft", "Individual aircraft"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
 
@@ -107,27 +107,30 @@ def addtemplate(target):
         # print 'P301 not found'
         savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
         try:
-            p31 = item_dict['claims']['P31']
-            test = 1
-            for clm in p31:
-                if 'Q4167836' in clm.getTarget().title():
-                    # We have a Wikimedia category with no P301, skip it
-                    print 'Wikimedia category, no P301'
-                    return 0
-                if 'Q14204246' in clm.getTarget().title():
-                    # We have a Wikimedia category with no P301, skip it
-                    print 'Wikimedia project page'
-                    return 0
-                if 'Q13406463' in clm.getTarget().title():
-                    # We have a Wikimedia category with no P301, skip it
-                    print 'Wikimedia list page'
-                    return 0
-                if 'Q4167410' in clm.getTarget().title():
-                    # We have a Wikimedia category with no P301, skip it
-                    print 'Wikimedia disambiguation page'
-                    return 0
+            p971 = item_dict['claims']['P971']
         except:
-            print 'P31 not found'
+            try:
+                p31 = item_dict['claims']['P31']
+                test = 1
+                for clm in p31:
+                    if 'Q4167836' in clm.getTarget().title():
+                        # We have a Wikimedia category with no P301, skip it
+                        print 'Wikimedia category, no P301'
+                        return 0
+                    if 'Q14204246' in clm.getTarget().title():
+                        # We have a Wikimedia category with no P301, skip it
+                        print 'Wikimedia project page'
+                        return 0
+                    if 'Q13406463' in clm.getTarget().title():
+                        # We have a Wikimedia category with no P301, skip it
+                        print 'Wikimedia list page'
+                        return 0
+                    if 'Q4167410' in clm.getTarget().title():
+                        # We have a Wikimedia category with no P301, skip it
+                        print 'Wikimedia disambiguation page'
+                        return 0
+            except:
+                print 'P31 not found'
 
     # Remove unneeded templates
     for option in templatestoremove:
@@ -210,6 +213,19 @@ if random:
             if nummodified >= maxnum:
                 print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
                 break
+elif usetemplate:
+    # Go through uses of a template
+    template = pywikibot.Page(commons, 'Template:'+usetemplate)
+    targetcats = template.embeddedin(namespaces='14')
+    for target in targetcats:
+        print target.title()
+        if target.title() not in existing_uses:
+            nummodified += addtemplate(target)
+            print nummodified
+        
+        if nummodified >= maxnum:
+            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            break
 elif usequarry:
     quarry_ref = []
     if quarry_reference != '':
