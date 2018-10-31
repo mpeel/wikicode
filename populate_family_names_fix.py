@@ -88,6 +88,7 @@ for i in range(0,numsteps):
             continue
 
         nativename = ''
+        nativelang = ''
         try:
             nativename_item = item_dict['claims']['P1559']
             count = 0

@@ -18,10 +18,10 @@ sys.setdefaultencoding('UTF8')
 # Connect to commons
 commons = pywikibot.Site('commons', 'commons')
 
-to_undelete = ["File:Powerful-person-17.jpg", "File:Powerful-person-18.jpg", "File:Powerful-person-16.jpg", "File:Powerful-person-15.jpg", "File:Powerful-person-14.jpg", "File:Powerful-person-13.jpg", "File:Powerful-person-12.jpg", "File:Powerful-person-11.jpg", "File:Powerful-person-10.jpg", "File:Powerful-person-8.jpg", "File:Powerful-person-9.jpg", "File:Powerful-person-7.jpg", "File:Powerful-person-6.jpg", "File:Powerful-person-5.jpg", "File:Powerful-person-4.jpg", "File:Powerful-person-2.jpg", "File:Powerful-person-3.jpg", "File:Powerful-person-1.jpg", "File:Female-conception-14.jpg", "File:Female-conception-13.jpg", "File:Female-conception-12.jpg", "File:Female-conception-11.jpg", "File:Female-conception-10.jpg", "File:Female-conception-9.jpg", "File:Female-conception-8.jpg", "File:Female-conception-7.jpg", "File:Female-conception-4.jpg", "File:Female-conception-5.jpg", "File:Female-conception-1.jpg", "File:Female-conception-2.jpg", "File:Female-conception-3.jpg", "File:Bow-new-hampshire-48.jpg", "File:Bow-new-hampshire-47.jpg", "File:Bow-new-hampshire-46.jpg", "File:Bow-new-hampshire-44.jpg", "File:Bow-new-hampshire-45.jpg", "File:Bow-new-hampshire-43.jpg", "File:Bow-new-hampshire-42.jpg", "File:Bow-new-hampshire-41.jpg", "File:Bow-new-hampshire-39.jpg", "File:Bow-new-hampshire-40.jpg", "File:Bow-new-hampshire-38.jpg", "File:Bow-new-hampshire-37.jpg", "File:Bow-new-hampshire-36.jpg", "File:Bow-new-hampshire-35.jpg", "File:Bow-new-hampshire-33.jpg", "File:Bow-new-hampshire-34.jpg", "File:Bow-new-hampshire-30.jpg", "File:Bow-new-hampshire-32.jpg", "File:Bow-new-hampshire-31.jpg", "File:Displacement-8.jpg", "File:Displacement-9.jpg", "File:Displacement-7.jpg", "File:Displacement-3.jpg", "File:Displacement-6.jpg", "File:Displacement-4.jpg", "File:Displacement-5.jpg", "File:Displacement-2.jpg", "File:Displacement-1.jpg", "File:Displacement-0.jpg"]
-editsummary = "Per undelete request at https://commons.wikimedia.org/w/index.php?title=Commons:Undeletion_requests/Current_requests&diff=320165883&oldid=320161477"
-remove = ["{{delete|reason=Self-created artwork without obvious educational uses, out of [[COM:SCOPE]]. See [[Commons:Project scope/Summary]].|subpage=Files uploaded by Gretchenandrew|year=2018|month=February|day=6}}"]
-replace = [["[[Category:Drawing]]", "[[Category:Works by Gretchen Andrew]]"]]
+to_undelete = ["File:Litoral sul 1.jpg","File:Praia litoral sul 2.jpg","File:Interior da Igreja de São Bento.jpg","File:Igreja de São Bento setembro 2018.jpg","File:Igreja da Terceira ordem do Carmo.jpg","File:FaroldoCaboBranco.jpg","File:Brennand's view.jpg","File:Brennand's garden.jpg","File:Brennand's entrance.jpg","File:Igreja da Ordem Terceira de São Franciso.jpg","File:Vista do porão da igreja.jpg","File:Igreja da Ordem terceira de São Franciso (com filtro).jpg","File:Instituto Brennand, parte interna do castelo.jpg","File:Lago dos cisnes.jpg","File:Lago interno.jpg","File:ForteSantaCatarina.jpg"]
+editsummary = "Per undelete request at https://commons.wikimedia.org/w/index.php?title=User_talk%3ASealle&type=revision&diff=321746856&oldid=321695608"
+remove = ["{{delete|reason=Last remaining files, small images without EXIF data, unlikely to be own works.|subpage=Files uploaded by PennyLane89075|year=2018|month=September|day=17}}"]
+replace = []#[["[[Category:Drawing]]", "[[Category:Works by Gretchen Andrew]]"]]
 
 def restoreimage(pagetitle, editmessage, texttoremove, texttoreplace):
     page = pywikibot.Page(commons, pagetitle)
@@ -35,7 +35,7 @@ def restoreimage(pagetitle, editmessage, texttoremove, texttoreplace):
         print texttoreplace[i][0]
         print texttoreplace[i][1]
         text = text.replace(texttoreplace[i][0], texttoreplace[i][1])
-    page.text = text
+    page.text = text.strip()
     try:
         page.save(editmessage)
         return 1

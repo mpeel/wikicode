@@ -15,11 +15,11 @@ import urllib
 import pprint
 import csv
 
-database = True
-manual = False
+database = False
+manual = True
 maxnum = 1000000
 usetemplate = 0
-usecategory = 0
+usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -76,6 +76,16 @@ def runimport(targetcat):
             except:
                 print 'Huh - no page found'
 
+            skip = 0
+            try:
+                p31 = candidate_item_dict['claims']['P31']
+                for clm in p31:
+                    if 'Q4167410' in clm:
+                        skip = 1
+            except:
+                null = 0
+            if skip == 1:
+                continue
             incat = 0
             try:
                 p18 = candidate_item_dict['claims']['P18']
@@ -89,6 +99,8 @@ def runimport(targetcat):
                         continue
                     else:
                         incat = 2
+                if incat == 1:
+                    continue
             except:
                 print 'No image found'
         try:
@@ -124,7 +136,7 @@ def runimport(targetcat):
                             print 'No image'
                         text = raw_input("Save? ")
                         if text == 'y':
-                            candidate_item.editEntity(data, summary=u'Add commons sitelink based on label and image')
+                            candidate_item.editEntity(data, summary=u'Add commons sitelink')
                             return 1
                         else:
                             return 0
@@ -162,8 +174,8 @@ if usetemplate:
         else:
             runimport(targetcat)
 elif usecategory:
-    #targetcats = ['Category:Uses of Wikidata Infobox with problems']
-    targetcats = ['Category:São Paulo']
+    targetcats = ['Category:Uses of Wikidata Infobox with problems']
+    # targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
     # New style of category walker
     numchecked = 0
     catschecked = 0
