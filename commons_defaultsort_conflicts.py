@@ -61,6 +61,13 @@ def fixcat(targetcat):
 
 
 startcat = 'Category:Pages with DEFAULTSORT conflicts'
+
+# First touch the pages to make sure it's not a caching issue
+cat = pywikibot.Category(commons,startcat)
+for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
+    result.touch()
+
+# Then disable the defaultsort if still needed.
 cat = pywikibot.Category(commons,startcat)
 targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
