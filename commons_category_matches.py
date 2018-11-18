@@ -54,13 +54,19 @@ elif action == 'tiles':
 		myresult = mycursor.fetchone()
 		# Make sure the category doesn't have an ID yet
 		targetcat = pywikibot.Category(commons,myresult[2])
+		badtile = 0
 		try:
 			wd_item = pywikibot.ItemPage.fromPage(targetcat)
 			item_dict = wd_item.get()
-			#print wd_item.title()
-			continue
+			badtile = 1
 		except:
-			null = 0
+			badtile = 0
+		if badtile == 1:
+			sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 1 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+			mycursor.execute(sql)
+			mydb.commit()
+			# exit()
+			continue
 
 		cattext = targetcat.get()
 		split = cattext.split('[[')

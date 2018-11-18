@@ -57,7 +57,9 @@ myresult = mycursor.fetchall()
 print '<table style="border:1px solid black;">'
 for val in myresult:
 	print "<tr><td>"
-	if val[0] == "":
+	if val[0] == "NA":
+		print "(Done outside of game)"
+	elif val[0] == "":
 		print "Not done yet"
 	else:
 		print str(val[0])
