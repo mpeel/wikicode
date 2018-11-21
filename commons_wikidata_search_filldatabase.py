@@ -21,7 +21,7 @@ from database_login import *
 database = True
 manual = True
 maxnum = 1000000
-usetemplate = 1
+usetemplate = 0
 usecategory = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
@@ -128,15 +128,18 @@ def runimport(targetcat):
                 try:
                     sitelink = candidate_item_dict['sitelinks']['commonswiki']
                 except:
-                    # # No existing sitelink found, add it to the database as a possibility
-                    mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + targetcat.title() + '"')
-                    myresult = mycursor.fetchone()
-                    print myresult
-                    if not myresult:
-                        sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
-                        val = (qid, targetcat.title())
-                        mycursor.execute(sql, val)
-                        mydb.commit()
+                    try:
+                        # # No existing sitelink found, add it to the database as a possibility
+                        mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + targetcat.title() + '"')
+                        myresult = mycursor.fetchone()
+                        print myresult
+                        if not myresult:
+                            sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
+                            val = (qid, targetcat.title())
+                            mycursor.execute(sql, val)
+                            mydb.commit()
+                    except:
+                        print 'Something went wrong when adding it to the database!'
 
                     # data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
                     # try:
@@ -190,10 +193,13 @@ if usetemplate:
             print 'In database'
             continue
         else:
-            runimport(targetcat)
+            try:
+                runimport(targetcat)
+            except:
+                print 'Unable to add it'
 elif usecategory:
     # targetcats = ['Category:Uses of Wikidata Infobox with problems']
-    targetcats = ['Category:Women by name']
+    targetcats = ['Category:CommonsRoot']#['Category:Women by name']
     # targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
     # New style of category walker
     numchecked = 0
@@ -201,31 +207,34 @@ elif usecategory:
     i = 0
     seen   = set(targetcats)
     active = set(targetcats)
-    trip = -1
+    trip = 1
     while active:
         i+=1
         next_active = set()
         for item in active:
             cat = pywikibot.Category(commons,item)
-            if cat.title() == "Category:Cécile Mézeray":
-                trip = 1
-            if trip == 0:
-                continue
+            # if cat.title() == "Category:Cécile Mézeray":
+            #     trip = 1
+            # if trip == 0:
+            #     continue
             if cat.title() not in existing_uses:
-                nummodified += runimport(cat)
+                try:
+                    nummodified += runimport(cat)
+                except:
+                    print 'Unable to add it'
             else:
                 print 'Already in database'
             numchecked += 1
             print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
 
             # See if there are subcategories that we want to check in the future
-            if i == 1:
-                for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
-                    if result.title() not in seen:
-                        seen.add(result.title())
-                        next_active.add(result.title())
-                        if i == -1:
-                            trip = 0
+            # if i == 1:
+            for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
+                if result.title() not in seen:
+                    seen.add(result.title())
+                    next_active.add(result.title())
+                    # if i == -1:
+                    #     trip = 0
         active = next_active
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
