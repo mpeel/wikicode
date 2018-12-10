@@ -16,7 +16,7 @@ import pprint
 import csv
 import random
 
-database = False
+database = True
 manual = False
 maxnum = 1000000
 usetemplate = 0
