@@ -175,7 +175,7 @@ if usetemplate:
         else:
             runimport(targetcat)
 elif usecategory:
-    targetcats = ['Category:Astronomy']
+    targetcats = ['Category:CommonsRoot']
     # targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
     # New style of category walker
     numchecked = 0
