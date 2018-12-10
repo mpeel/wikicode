@@ -16,13 +16,14 @@ import urllib
 import pprint
 import csv
 import mysql.connector
+import random
 from database_login import *
 
 database = True
 manual = True
 maxnum = 1000000
 usetemplate = 0
-usecategory = 0
+usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -235,7 +236,9 @@ elif usecategory:
                     next_active.add(result.title())
                     # if i == -1:
                     #     trip = 0
-        active = next_active
+        temp = list(next_active)
+        random.shuffle(temp)
+        active = set(temp)
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
