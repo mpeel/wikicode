@@ -5,18 +5,20 @@ import pywikibot
 import re
 import requests
 import datetime
+import locale
 
 from pywikibot import pagegenerators
 
 debug = False
-maxnum = 500
-reportpage = 'Utilisateur:Mike Peel/Brouillon'#'Wikipedia:WikiProject_Medicine/Cochrane_update'
+maxnum = 1000
+reportpage = u'Projet:Médecine/Cochrane/Bot'
+locale.setlocale(locale.LC_TIME, "fr_FR")
 
-def update_report(page, old_pmid, new_pmid, ):
+def update_report(page, old_pmid, new_pmid, previousreports):
     report = pywikibot.Page(site, reportpage)
     report_text = report.get()
     rep = u'\n*Article [[%s]] ([{{fullurl:%s|action=edit}} edit]) ancienne critique [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s] nouvelle critique [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s]' % (page.title(), page.title(),old_pmid, old_pmid, new_pmid, new_pmid)
-    if rep in report_text:
+    if rep in report_text or rep in previousreports:
         return
     report.text = report_text + rep + u' - ~~~~~'
     report.save(u'Rapport de mise à jour à inclure ' + page.title())
@@ -50,13 +52,14 @@ if debug == False:
     report.text = report_text_new.strip()
     report.save("Archivage d'anciens rapports")
 
+previousreports = archive_text + "\n" + report_text_new
 regexes = ["insource:/\| périodique =.+Cochrane/", "insource:/\| périodique=.+Cochrane/", "insource:/\|périodique =.+Cochrane/", "insource:/\|périodique=.+Cochrane/","insource:/\| titre =.+Cochrane/", "titre:/\| title=.+Cochrane/", "insource:/\|titre =.+Cochrane/", "insource:/\|titre=.+Cochrane/"]
 i = 0
 nummodified = 0
 
 todaysdate = datetime.datetime.now()
 todaysdate.strftime("%B")
-datestr = "|date = " + todaysdate.strftime("%B %Y")
+datestr = "|date = " + (todaysdate.strftime("%B %Y")).lower()
 print datestr
 
 for regex in regexes:
@@ -114,18 +117,25 @@ for regex in regexes:
                 print 'using cache for ' + str(pmid)
             print checkedpages[str(pmid)]
             if checkedpages[str(pmid)] != 0:
-                if '<!-- No update needed: ' + str(pmid) + ' -->' not in text:
-                    up = u'{{Update inline|reason=Updated version https://www.ncbi.nlm.nih.gov/pubmed/' + checkedpages[str(pmid)]
+                if u'<!-- Aucune mise à jour nécessaire: ' + str(pmid) + ' -->' not in text:
+                    up = u'<!-- Nouvelle revue https://www.ncbi.nlm.nih.gov/pubmed/' + checkedpages[str(pmid)]+u" -->{{Passage à actualiser"
                     if not up in text:
-                        text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\< *?\/ *?ref *?\>)' % pmid,ur'\1%s}}' % (up+str(datestr)), text, re.DOTALL)
+                        # text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\}\})' % pmid,ur'\1%s}}' % (up+str(datestr)), text, re.DOTALL)
+                        # print text
                         if debug == False:
-                            update_report(page, pmid, checkedpages[str(pmid)])
-        if text != page.text and debug == False:
-        #     page.text = text
-        #     page.save(u'Adding "update inline" template for Cochrane reference')
-            nummodified += 1
-            if nummodified > maxnum - 1:
-                print 'Reached the maximum of ' + str(maxnum) + ' pages modified, quitting!'
-                exit()
+                            update_report(page, pmid, checkedpages[str(pmid)], previousreports)
+                            nummodified += 1
+        if nummodified > maxnum - 1:
+            print 'Reached the maximum of ' + str(maxnum) + ' pages modified, quitting!'
+            exit()
 
 print str(i) + " pages checked, " + str(nummodified) + " tagged!"
+
+
+# if text != page.text and debug == False:
+#     page.text = text
+#     page.save(u'ajout d\'un modèle de passage à actualiser pour la référence Cochrane')
+#     nummodified += 1
+#     if nummodified > maxnum - 1:
+#         print 'Reached the maximum of ' + str(maxnum) + ' pages modified, quitting!'
+#         exit()
