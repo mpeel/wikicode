@@ -135,15 +135,15 @@ for page in pages:
 			page.text = target_text
 			test = 'y'
 			savemessage = "Removing Commons category ("+id_val+") as it does not exist"
-			# if debug == 1:
-			# 	print target_text
-			# 	print id_val
-			# 	print savemessage
-			# 	test = raw_input("Continue? ")
-			# if test == 'y':
-			# 	nummodified += 1
-			# 	page.save(savemessage)
-			continue
+			if debug == 1:
+				print target_text
+				print id_val
+				print savemessage
+				test = raw_input("Continue? ")
+			if test == 'y':
+				nummodified += 1
+				page.save(savemessage)
+				continue
 
 	# Only attempt to do the next part if we have a commons category link both locally and on wikidata
 	if id_val != 0 and sitelink_check == 1:
@@ -184,7 +184,7 @@ for page in pages:
 					sitelink_redirect = sitelink_redirect.replace(u":Category:","").strip()
 					sitelink_redirect = sitelink_redirect.replace(u"Category:","").strip()
 			if sitelink_redirect != '':
-				if sitelink == sitelink_redirect:
+				if sitelink == 'Category:'+sitelink_redirect:
 					print 'We have a redirect to the Wikidata entry, so use the wikidata entry'
 					target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 					page.text = target_text
