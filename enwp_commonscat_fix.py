@@ -154,7 +154,7 @@ for page in pages:
 			category_text = commonscat_page.get()
 		except:
 			print 'Found a bad sitelink, but there is one on wikidata we can use'
-			target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category',''))
+			target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 			page.text = target_text
 			test = 'y'
 			savemessage = "Removing locally defined but non-existent Commons category ("+id_val+") to use the one from Wikidata ("+sitelink+")"
@@ -185,7 +185,7 @@ for page in pages:
 			if sitelink_redirect != '':
 				if sitelink == sitelink_redirect:
 					print 'We have a redirect to the Wikidata entry, so use the wikidata entry'
-					target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category',''))
+					target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 					page.text = target_text
 					test = 'y'
 					savemessage = "Updating the Commons category from "+id_val+" to " + sitelink + " to avoid a category redirect"
