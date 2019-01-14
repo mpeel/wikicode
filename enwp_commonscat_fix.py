@@ -136,7 +136,7 @@ for page in pages:
 			savemessage = "Removing Commons category ("+id_val+") as it does not exist"
 			if debug == 1:
 				print target_text
-				print "Removing Commons link from " + page.title()
+				print id_val
 				print savemessage
 				test = raw_input("Continue? ")
 			if test == 'y':
@@ -146,6 +146,7 @@ for page in pages:
 
 	# Only attempt to do the next part if we have a commons category link both locally and on wikidata
 	if id_val != 0 and sitelink_check == 1:
+		print sitelink
 
 		# First, fix broken commons category links
 		try:
@@ -153,13 +154,13 @@ for page in pages:
 			category_text = commonscat_page.get()
 		except:
 			print 'Found a bad sitelink, but there is one on wikidata we can use'
-			target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a)
+			target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category',''))
 			page.text = target_text
 			test = 'y'
-			savemessage = "Removing locally defined but non-existent Commons category ("+id_val+") to use the one from Wikidata"
+			savemessage = "Removing locally defined but non-existent Commons category ("+id_val+") to use the one from Wikidata ("+sitelink+")"
 			if debug == 1:
 				print target_text
-				print "Removing locally-defined commons link from " + page.title()
+				print id_val
 				print savemessage
 				test = raw_input("Continue? ")
 			if test == 'y':
@@ -184,13 +185,13 @@ for page in pages:
 			if sitelink_redirect != '':
 				if sitelink == sitelink_redirect:
 					print 'We have a redirect to the Wikidata entry, so use the wikidata entry'
-					target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a)
+					target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category',''))
 					page.text = target_text
 					test = 'y'
-					savemessage = "Removing locally defined Commons category ("+id_val+") as it points to a redirect - use the one from Wikidata instead"
+					savemessage = "Updating the Commons category from "+id_val+" to " + sitelink + " to avoid a category redirect"
 					if debug == 1:
 						print target_text
-						print "Removing locally-defined commons link from " + page.title()
+						print id_val
 						print savemessage
 						test = raw_input("Continue? ")
 					if test == 'y':
@@ -199,22 +200,23 @@ for page in pages:
 						continue
 
 		# What if it is pointing at a disambig page?
-		if '{{Disambig' in target_text or '{{disambig' in target_text:
-			if sitelink in target_text:
-				print 'We have a disambig category, so use the wikidata entry'
-				target_text = target_text.replace(commonscat_string2, '')
-				page.text = target_text
-				test = 'y'
-				savemessage = "Removing locally defined Commons category ("+id_val+") as it points to a disambiguation page - use the one from Wikidata instead"
-				if debug == 1:
-					print target_text
-					print "Removing locally-defined commons link from " + page.title()
-					print savemessage
-					test = raw_input("Continue? ")
-				if test == 'y':
-					nummodified += 1
-					page.save()
-					continue
+		# Disabled for now
+		# if '{{Disambig' in target_text or '{{disambig' in target_text:
+		# 	if sitelink in target_text:
+		# 		print 'We have a disambig category, so use the wikidata entry'
+		# 		target_text = target_text.replace(commonscat_string2, '')
+		# 		page.text = target_text
+		# 		test = 'y'
+		# 		savemessage = "Removing locally defined Commons category ("+id_val+") as it points to a disambiguation page - use the one from Wikidata instead"
+		# 		if debug == 1:
+		# 			print target_text
+		# 			print "Removing locally-defined commons link from " + page.title()
+		# 			print savemessage
+		# 			test = raw_input("Continue? ")
+		# 		if test == 'y':
+		# 			nummodified += 1
+		# 			page.save()
+		# 			continue
 
 		# ... That's all for now
 
