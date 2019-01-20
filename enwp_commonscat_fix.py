@@ -14,10 +14,11 @@ from pywikibot import pagegenerators
 import urllib
 import mysql.connector
 from database_login import *
+from pibot_functions import *
 
-maxnum = 1
+maxnum = 5
 nummodified = 0
-categories = 1
+categories = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
@@ -29,7 +30,7 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcat = 'Category:Commons category link is locally defined'
+targetcat = 'Category:Commons category link is defined as the pagename'#'Category:Commons category link is locally defined'
 cat = pywikibot.Category(enwp, targetcat)
 
 if categories:
@@ -129,21 +130,23 @@ for page in pages:
 			commonscat_page = pywikibot.Page(commons, commonscat)
 			text = commonscat_page.get()
 		except:
-			print 'Found a bad sitelink - removing it'
-			target_text = target_text.replace(commonscat_string+"\n", '')
-			target_text = target_text.replace(commonscat_string, '')
-			page.text = target_text
-			test = 'y'
-			savemessage = "Removing Commons category ("+id_val+") as it does not exist"
-			if debug == 1:
-				print target_text
-				print id_val
-				print savemessage
-				test = raw_input("Continue? ")
-			if test == 'y':
-				nummodified += 1
-				page.save(savemessage)
-				continue
+			last_check = check_if_category_has_contents(id_val,site=commons)
+			if last_check == False:
+				print 'Found a bad sitelink - removing it'
+				target_text = target_text.replace(commonscat_string+"\n", '')
+				target_text = target_text.replace(commonscat_string, '')
+				page.text = target_text
+				test = 'y'
+				savemessage = "Removing Commons category ("+id_val+") as it does not exist"
+				if debug == 1:
+					print target_text
+					print id_val
+					print savemessage
+					test = raw_input("Continue? ")
+				if test == 'y':
+					nummodified += 1
+					page.save(savemessage)
+					continue
 
 	# Only attempt to do the next part if we have a commons category link both locally and on wikidata
 	if id_val != 0 and sitelink_check == 1:
@@ -154,20 +157,22 @@ for page in pages:
 			commonscat_page = pywikibot.Page(commons, commonscat)
 			category_text = commonscat_page.get()
 		except:
-			print 'Found a bad sitelink, but there is one on wikidata we can use'
-			target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
-			page.text = target_text
-			test = 'y'
-			savemessage = "Removing locally defined but non-existent Commons category (Category:"+id_val+") to use the one from Wikidata ("+sitelink+")"
-			if debug == 1:
-				print target_text
-				print id_val
-				print savemessage
-				test = raw_input("Continue? ")
-			if test == 'y':
-				nummodified += 1
-				page.save(savemessage)
-				continue
+			last_check = check_if_category_has_contents(id_val,site=commons)
+			if last_check == False:
+				print 'Found a bad sitelink, but there is one on wikidata we can use'
+				target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
+				page.text = target_text
+				test = 'y'
+				savemessage = "Removing locally defined but non-existent Commons category (Category:"+id_val+") to use the one from Wikidata ("+sitelink+")"
+				if debug == 1:
+					print target_text
+					print id_val
+					print savemessage
+					test = raw_input("Continue? ")
+				if test == 'y':
+					nummodified += 1
+					page.save(savemessage)
+					continue
 		
 		# Now check to see if the local one is a redirect to the wikidata one
 		if 'Category:'+id_val != sitelink:
