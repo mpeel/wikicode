@@ -3,6 +3,7 @@
 # Remove locally defined commons category links when bad or pointing to a redirect
 # Mike Peel     01-Jan-2019      v1 - start
 # Mike Peel     14-Jan-2019      v1.1 - tweaks for enwp bot approval
+# Mike Peel     20-Jan-2019      v1.2 - last check for files in a category
 
 from __future__ import unicode_literals
 
