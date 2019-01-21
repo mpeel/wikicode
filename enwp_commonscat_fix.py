@@ -25,7 +25,7 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 enwp = pywikibot.Site('en', 'wikipedia')
-debug = 1
+debug = 0
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline']
 
@@ -98,7 +98,10 @@ for page in pages:
 
 	# Do some tidying of the link
 	if "|" in id_val:
-		id_val = id_val.split("|")[0]
+		if 'position' in id_val.split("|")[0]:
+			value = id_val.split("|")[1]
+		else:
+			value = id_val.split("|")[0]
 	try:
 		id_val = id_val.strip()
 	except:
