@@ -198,7 +198,7 @@ for page in pages:
 					target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 					page.text = target_text
 					test = 'y'
-					savemessage = "Updating the Commons category from Category:"+id_val+" to " + sitelink + " to avoid a category redirect"
+					savemessage = 'Updating the Commons category from "Category:'+id_val+'" to "' + sitelink + '" to avoid a category redirect'
 					if debug == 1:
 						print target_text
 						print id_val
