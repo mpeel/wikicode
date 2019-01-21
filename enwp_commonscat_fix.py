@@ -167,7 +167,7 @@ for page in pages:
 				target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 				page.text = target_text
 				test = 'y'
-				savemessage = "Removing locally defined but non-existent Commons category (Category:"+id_val+") to use the one from Wikidata ("+sitelink+")"
+				savemessage = "Changing locally defined but nonexistent Commons category (Category:"+id_val+") to the one from Wikidata ("+sitelink+")"
 				if debug == 1:
 					print target_text
 					print id_val
