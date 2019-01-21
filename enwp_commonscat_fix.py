@@ -4,6 +4,7 @@
 # Mike Peel     01-Jan-2019      v1 - start
 # Mike Peel     14-Jan-2019      v1.1 - tweaks for enwp bot approval
 # Mike Peel     20-Jan-2019      v1.2 - last check for files in a category
+# Mike Peel     21-Jan-2019      v1.3 - tweaks to removal code and template list
 
 from __future__ import unicode_literals
 
