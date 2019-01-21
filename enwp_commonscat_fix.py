@@ -17,7 +17,7 @@ import mysql.connector
 from database_login import *
 from pibot_functions import *
 
-maxnum = 5
+maxnum = 50
 nummodified = 0
 categories = 0
 
@@ -99,9 +99,9 @@ for page in pages:
 	# Do some tidying of the link
 	if "|" in id_val:
 		if 'position' in id_val.split("|")[0]:
-			value = id_val.split("|")[1]
+			id_val = id_val.split("|")[1]
 		else:
-			value = id_val.split("|")[0]
+			id_val = id_val.split("|")[0]
 	try:
 		id_val = id_val.strip()
 	except:
