@@ -17,7 +17,7 @@ import mysql.connector
 from database_login import *
 from pibot_functions import *
 
-maxnum = 50
+maxnum = 100000
 nummodified = 0
 categories = 0
 
@@ -27,7 +27,7 @@ commons = pywikibot.Site('commons', 'commons')
 enwp = pywikibot.Site('en', 'wikipedia')
 debug = 0
 trip = 1
-templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline']
+templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -137,6 +137,8 @@ for page in pages:
 			last_check = check_if_category_has_contents(id_val,site=commons)
 			if last_check == False:
 				print 'Found a bad sitelink - removing it'
+				target_text = target_text.replace("* " + commonscat_string+"\n", '')
+				target_text = target_text.replace("*" + commonscat_string+"\n", '')
 				target_text = target_text.replace(commonscat_string+"\n", '')
 				target_text = target_text.replace(commonscat_string, '')
 				page.text = target_text
@@ -192,6 +194,7 @@ for page in pages:
 							print 'Wikitext parsing issue!'
 					sitelink_redirect = sitelink_redirect.replace(u":Category:","").strip()
 					sitelink_redirect = sitelink_redirect.replace(u"Category:","").strip()
+					print 'Redirect target:' + sitelink_redirect
 			if sitelink_redirect != '':
 				if sitelink == 'Category:'+sitelink_redirect:
 					print 'We have a redirect to the Wikidata entry, so use the wikidata entry'
