@@ -26,13 +26,14 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 enwp = pywikibot.Site('en', 'wikipedia')
-debug = 0
-trip = 1
-templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline']
+debug = 1
+trip = 0
+templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcat = 'Category:Commons category link is defined as the pagename'#'Category:Commons category link is locally defined'
+# targetcat = 'Category:Commons category link is defined as the pagename'
+targetcat = 'Category:Commons category link is locally defined'
 cat = pywikibot.Category(enwp, targetcat)
 
 if categories:
@@ -43,7 +44,7 @@ for page in pages:
 
 	# Optional skip-ahead to resume broken runs
 	if trip == 0:
-		if "Category:Al-Nasr SC (Dubai)" in page.title():
+		if "Rawaseneng Monastery" in page.title():
 			trip = 1
 		else:
 			print page.title()
@@ -99,14 +100,22 @@ for page in pages:
 
 	# Do some tidying of the link
 	if "|" in id_val:
-		if 'position' in id_val.split("|")[0]:
-			id_val = id_val.split("|")[1]
+		if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0]:
+			if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1]:
+				id_val = id_val.split("|")[2]
+			else:
+				id_val = id_val.split("|")[1]
 		else:
 			id_val = id_val.split("|")[0]
 	try:
 		id_val = id_val.strip()
 	except:
 		null = 1
+
+	# Check for bad characters
+	if "{" in id_val or "<" in id_val or "]" in id_val or "[" in id_val:
+		continue
+
 	print id_val
 	commonscat = u"Category:" + id_val
 
