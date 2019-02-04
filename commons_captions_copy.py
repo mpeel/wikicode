@@ -75,21 +75,26 @@ def get_caption(site, itemtitle):
      return request.submit()
 
 def set_caption(site, itemtitle, caption,language='en'):
-     loginmanager = pywikibot.data.api.LoginManager(password=commons_testbot_pass, sysop=False, site=site, user=commons_testbot_username)
-     print loginmanager.login()
-     print loginmanager.get_login_token()
+     # loginmanager = pywikibot.data.api.LoginManager(password=commons_testbot_pass, sysop=False, site=site, user=commons_testbot_username)
+     # print loginmanager.login()
+     # print loginmanager.get_login_token()
      # print loginmanager.getCookie()
      # test = pywikibot.login.LoginManager(password=commons_testbot_pass,site=site, user=commons_testbot_username)
      # print test.botAllowed()
      # test.login()
      # prettyPrint(test)
      # caption = 'Sala Sao Paulo, Brazil'
-     caption = caption.replace(' ','%20')
+     print 'test'
+     site.login()
+     print site.logged_in()
+     print site.getuserinfo()
+     # site.TokenWallet.load_tokens()
+     # caption = caption.replace(' ','%20')
      print caption
      params = { 'action' :'wbsetlabel', 
                 'format' : 'json',
                 # 'lgname' : commons_testbot_username,
-                'token': loginmanager.get_login_token(),
+                'token': site.tokens['edit'],#loginmanager.get_login_token(),
                 'id': itemtitle,
                 'language' : language,
                 'value': caption}
@@ -103,6 +108,12 @@ def prettyPrint(variable):
     pp.pprint(variable)
 
 def check_and_set_caption(target):
+
+    # Test using the Wikidata sandbox
+    # captions = get_caption(repo, 'Q4115189')
+    # prettyPrint(captions)
+    # test = set_caption(repo, 'Q4115189', 'This is a test',language='en')
+    # exit()
 
     # token = get_login_token(commons)
     # prettyPrint(token)
