@@ -14,8 +14,6 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
-import mysql.connector
-from database_login import *
 from pibot_functions import *
 
 maxnum = 100000
