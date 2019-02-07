@@ -36,7 +36,6 @@ targetcats = ['Commons category link is the pagename‎', 'Commons category link
 for categories in range(0,1):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-
 		if categories:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
@@ -45,7 +44,7 @@ for categories in range(0,1):
 
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Rawaseneng Monastery" in page.title():
+				if "Exposition Internationale des Arts" in page.title():
 					trip = 1
 				else:
 					print page.title()
@@ -101,20 +100,23 @@ for categories in range(0,1):
 
 			# Do some tidying of the link
 			if "|" in id_val:
-				if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0]:
-					if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1]:
-						id_val = id_val.split("|")[2]
+				try:
+					if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0]:
+						if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1]:
+							id_val = id_val.split("|")[2]
+						else:
+							id_val = id_val.split("|")[1]
 					else:
-						id_val = id_val.split("|")[1]
-				else:
-					id_val = id_val.split("|")[0]
+						id_val = id_val.split("|")[0]
+				except:
+					continue
 			try:
 				id_val = id_val.strip()
 			except:
 				null = 1
 
 			# Check for bad characters
-			if "{" in id_val or "<" in id_val or "]" in id_val or "[" in id_val:
+			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val:
 				continue
 
 			print id_val
