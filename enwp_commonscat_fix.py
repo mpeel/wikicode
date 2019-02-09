@@ -31,7 +31,7 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 
 targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎']
 
-for categories in range(0,1):
+for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
 		if categories:
