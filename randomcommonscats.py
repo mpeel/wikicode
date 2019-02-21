@@ -20,7 +20,7 @@ sys.setdefaultencoding('utf-8')
 site = pywikibot.Site('commons', 'commons')
 repo = site.data_repository()
 
-num = 1000
+num = 100
 blank = 0
 error = 0
 text = "This is a sample of " + str(num) + " random categories without Wikidata sitelinks.\n\n"
@@ -31,6 +31,16 @@ while numfound < num:
     targets = pagegenerators.RandomPageGenerator(total=100, site=site, namespaces='14')
     for target in targets:
         print target.title()
+        catredirect = 0
+        try:
+            text = targets.get()
+            templatestoavoid = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
+            if any(option in text for option in templatestoavoid):
+                catredirect = 1
+        except:
+            null = 1
+        if catredirect == 1:
+            continue
         try:
             wd_item = pywikibot.ItemPage.fromPage(target)
         except:
