@@ -19,7 +19,7 @@ import sys
 reload(sys)  # Reload does the trick!
 sys.setdefaultencoding('UTF8')
 
-maxnum = 5000000
+maxnum = 1000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
@@ -27,9 +27,9 @@ repo = commons.data_repository()  # this is a DataSite object
 manual = False
 random = False
 usequery = False
-usetemplate = ''#'Individual aircraft'
-usequarry = 'quarry.csv'
-quarry_reference = ''#'quarry5.csv'
+usetemplate = ''#'Creator'#'Individual aircraft'
+usequarry = 'quarry_new.csv'
+quarry_reference = 'quarry.csv'
 useimport = 'import.csv'
 newstyle = False
 database = False
@@ -46,8 +46,8 @@ targetcats = ['Category:CommonsRoot']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wikidata person", "wikidata person", "Wikidata place", "wikidata place", "{{Institution", "{{institution", "{{Creator", "{{creator", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", "{{Artwork", "{{artwork", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai', 'Finlandyear', 'finlandyear', 'Finlandyear-Sweden', 'finlandyear-Sweden', 'AirDisasters', 'airDisasters', 'Finland decade', 'finland decade'] + catredirect_templates
-templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw", "en", "En", "individual aircraft", "Individual aircraft"]
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wdbox", "wdbox", "{{Institution", "{{institution", "{{Creator|", "{{creator|", "{{Creator:", "{{creator:", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", "{{Artwork", "{{artwork", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai', 'Finlandyear', 'finlandyear', 'Finlandyear-Sweden', 'finlandyear-Sweden', 'Finlanddisestablishmentyear' 'AirDisasters', 'airDisasters', 'Finland decade', 'finland decade'] + catredirect_templates
+templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw", "en", "En", "individual aircraft", "Individual aircraft", "Wikidata person", "wikidata person"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
 
@@ -77,6 +77,42 @@ def addtemplate(target):
         'Already uses Wikidata Infobox!'
         return 0
 
+    # Replace the Creator template if it is present
+    test_item_dict = item_dict
+    try:
+        existing_id = test_item_dict['claims']['P301']
+        print 'P301 exists, following that.'
+        for clm2 in existing_id:
+            test_item = clm2.getTarget()
+            test_item_dict = test_item.get()
+    except:
+        null = 0    
+    try:
+        p1472 = test_item_dict['claims']['P1472']
+        # print p1472
+        for clm in p1472:
+            creator_template = clm.getTarget()
+            print target_text
+            target_text = target_text.replace("{{Creator:"+creator_template+"}}","")
+            target_text = target_text.replace("{{creator:"+creator_template+"}}","")
+            target_text = target_text.replace("{{Creator:"+creator_template+"|autocategorize}}","")
+            target_text = target_text.replace("{{creator:"+creator_template+"|autocategorize}}","")
+            print target_text
+    except:
+        null = 0
+    # ... and the Institution template
+    try:
+        p1612 = test_item_dict['claims']['P1612']
+        # print p1812
+        for clm in p1612:
+            institution_template = clm.getTarget()
+            print target_text
+            target_text = target_text.replace("{{Institution:"+institution_template+"}}","")
+            target_text = target_text.replace("{{institution:"+institution_template+"}}","")
+            print target_text
+    except:
+        null = 0
+
     # We have a category that's linked to a Wikidata item. Check if we want to add the template:
     if any(option in target_text for option in templatestoavoid):
         for option in templatestoavoid:
@@ -90,67 +126,100 @@ def addtemplate(target):
         p301 = item_dict['claims']['P301']
         for clm in p301:
             print clm
+            # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
             savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
             wd_id = clm.getTarget().title()
             # Check to see if it's linked to a list item, and avoid if so
-            test = pywikibot.ItemPage(repo, wd_id)
-            try:
-                testitem = test.get()
-                test_p31 = testitem['claims']['P31']
-                for clm in test_p31:
-                    if 'Q13406463' in clm.getTarget().title():
-                        print 'Category linked to a list item'
-                        return 0
-            except:
-                print 'nm'
+            # test = pywikibot.ItemPage(repo, wd_id)
+            # try:
+            #     testitem = test.get()
+            #     test_p31 = testitem['claims']['P31']
+            #     for clm in test_p31:
+            #         if 'Q13406463' in clm.getTarget().title():
+            #             print 'Category linked to a list item'
+            #             return 0
+            # except:
+            #     print 'nm'
     except:
         # print 'P301 not found'
+        # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
         savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
-        try:
-            p971 = item_dict['claims']['P971']
-        except:
-            try:
-                p31 = item_dict['claims']['P31']
-                test = 1
-                for clm in p31:
-                    if 'Q4167836' in clm.getTarget().title():
-                        # We have a Wikimedia category with no P301, skip it
-                        print 'Wikimedia category, no P301'
-                        return 0
-                    if 'Q14204246' in clm.getTarget().title():
-                        # We have a Wikimedia category with no P301, skip it
-                        print 'Wikimedia project page'
-                        return 0
-                    if 'Q13406463' in clm.getTarget().title():
-                        # We have a Wikimedia category with no P301, skip it
-                        print 'Wikimedia list page'
-                        return 0
-                    if 'Q4167410' in clm.getTarget().title():
-                        # We have a Wikimedia category with no P301, skip it
-                        print 'Wikimedia disambiguation page'
-                        return 0
-            except:
-                print 'P31 not found'
+        # try:
+        #     p971 = item_dict['claims']['P971']
+        # except:
+        #     try:
+        #         p31 = item_dict['claims']['P31']
+        #         test = 1
+        #         for clm in p31:
+        #             if 'Q4167836' in clm.getTarget().title():
+        #                 # We have a Wikimedia category with no P301, skip it
+        #                 print 'Wikimedia category, no P301'
+        #                 return 0
+        #             if 'Q14204246' in clm.getTarget().title():
+        #                 # We have a Wikimedia category with no P301, skip it
+        #                 print 'Wikimedia project page'
+        #                 return 0
+        #             if 'Q13406463' in clm.getTarget().title():
+        #                 # We have a Wikimedia category with no P301, skip it
+        #                 print 'Wikimedia list page'
+        #                 return 0
+        #             if 'Q4167410' in clm.getTarget().title():
+        #                 # We have a Wikimedia category with no P301, skip it
+        #                 print 'Wikimedia disambiguation page'
+        #                 return 0
+        #     except:
+        #         print 'P31 not found'
 
     # Remove unneeded templates
     for option in templatestoremove:
         if option in target.text:
             target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}\n", "")
             target_text = target_text.replace("{{"+option+"|"+wd_item.title()+"}}", "")
-            if wd_id != 0:
-                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}\n", "")
-                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}", "")
+            target_text = target_text.replace("{{"+option+"| "+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"| "+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+"|1="+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"|1="+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+" |1="+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+" |1="+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+" |1= "+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+" |1= "+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+"| 1="+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"| 1="+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+"| 1= "+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+"| 1= "+wd_item.title()+"}}", "")
+            target_text = target_text.replace("{{"+option+" | 1="+wd_item.title()+"}}\n", "")
+            target_text = target_text.replace("{{"+option+" | 1="+wd_item.title()+"}}", "")
             target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}\n", "")
             target_text = target_text.replace("{{"+option+"|Wikidata="+wd_item.title()+"}}", "")
-            if wd_id != 0:
-                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}\n", "")
-                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
             target_text = target_text.replace("{{"+option+"}}\n", "")
             target_text = target_text.replace("{{"+option+"}}", "")
             target_text = target_text.replace("{{"+option+"|}}\n", "")
             target_text = target_text.replace("{{"+option+"|}}", "")
             target_text = target_text.replace("{{"+option+"| }}\n", "")
             target_text = target_text.replace("{{"+option+"| }}", "")
+            if wd_id != 0:
+                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"|"+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+"| "+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"| "+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+"|1="+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"|1="+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+" |1="+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+" |1="+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+" |1= "+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+" |1= "+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+"| 1="+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"| 1="+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+"| 1= "+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"| 1= "+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+" | 1="+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+" | 1="+wd_id+"}}", "")
+                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}\n", "")
+                target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
+
+    # if "Wikidata person" in target_text or "wikidata person" in target_text:
+    #     print 'Failed to remove the existing Wikidata person template!'
+    #     return 0
 
     # We're good to go. Look for the best line to add the template in.
     i = 0
@@ -227,6 +296,7 @@ elif usetemplate:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
 elif usequarry:
+    print 'hello'
     quarry_ref = []
     if quarry_reference != '':
         with open(quarry_reference, mode='r') as infile:
