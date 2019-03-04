@@ -53,8 +53,8 @@ text = text + u"\n|}\n[[Category:User groups]]\n[[Category:Wikimedia Foundation 
 
 # Test if it is the same (using splits to avoid update date changes triggering this)
 # Also handle cases where the search text can't be found.
-test1 = text.split('The synchronisation code [[User:Mike Peel')
-test2 = page.text.split('The synchronisation code [[User:Mike Peel')
+test1 = text.split('For any maintenance issues, please leave a note for')
+test2 = page.text.split('For any maintenance issues, please leave a note for')
 if len(test1) > 1:
     test1 = test1[1]
 if len(test2) > 1:
