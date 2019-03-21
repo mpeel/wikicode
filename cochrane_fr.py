@@ -17,10 +17,10 @@ locale.setlocale(locale.LC_TIME, "fr_FR")
 def update_report(page, old_pmid, new_pmid, previousreports):
     report = pywikibot.Page(site, reportpage)
     report_text = report.get()
-    rep = u'\n*Article [[%s]] ([{{fullurl:%s|action=edit}} edit]) ancienne critique [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s] nouvelle critique [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s]' % (page.title(), page.title(),old_pmid, old_pmid, new_pmid, new_pmid)
+    rep = u'Article [[%s]] ([{{fullurl:%s|action=edit}} edit]) ancienne critique [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s] nouvelle critique [https://www.ncbi.nlm.nih.gov/pubmed/%s PMID:%s]' % (page.title(), page.title(),old_pmid, old_pmid, new_pmid, new_pmid)
     if rep in report_text or rep in previousreports:
         return
-    report.text = report_text + rep + u' - ~~~~~'
+    report.text = report_text + "\n*" + rep + u' - ~~~~~'
     report.save(u'Rapport de mise à jour à inclure ' + page.title())
 
 checkedpages = {}
