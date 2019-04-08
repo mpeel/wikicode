@@ -307,6 +307,7 @@ elif usequarry:
         targets = {rows[1] for rows in reader}
     for target in targets:
         # if test == 0 and 'Toyota JPN' not in target:
+        target = target.strip()
         if target in quarry_ref:
             continue
         # else:
