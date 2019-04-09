@@ -114,7 +114,7 @@ for categories in range(0,2):
 				null = 1
 
 			# Check for bad characters
-			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val:
+			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val:
 				continue
 
 			print id_val
