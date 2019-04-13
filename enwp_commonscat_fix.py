@@ -5,6 +5,7 @@
 # Mike Peel     14-Jan-2019      v1.1 - tweaks for enwp bot approval
 # Mike Peel     20-Jan-2019      v1.2 - last check for files in a category
 # Mike Peel     21-Jan-2019      v1.3 - tweaks to removal code and template list
+# Mike Peel     13-Apr-2019      v1.4 - add matches to the wikidata game database
 
 from __future__ import unicode_literals
 
@@ -15,6 +16,16 @@ import string
 from pywikibot import pagegenerators
 import urllib
 from pibot_functions import *
+import mysql.connector
+from database_login import *
+
+mydb = mysql.connector.connect(
+  host=database_host,
+  user=database_user,
+  passwd=database_password,
+  database=database_database
+)
+mycursor = mydb.cursor()
 
 maxnum = 100000
 nummodified = 0
@@ -127,6 +138,7 @@ for categories in range(0,2):
 				for clm2 in existing_id:
 					wd_item = clm2.getTarget()
 					item_dict = wd_item.get()
+					qid = wd_item.title()
 					print wd_item.title()
 			except:
 				null = 0
@@ -164,6 +176,24 @@ for categories in range(0,2):
 							nummodified += 1
 							page.save(savemessage)
 							continue
+
+				# It exists, but the Wikidata item has no sitelink, so add it as a tile in the game
+				try:
+					commonscat = u"Category:" + id_val
+					mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + commonscat + '"')
+					myresult = mycursor.fetchone()
+					print myresult
+					if not myresult:
+						sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
+						val = (qid, commonscat)
+						print sql
+						print val
+						mycursor.execute(sql, val)
+						mydb.commit()
+						nummodified += 1
+				except:
+					print 'Something went wrong when adding it to the database!'
+
 
 			# Only attempt to do the next part if we have a commons category link both locally and on wikidata
 			if id_val != 0 and sitelink_check == 1:
