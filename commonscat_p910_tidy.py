@@ -13,9 +13,9 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-
 maxnum = 10000
 nummodified = 0
+debug = False
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -86,7 +86,7 @@ for i in range(0,num):
             # except:
             #     print 'Unable to get target!'
             #     continue
-            print p910_id
+            # print(p910_id)
 
         try:
             sitelink2 = p910_dict['sitelinks']['commonswiki']
@@ -99,19 +99,21 @@ for i in range(0,num):
         if redirect1 == '' and redirect2 == '':
             continue
 
-        print(redirect1)
-        print(redirect2)
-        print(sitelink)
-        print(sitelink2)
-        text = 'n'
-        if redirect1 == sitelink2.replace('Category:',''):
-            print('Will remove ' + sitelink)
-            text = raw_input("Save? ")
-        elif redirect2 == sitelink.replace('Category:',''):
-            print('Will remove ' + sitelink2)
-            text = raw_input("Save? ")
-        else:
-            print('No change')
+        text = 'y'
+        if debug:
+            print(redirect1)
+            print(redirect2)
+            print(sitelink)
+            print(sitelink2)
+            text = 'n'
+            if redirect1 == sitelink2.replace('Category:',''):
+                print('Will remove ' + sitelink)
+                # text = raw_input("Save? ")
+            elif redirect2 == sitelink.replace('Category:',''):
+                print('Will remove ' + sitelink2)
+                # text = raw_input("Save? ")
+            else:
+                print('No change')
 
         if text != 'n':
             if redirect1 == sitelink2.replace('Category:',''):
