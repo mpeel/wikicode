@@ -11,18 +11,18 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 1000
+maxnum = 10000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = False
-templates = ['Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata']
-others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location|wikidata=', 'object location|Wikidata=', 'Object location|Wikidata=', 'Object location|wikidata=', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en", 'Individual aircraft', 'individual aircraft']
+templates = ['Wdbox','Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata', 'WI', 'Wdbox']
+others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location', 'Object location', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en", 'Individual aircraft', 'individual aircraft', 'Wikidata place','wikidata place', 'Articles via Wikidata', 'Articles via Wikidata |P301=']
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
-savemessage="Tidy Wikidata Infobox call"# (trimming [[Template:Individual aircraft]] as all info is now in the infobox)"
-wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox"]
+savemessage="Tidy Wikidata Infobox call"
+wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox", "Wdbox", "wdbox", 'WI']
 
 def migratecat(targetcat):
     print targetcat
@@ -34,13 +34,14 @@ def migratecat(targetcat):
         return 0
 
     # Fetch the info from Wikidata
+    wd_item = 0
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
         item_dict = wd_item.get()
         print wd_item.title()
     except:
         print 'No Wikidata ID'
-        return 0
+        null = 0
 
     # Or in the main topic
     wd_item2 = 0
@@ -55,10 +56,22 @@ def migratecat(targetcat):
     # Remove other templates
     for i in range(0,len(others)):
         target_text = target_text.replace("{{"+others[i]+"}}", "")
-        target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + "}}", "")
-        target_text = target_text.replace("{{" + others[i] + "|Wikidata=" + wd_item.title() + "}}", "")
-        target_text = target_text.replace("{{" + others[i] + "|wikidata=" + wd_item.title() + "}}", "")
-        target_text = target_text.replace("{{" + others[i] + wd_item.title() + "}}", "")
+        if wd_item != 0:
+            target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + " }}", "")
+            target_text = target_text.replace("{{" + others[i] + "|Wikidata=" + wd_item.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "|wikidata=" + wd_item.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "| Wikidata=" + wd_item.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "| wikidata=" + wd_item.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + wd_item.title() + "}}", "")
+        if wd_item2 != 0:
+            target_text = target_text.replace("{{" + others[i] + "|" + wd_item2.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "|" + wd_item2.title() + " }}", "")
+            target_text = target_text.replace("{{" + others[i] + "|Wikidata=" + wd_item2.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "|wikidata=" + wd_item2.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "| Wikidata=" + wd_item2.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + "| wikidata=" + wd_item2.title() + "}}", "")
+            target_text = target_text.replace("{{" + others[i] + wd_item2.title() + "}}", "")
         target_text = target_text.replace("{{" + others[i] + "| }}", "")
         target_text = target_text.replace("{{" + others[i] + " | }}", "")
 
@@ -72,11 +85,32 @@ def migratecat(targetcat):
         null = 1
 
     for i in range(0,len(wikidatainfobox)):
-        target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item.title(),'{{Wikidata Infobox')
-        target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item.title(),'{{Wikidata Infobox')
+        if wd_item != 0:
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid ="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid = "+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid = "+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid ="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid= "+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid ="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid = "+wd_item.title(),'{{Wikidata Infobox')
         if wd_item2 != 0:
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item2.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid ="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid = "+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid = "+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid ="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid= "+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid ="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid = "+wd_item2.title(),'{{Wikidata Infobox')
         target_text = target_text.replace("{{"+wikidatainfobox[i],'{{Wikidata Infobox')
 
     lines = target_text.splitlines()
@@ -123,16 +157,10 @@ def migratecat(targetcat):
     else:
         return 0
 
-category = 'Category:Uses of Wikidata Infobox with manual qid'#'Category:Pages with malformed coordinate tags'
-# category = 'Category:Uses of Wikidata Infobox with problems'
+# Check through the manual ID category
+category = 'Category:Uses of Wikidata Infobox with manual qid'
 cat = pywikibot.Category(commons,category)
 targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
-
-
-# for i in range(0,len(templates)):
-# template = pywikibot.Page(commons, 'Template:Individual aircraft')#+templates[i])
-# targetcats = template.embeddedin(namespaces='14')
-
 for targetcat in targetcats:
     print targetcat
     print "\n" + targetcat.title()
@@ -141,6 +169,20 @@ for targetcat in targetcats:
     if nummodified >= maxnum:
         print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
         exit()
+
+# Check for uses of the Wikidata Infobox redirects
+for i in range(0,len(templates)):
+    template = pywikibot.Page(commons, 'Template:'+templates[i])
+    targetcats = template.embeddedin(namespaces='14')
+    for targetcat in targetcats:
+        print targetcat
+        print "\n" + targetcat.title()
+        nummodified += migratecat(targetcat)
+
+        if nummodified >= maxnum:
+            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            exit()
+
 
 print 'Done! Edited ' + str(nummodified) + ' entries'
                 

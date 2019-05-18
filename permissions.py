@@ -6,6 +6,7 @@
 # Mike Peel        19 Feb 2017    Bug fixes, link to code location
 # Mike Peel        01 Sep 2017    Encoding fixes
 # Joe Sutherland   01 Sep 2017    Updating to match new sheet
+# Mike Peel        14 Feb 2019    Update URL to source code
 
 import csv
 import datetime
@@ -27,7 +28,7 @@ repo = site.data_repository()
 page = pywikibot.Page(site, u"WMF Advanced Permissions")
 
 now = datetime.datetime.now()
-text = u'This table is a mirror of the Google spreadsheet [https://docs.google.com/spreadsheet/pub?key=0AvhjkTJIpW2zdDl1bVBuOU1jQUJwOHd5YmhmSzFaZHc here], please arrange changes to that spreadsheet rather than changing this page yourself. The table was last <abbr title="The data in this wikitable being identical to the Google spreadsheet data at that time, apart from formatting.">synchronized</abbr> at ' + str(datetime.date(now.year, now.month, now.day)) + '. The synchronisation code [[User:Mike Peel/WMF permissions script|is available on-wiki]]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Username !! Received !! Usecase !! Rights\n|-'
+text = u'This table is a mirror of the Google spreadsheet [https://docs.google.com/spreadsheet/pub?key=0AvhjkTJIpW2zdDl1bVBuOU1jQUJwOHd5YmhmSzFaZHc here], please arrange changes to that spreadsheet rather than changing this page yourself. The table was last <abbr title="The data in this wikitable being identical to the Google spreadsheet data at that time, apart from formatting.">synchronized</abbr> at ' + str(datetime.date(now.year, now.month, now.day)) + '. The synchronisation code [https://bitbucket.org/mikepeel/wikicode/src/master/permissions.py is available]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Username !! Received !! Usecase !! Rights\n|-'
 
 i = 0
 for row in cr:
@@ -52,8 +53,8 @@ text = text + u"\n|}\n[[Category:User groups]]\n[[Category:Wikimedia Foundation 
 
 # Test if it is the same (using splits to avoid update date changes triggering this)
 # Also handle cases where the search text can't be found.
-test1 = text.split('The synchronisation code [[User:Mike Peel')
-test2 = page.text.split('The synchronisation code [[User:Mike Peel')
+test1 = text.split('For any maintenance issues, please leave a note for')
+test2 = page.text.split('For any maintenance issues, please leave a note for')
 if len(test1) > 1:
     test1 = test1[1]
 if len(test2) > 1:

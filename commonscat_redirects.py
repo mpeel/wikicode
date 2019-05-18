@@ -22,9 +22,9 @@ trap = 0
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 report = pywikibot.Page(commons, reportpage)
-if trap != 1:
-    report.text = ''
-    report.save('Blanking to restart logging')
+# if trap != 1:
+#     report.text = ''
+#     report.save('Blanking to restart logging')
 debug = 1
 
 targetcats = ['Category:Redirects connected to a Wikidata item', 'Category:Category redirects']
@@ -76,9 +76,9 @@ for targetcat in targetcats:
                         nummodified += 1
                     except:
                         print "That didn't work!"
-                        report_text = report.get()
-                        report.text = report_text + "\n* [[:"+target.title()+"]] -> [[:Category:"+redirect+"]]\n"
-                        report.save('+1')
+                        # report_text = report.get()
+                        # report.text = report_text + "\n* [[:"+target.title()+"]] -> [[:Category:"+redirect+"]]\n"
+                        # report.save('+1')
             
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'

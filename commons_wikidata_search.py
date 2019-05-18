@@ -14,9 +14,10 @@ from pywikibot import pagegenerators
 import urllib
 import pprint
 import csv
+import random
 
-database = False
-manual = True
+database = True
+manual = False
 maxnum = 1000000
 usetemplate = 0
 usecategory = 1
@@ -174,7 +175,7 @@ if usetemplate:
         else:
             runimport(targetcat)
 elif usecategory:
-    targetcats = ['Category:Uses of Wikidata Infobox with problems']
+    targetcats = ['Category:CommonsRoot']
     # targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
     # New style of category walker
     numchecked = 0
@@ -201,7 +202,9 @@ elif usecategory:
                 if result.title() not in seen:
                     seen.add(result.title())
                     next_active.add(result.title())
-        active = next_active
+        temp = list(next_active)
+        random.shuffle(temp)
+        active = set(temp)
         if nummodified >= maxnum:
             print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
             break
