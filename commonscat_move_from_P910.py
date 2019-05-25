@@ -11,6 +11,7 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
+import time
 
 maxnum = 100000
 nummodified = 0
@@ -133,6 +134,7 @@ for i in range(0,numsteps):
                 # if text == 'y':
                 print 'Saving!'
                 page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item (' + str(wd_id) + ')')
+                time.sleep(5)
                 val.editEntity(data, summary=u'Moving commons category sitelink from main item (' + str(qid) + ')')
                 nummodified += 1
             except:
