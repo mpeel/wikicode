@@ -15,8 +15,11 @@ import urllib
 maxnum = 100000
 nummodified = 0
 stepsize =  10000
-maximum = 2000000
+maximum = 3000000
 numsteps = int(maximum / stepsize)
+
+catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
+
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
@@ -48,11 +51,11 @@ for i in range(0,numsteps):
     '        ?item2 wdt:P373 ?commonscat .\n'\
     '        ?item2 wdt:P31 wd:Q4167836\n'\
     '    }\n'\
-    '    FILTER NOT EXISTS {\n'\
-    '        ?item3 wdt:P373 ?commonscat .\n'\
-    '        FILTER (?item3 != ?item) .\n'\
-    '        FILTER (!(bound(?item2) && ?item3 = ?item2))\n'\
-    '    }\n'\
+   '    FILTER NOT EXISTS {\n'\
+   '        ?item3 wdt:P373 ?commonscat .\n'\
+   '        FILTER (?item3 != ?item) .\n'\
+   '        FILTER (!(bound(?item2) && ?item3 = ?item2))\n'\
+   '    }\n'\
     '    MINUS {?commonslink schema:about ?item . ?commonslink schema:isPartOf <https://commons.wikimedia.org/> . } \n'\
     '}'
     # '    MINUS {?item wdt:P910 [] }\n'\
@@ -98,6 +101,41 @@ for i in range(0,numsteps):
             sitelink_check = 1
         except:
             sitelink_check = 0
+
+        # If we have a sitelink, is the P373 value we found a redirect to it?
+        if sitelink_check == 1:
+            for clm in p373:
+                val = clm.getTarget()
+                val = clm.getTarget()
+                commonscat = u"Category:" + val
+                try:
+                    targetpage = pywikibot.Page(commons, commonscat)
+                except:
+                    print 'Found a bad sitelink'
+                else:
+                    redirect = ''
+                    for option in catredirect_templates:
+                        if "{{" + option in targetpage.text:
+                            try:
+                                redirect = (targetpage.text.split("{{" + option + "|"))[1].split("}}")[0]
+                            except:
+                                try:
+                                    redirect = (targetpage.text.split("{{" + option + " |"))[1].split("}}")[0]
+                                except:
+                                    print 'Wikitext parsing bug!'
+                            redirect = redirect.replace(u":Category:","")
+                            redirect = redirect.replace(u"Category:","")
+                    if redirect != '':
+                        # print clm
+                        # print redirect
+                        # print sitelink
+                        if redirect == sitelink.replace(u'Category:',''):
+                            # text = raw_input("Save? ")
+                            # if text == 'y':
+                            clm.changeTarget(redirect, summary=u"Update P373 to avoid commons category redirect")
+                            nummodified+=1
+
+
         # Only attempt to do this if there is only one value for P373 and no existing sitelink
         if p373_check == 1 and sitelink_check == 0:
             for clm in p373:
