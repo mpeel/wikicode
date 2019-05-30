@@ -45,11 +45,9 @@ for i in range(0,numsteps):
     '         ?commonspage schema:about [] .\n'\
     '    }\n'\
     '    FILTER (!bound(?commonspage)) \n'\
-    '    MINUS {?item wdt:P31 wd:Q4167836}\n'\
     '    MINUS {?item wdt:P31 wd:Q4167410}\n'\
     '    OPTIONAL {\n'\
     '        ?item2 wdt:P373 ?commonscat .\n'\
-    '        ?item2 wdt:P31 wd:Q4167836\n'\
     '    }\n'\
    '    FILTER NOT EXISTS {\n'\
    '        ?item3 wdt:P373 ?commonscat .\n'\
