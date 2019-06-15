@@ -46,7 +46,7 @@ targetcats = ['Commons category link is the pagename‎', 'Commons category link
 for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 0:
+		if categories == 1:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -70,7 +70,10 @@ for categories in range(0,2):
 			print("\n" + page.title())
 
 			# Get the candidate commonscat link
-			target_text = page.get()
+			try:
+				target_text = page.get()
+			except:
+				continue
 			id_val = 0
 			abort = 0
 			commonscat_string = ""
