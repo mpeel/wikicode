@@ -41,7 +41,7 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Commons category link is locally defined‎', 'Commons category link is defined as the pagename‎', 'Commons category link is the pagename‎']
+targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
@@ -118,7 +118,7 @@ for categories in range(0,2):
 				null = 1
 
 			# Check for bad characters
-			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val:
+			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val or 'bullet=' in id_val or 'bullet =' in id_val:
 				continue
 
 			print(id_val)
@@ -214,7 +214,10 @@ for categories in range(0,2):
 					commonscat_page = pywikibot.Page(commons, commonscat)
 					category_text = commonscat_page.get()
 				except:
-					last_check = check_if_category_has_contents(id_val,site=commons)
+					try:
+						last_check = check_if_category_has_contents(id_val,site=commons)
+					except:
+						continue
 					if last_check == False:
 						print('Found a bad sitelink, but there is one on wikidata we can use')
 						target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
