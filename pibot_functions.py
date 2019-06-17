@@ -21,6 +21,11 @@ def check_if_category_has_contents(category, site=''):
 		return True
 		exit()
 
+	pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+	for page in pages:
+		return True
+		exit()
+
 	return False
 
 
