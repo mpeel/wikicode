@@ -50,7 +50,10 @@ for page in generator:
             commonscat_page = pywikibot.Page(commons, commonscat)
             text = commonscat_page.get()
         except:
-            last_check = check_if_category_has_contents(commonscat,site=commons)
+            try:
+                last_check = check_if_category_has_contents(commonscat,site=commons)
+            except:
+                continue
             if last_check == False:
                 # See if we have a sitelink we can copy from
                 try:
