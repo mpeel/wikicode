@@ -95,7 +95,7 @@ for pageid in candidates:
                     sitelink = item_dict['sitelinks']['commonswiki']
                 except:
                     sitelink = ''
-                if sitelink != '':
+                if sitelink != '' and 'Category:' in sitelink:
                     test = 'y'
                     if debug == 1:
                         print(clm)
