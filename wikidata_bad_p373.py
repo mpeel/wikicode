@@ -29,16 +29,16 @@ query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
 '    FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
 '    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
 '}'
-if debug:
-    query = query + " LIMIT 10"
+# if debug:
+#     query = query + " LIMIT 10"
 
-print query
+print(query)
 
 generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
 for page in generator:
     item_dict = page.get()
     qid = page.title()
-    print "\n" + qid
+    print("\n" + qid)
     try:
         p373 = item_dict['claims']['P373']
     except:
@@ -46,10 +46,25 @@ for page in generator:
     for clm in p373:
         val = clm.getTarget()
         commonscat = u"Category:" + val
+        print(commonscat)
+        original = commonscat
+        # First let's see if we can correct the P373 value
+        commonscat = commonscat.replace('Category::','Category:')
+        commonscat = commonscat.replace('Category:Category:','Category:')
         try:
             commonscat_page = pywikibot.Page(commons, commonscat)
             text = commonscat_page.get()
+            if commonscat != original:
+                test = 'y'
+                if debug == 1:
+                    print(original)
+                    print(commonscat)
+                    test = raw_input("Continue? ")
+                if test == 'y':
+                    clm.changeTarget(commonscat.replace('Category:',''), summary=u"Correct P373")
+                    nummodified += 1
         except:
+            continue
             try:
                 last_check = check_if_category_has_contents(commonscat,site=commons)
             except:
@@ -79,10 +94,10 @@ for page in generator:
                         nummodified += 1
 
         if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             exit()
 
 
-print 'Done! Edited ' + str(nummodified) + ' entries'
+print('Done! Edited ' + str(nummodified) + ' entries')
         
 # EOF
