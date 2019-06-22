@@ -29,8 +29,8 @@ query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
 '    FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
 '    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
 '}'
-# if debug:
-#     query = query + " LIMIT 10"
+if debug:
+    query = query + " LIMIT 10"
 
 print(query)
 
@@ -64,7 +64,6 @@ for page in generator:
                     clm.changeTarget(commonscat.replace('Category:',''), summary=u"Correct P373")
                     nummodified += 1
         except:
-            continue
             try:
                 last_check = check_if_category_has_contents(commonscat,site=commons)
             except:
