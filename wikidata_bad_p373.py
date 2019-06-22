@@ -23,25 +23,46 @@ debug = 0
 attempts = 0
 count = 0
 
-query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
-'    ?statement wikibase:hasViolationForConstraint wds:P373-3C23B442-AC15-4E46-B58C-705E563DD015 .'\
-'    ?item ?p ?statement .'\
-'    FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
-'    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-'}'
-if debug:
-    query = query + " LIMIT 10"
+usereport = True
+candidates = []
+if usereport:
+    reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P373')
+    text = reportpage.get()
+    text = text.split('== "Commons link" violations ==')[1].split('== "Conflicts with {{P|31}}" violations ==')[0]
+    lines = text.splitlines()
+    for line in lines:
+        try:
+            qid = line.split('* [[')[1].split(']]')[0]
+            # print(qid)
+            candidates.append(qid)
+        except:
+            continue
+else:
+    query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
+    '    ?statement wikibase:hasViolationForConstraint wds:P373-3C23B442-AC15-4E46-B58C-705E563DD015 .'\
+    '    ?item ?p ?statement .'\
+    '    FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
+    '    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+    '}'
+    if debug:
+        query = query + " LIMIT 10"
 
-print(query)
+    print(query)
 
-generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
-for page in generator:
+    generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+
+
+# for page in generator:
+for pageid in candidates:
+    page = pywikibot.ItemPage(repo, pageid)
     item_dict = page.get()
     qid = page.title()
     print("\n" + qid)
+    # print(item_dict)
     try:
         p373 = item_dict['claims']['P373']
     except:
+        print('No P373')
         continue
     for clm in p373:
         val = clm.getTarget()
