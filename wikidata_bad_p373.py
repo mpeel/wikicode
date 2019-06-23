@@ -23,7 +23,7 @@ debug = 0
 attempts = 0
 count = 0
 
-usereport = True
+usereport = False
 candidates = []
 if usereport:
     reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P373')
@@ -52,9 +52,9 @@ else:
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
 
 
-# for page in generator:
-for pageid in candidates:
-    page = pywikibot.ItemPage(repo, pageid)
+for page in generator:
+# for pageid in candidates:
+#     page = pywikibot.ItemPage(repo, pageid)
     item_dict = page.get()
     qid = page.title()
     print("\n" + qid)
