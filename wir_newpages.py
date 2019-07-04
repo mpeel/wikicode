@@ -152,11 +152,11 @@ def addDateClaim(repo='', item='', claim='', date='', lang=''):
 	if repo and item and claim and date and lang:
 		claim = pywikibot.Claim(repo, claim)
 		if len(date.split('-')) == 3:
-			claim.setTarget(pywikibot.WbTime(year=date.split('-')[0], month=date.split('-')[1], day=date.split('-')[2]))
+			claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0]), month=int(date.split('-')[1]), day=int(date.split('-')[2])))
 		elif len(date.split('-')) == 2:
-			claim.setTarget(pywikibot.WbTime(year=date.split('-')[0], month=date.split('-')[1]))
+			claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0]), month=int(date.split('-')[1])))
 		elif len(date.split('-')) == 1:
-			claim.setTarget(pywikibot.WbTime(year=date.split('-')[0]))
+			claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0])))
 		item.addClaim(claim, summary='BOT - Adding 1 claim')
 		addImportedFrom(repo=repo, claim=claim, lang=lang)
 
@@ -206,6 +206,26 @@ def calculateBirthDate(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
+		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	elif lang == 'de':
+		m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Geboren (\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	elif lang == 'fr':
+		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Naissance en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	return ''
+
+def calculateBirthDateFull(page='', lang=''):
+	if not page:
+		return ''
+	if lang == 'en':
+		m = re.findall(r'\{\{birth date and age\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		if m:
+			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
 		if m:
 			return m[0]
@@ -320,7 +340,7 @@ def pageIsRubbish(page='', lang=''):
 def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 	if repo and wikisite and item and page and lang:
 		gender = calculateGender(page=page, lang=lang)
-		birthdate = calculateBirthDate(page=page, lang=lang)
+		birthdate = calculateBirthDateFull(page=page, lang=lang)
 		deathdate = calculateDeathDate(page=page, lang=lang)
 		occupations = calculateOccupations(wikisite=wikisite, page=page, lang=lang)
 		try:
