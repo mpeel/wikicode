@@ -223,7 +223,10 @@ def calculateBirthDateFull(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
-		m = re.findall(r'\{\{birth date and age\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		m = re.findall(r'\{\{birth date and age\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y',''))
+		if m:
+			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
+		m = re.findall(r'\{\{birth date\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y',''))
 		if m:
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
