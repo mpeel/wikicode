@@ -374,7 +374,7 @@ def main():
 		gen = pagegenerators.NewpagesPageGenerator(site=wikisite, namespaces=[0], total=total)
 		#cat = pywikibot.Category(wikisite, 'Category:Articles without Wikidata item')
 		#gen = pagegenerators.CategorizedPageGenerator(cat, recurse=False)
-		pre = pagegenerators.PreloadingGenerator(gen, groupsize=50)
+		pre = pagegenerators.PreloadingGenerator(gen, groupsize=total)
 		for page in pre:
 			print(page.title())
 			if page.isRedirectPage():
