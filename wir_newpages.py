@@ -32,6 +32,7 @@ import unicodedata
 import urllib
 import urllib.request
 import urllib.parse
+import dateparser
 
 def removeAccents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
@@ -233,9 +234,17 @@ def calculateBirthDateFull(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'de':
-		m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Geboren (\d+)\s*[\|\]]', page.text)
+		m = re.findall(r'(?im)\|\s*GEBURTSDATUM\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('.',''))
 		if m:
-			return m[0]
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
+		if not m:
+			m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Geboren (\d+)\s*[\|\]]', page.text)
+			if m:
+				return m[0]
 	elif lang == 'fr':
 		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Naissance en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
 		if m:
@@ -253,6 +262,31 @@ def calculateDeathDate(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Gestorben (\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'fr':
+		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Décès en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	return ''
+
+def calculateDeathDateFull(page='', lang=''):
+	if not page:
+		return ''
+	if lang == 'en':
+		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) deaths\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	elif lang == 'de':
+		m = re.findall(r'(?im)\|\s*STERBEDATUM\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('.',''))
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
+		if not m:
+			m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Gestorben (\d+)\s*[\|\]]', page.text)
+			if m:
+				return m[0]
 	elif lang == 'fr':
 		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Décès en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
 		if m:
@@ -344,7 +378,7 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 	if repo and wikisite and item and page and lang:
 		gender = calculateGender(page=page, lang=lang)
 		birthdate = calculateBirthDateFull(page=page, lang=lang)
-		deathdate = calculateDeathDate(page=page, lang=lang)
+		deathdate = calculateDeathDateFull(page=page, lang=lang)
 		occupations = calculateOccupations(wikisite=wikisite, page=page, lang=lang)
 		try:
 			item.get()

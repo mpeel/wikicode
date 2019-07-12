@@ -11,7 +11,6 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
-import mysql.connector
 from database_login import *
 
 # mydb = mysql.connector.connect(
@@ -32,8 +31,8 @@ enwp = pywikibot.Site('en', 'wikipedia')
 debug = 1
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
-targetcat = 'Category:Commons category link is the pagename'
-# targetcat = 'Category:Commons category link is defined as the pagename'
+# targetcat = 'Category:Commons category link is the pagename'
+targetcat = 'Category:Commons category link is defined as the pagename'
 # targetcat = 'Category:Commons category link is on Wikidata using P373'
 # targetcat = 'Category:Commons category link is locally defined'
 cat = pywikibot.Category(enwp, targetcat)
@@ -49,7 +48,7 @@ for page in pages:
 		if "Barbara Baska" in page.title():
 			trip = 1
 		else:
-			print page.title()
+			print(page.title())
 			continue
 	try:
 		# item_dict = page.get()
@@ -58,13 +57,13 @@ for page in pages:
 		item_dict = wd_item.get()
 		qid = wd_item.title()
 	except:
-		print 'Huh - no page found'
+		print('Huh - no page found')
 		continue
-	# print item_dict
+	# print(item_dict)
 	# exit()
 
-	print "\n" + qid
-	print page.title()
+	print("\n" + qid)
+	print(page.title())
 
 	# Get the candidate page
 	target_text = page.get()
@@ -73,13 +72,13 @@ for page in pages:
 	for i in range(0,len(templates)):
 		try:
 			value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0].strip()
-			print value
+			print(value)
 			values = (value.split("|"))
 			if 'position' in values[0]:
 				value = values[1]
 			else:
 				value = values[0]
-			print value
+			print(value)
 			if value and id_val == 0:
 				id_val = value
 		except:
@@ -89,7 +88,7 @@ for page in pages:
 				if value and id_val == 0:
 					id_val = value
 				elif id_val != 0:
-					print 'Found multiple IDs'
+					print('Found multiple IDs')
 			except:
 				null = 2
 
@@ -117,16 +116,16 @@ for page in pages:
 	else:
 		id_val = page.title()
 
-	print id_val
+	print(id_val)
 
 	# If we have a P910 value, switch to using that item
 	try:
 		existing_id = item_dict['claims']['P910']
-		print 'P910 exists, following that.'
+		print('P910 exists, following that.')
 		for clm2 in existing_id:
 			wd_item = clm2.getTarget()
 			item_dict = wd_item.get()
-			print wd_item.title()
+			print(wd_item.title())
 	except:
 		null = 0
 
@@ -143,7 +142,7 @@ for page in pages:
 		try:
 			sitelink_page = pywikibot.Page(commons, commonscat)
 		except:
-			print 'Found a bad sitelink'
+			print('Found a bad sitelink')
 			# clm.changeTarget("", summary=u"Remove non-functional value of P373")
 		else:
 			# Check the category to see if it already has a Wikidata item
@@ -155,7 +154,7 @@ for page in pages:
 				try:
 					text = commonscat_page.get()
 				except:
-					print 'Commons category does not exist - fix that?'
+					print('Commons category does not exist - fix that?')
 					# text = raw_input("Continue? ")
 					continue
 
@@ -164,36 +163,18 @@ for page in pages:
 
 					# That didn't work, add it to the Wikidata entry
 					data = {'sitelinks': [{'site': 'commonswiki', 'title': commonscat}]}
-					print 'http://www.wikidata.org/wiki/'+qid
-					print 'http://commons.wikimedia.org/wiki/'+commonscat
-					text = raw_input("Save? ")
+					print('http://www.wikidata.org/wiki/'+qid)
+					print('http://commons.wikimedia.org/wiki/'+commonscat)
+					text = input("Save? ")
 					if text != 'n':
 						wd_item.editEntity(data, summary=u'Add commons sitelink')
 						nummodified += 1
 
-					# try:
-					# print id_val
-					# print data
-					# try:
-					# 	# No existing sitelink found, add it to the database as a possibility
-					# 	mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + commonscat + '"')
-					# 	myresult = mycursor.fetchone()
-					# 	print myresult
-					# 	if not myresult:
-					# 		sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
-					# 		val = (qid, commonscat)
-					# 		print sql
-					# 		print val
-					# 		mycursor.execute(sql, val)
-					# 		mydb.commit()
-					# 		nummodified += 1
-					# except:
-					# 	print 'Something went wrong when adding it to the database!'
-					print nummodified
+					print(nummodified)
 					if nummodified >= maxnum:
-						print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+						print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
 						exit()
 
-print 'Done! Edited ' + str(nummodified) + ' entries'
+print('Done! Edited ' + str(nummodified) + ' entries')
 		
 # EOF
