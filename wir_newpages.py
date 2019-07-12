@@ -228,11 +228,19 @@ def calculateBirthDateFull(page='', lang=''):
 		if m:
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'\{\{(?:B|b)irth date\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y',''))
+		m = re.findall(r'(?im)\|\s*birth_date\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace(',',''))
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 		if m:
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
-		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
-		if m:
-			return m[0]
+		if not m:
+			m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
+			if m:
+				return m[0]
 	elif lang == 'de':
 		m = re.findall(r'(?im)\|\s*GEBURTSDATUM\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('.',''))
 		if m:
@@ -516,7 +524,6 @@ def main():
 						print("Error adding sitelink. Skiping.")
 						break
 					addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
-
 
 if __name__ == "__main__":
 	main()
