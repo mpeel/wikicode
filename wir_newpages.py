@@ -398,7 +398,6 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 			addDeathDateClaim(repo=repo, item=item, date=deathdate, lang=lang)
 		if not 'P106' in item.claims and occupations:
 			addOccupationsClaim(repo=repo, item=item, occupations=occupations, lang=lang)
-	exit()
 
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
@@ -514,6 +513,8 @@ def main():
 						print("Error adding sitelink. Skiping.")
 						break
 					addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
+					exit()
+
 
 if __name__ == "__main__":
 	main()
