@@ -272,6 +272,9 @@ def calculateDeathDateFull(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
+		m = re.findall(r'\{\{(?:D|d)da\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
+		if m:
+			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) deaths\s*[\|\]]', page.text)
 		if m:
 			return m[0]
