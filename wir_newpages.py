@@ -516,7 +516,6 @@ def main():
 						print("Error adding sitelink. Skiping.")
 						break
 					addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
-					exit()
 
 
 if __name__ == "__main__":
