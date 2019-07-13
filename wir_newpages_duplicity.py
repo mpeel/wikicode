@@ -144,4 +144,4 @@ for lang in langs:
 					print("Error adding sitelink. Skiping.")
 					break
 				addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
-				exit()
+				# exit()
