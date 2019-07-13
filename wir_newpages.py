@@ -260,6 +260,9 @@ def calculateBirthDateFull(page='', lang=''):
 			if m:
 				return m[0]
 	elif lang == 'fr':
+		m = re.findall(r'\{\{(?:D|d)ate sport\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
+		if m:
+			return str(m[0][2]) + '-' + str(m[0][1]) + '-' + str(m[0][0])
 		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Naissance en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
