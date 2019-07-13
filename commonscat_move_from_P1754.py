@@ -14,7 +14,7 @@ from pywikibot import pagegenerators
 import urllib
 import time
 
-maxnum = 100000
+maxnum = 1
 nummodified = 0
 stepsize =  10000
 maximum = 2000000
@@ -73,6 +73,7 @@ for i in range(0,numsteps):
         # Only attempt to do this if there is only one value for P1754
         if P1754_check != 1:
             print('More than one P1754 value found! Skipping...')
+            continue
 
         for clm in P1754:
             try:
