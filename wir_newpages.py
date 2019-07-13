@@ -238,27 +238,27 @@ def calculateBirthDateFull(page='', lang=''):
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'\|\s*(?:B|b)irth(?:_| )date\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
 		if m:
-			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
-				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
-			except:
-				m = False
-		if not m:
-			m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
-			if m:
-				return m[0]
+			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+				try:
+					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+				except:
+					m = False
+		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
+		if m:
+			return m[0]
 	elif lang == 'de':
 		m = re.findall(r'(?im)\|\s*GEBURTSDATUM\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('.',''))
 		if m:
-			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
-				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
-			except:
-				m = False
-		if not m:
-			m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Geboren (\d+)\s*[\|\]]', page.text)
-			if m:
-				return m[0]
+			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+				try:
+					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+				except:
+					m = False
+		m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Geboren (\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
 	elif lang == 'fr':
 		m = re.findall(r'\{\{(?:D|d)ate sport\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
 		if m:
@@ -297,29 +297,32 @@ def calculateDeathDateFull(page='', lang=''):
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'\{\{(?:D|d)eath date\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
 		if m:
-			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
-				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
-			except:
-				m = False
+			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+				try:
+					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+				except:
+					m = False
 		m = re.findall(r'\|\s*(?:D|d)eath(?:_| )date\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
 		if m:
-			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
-				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
-			except:
-				m = False
+			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+				try:
+					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+				except:
+					m = False
 		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) deaths\s*[\|\]]', page.text)
 		if m:
 			return m[0]
 	elif lang == 'de':
 		m = re.findall(r'(?im)\|\s*STERBEDATUM\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('.',''))
 		if m:
-			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
-				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
-			except:
-				m = False
+			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+				try:
+					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+				except:
+					m = False
 		if not m:
 			m = re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*:\s*Gestorben (\d+)\s*[\|\]]', page.text)
 			if m:
