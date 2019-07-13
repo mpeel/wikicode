@@ -236,6 +236,13 @@ def calculateBirthDateFull(page='', lang=''):
 				m = False
 		if m:
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
+		m = re.findall(r'\|\s*(?:B|b)irth(?:_| )date\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 		if not m:
 			m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
 			if m:
