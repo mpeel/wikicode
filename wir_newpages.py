@@ -292,6 +292,13 @@ def calculateDeathDateFull(page='', lang=''):
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
+		m = re.findall(r'\|\s*(?:D|d)eath(?:_| )date\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 		m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) deaths\s*[\|\]]', page.text)
 		if m:
 			return m[0]
@@ -530,6 +537,7 @@ def main():
 						print("Error adding sitelink. Skiping.")
 						break
 					addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
+					exit()
 
 if __name__ == "__main__":
 	main()
