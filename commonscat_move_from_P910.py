@@ -72,6 +72,7 @@ for i in range(0,numsteps):
         # Only attempt to do this if there is only one value for P910
         if p910_check != 1:
             print 'More than one P910 value found! Skipping...'
+            continue
 
         for clm in p910:
             try:

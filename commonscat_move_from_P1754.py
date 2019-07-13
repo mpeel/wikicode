@@ -14,7 +14,7 @@ from pywikibot import pagegenerators
 import urllib
 import time
 
-maxnum = 1
+maxnum = 1000
 nummodified = 0
 stepsize =  10000
 maximum = 2000000
