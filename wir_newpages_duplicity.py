@@ -55,7 +55,7 @@ for lang in langs:
 			item = pywikibot.ItemPage.fromPage(page)
 		except:
 			pass
-		exit()
+
 		if item:
 			print('Page has item')
 			print('https://www.wikidata.org/wiki/%s' % (item.title()))
