@@ -439,10 +439,10 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
 	repo = wdsite.data_repository()
-	langs = ['en']#, 'fr', 'de']
+	langs = ['fr']#['en', 'fr', 'de']
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
-		total = 1000
+		total = 100
 		if len(sys.argv) >= 2:
 			total = int(sys.argv[1])
 		gen = pagegenerators.NewpagesPageGenerator(site=wikisite, namespaces=[0], total=total)
@@ -550,7 +550,7 @@ def main():
 						print("Error adding sitelink. Skiping.")
 						break
 					addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
-					# exit()
+					exit()
 
 if __name__ == "__main__":
 	main()
