@@ -224,7 +224,7 @@ def calculateBirthDateFull(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
-		m = re.findall(r'\{\{(?:B|b)irth date and age\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
+		m = re.findall(r'\{\{(?:B|b)irth (?:D|d)ate and age\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
 		if m:
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'\{\{(?:B|b)irth date\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
@@ -453,7 +453,7 @@ def main():
 	langs = ['fr']#['en', 'fr', 'de']
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
-		total = 100
+		total = 1000
 		if len(sys.argv) >= 2:
 			total = int(sys.argv[1])
 		gen = pagegenerators.NewpagesPageGenerator(site=wikisite, namespaces=[0], total=total)
