@@ -393,7 +393,7 @@ def pageIsBiography(page='', lang=''):
 	return False
 
 def pageIsRubbish(page='', lang=''):
-	if lang == 'en' and re.search(r'(?im)\{\{\s*(db|AfD|Article for deletion|Notability)', page.text):
+	if lang == 'en' and re.search(r'(?im)\{\{\s*(db|AfD|Article for deletion|Notability|Prod blp)', page.text):
 		return True
 	elif lang == 'de' and re.search(r'(?im)\{\{\s*(Löschen|db|SLA|Speedy)', page.text):
 		return True
