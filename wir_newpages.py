@@ -413,7 +413,8 @@ def pageIsBiography(page='', lang=''):
 		elif not page.title().startswith('Liste ') and not page.title().startswith('Listes '):
 			if len(page.title().split(' ')) <= 5:
 				if re.search(r'(?im)((Catégorie|Category)\s*:\s*(Naissance|Décès) en)', page.text):
-					return True
+					if not re.search(r'(?im)(:(Catégorie|Category)\s*:\s*(Naissance|Décès) en)', page.text):
+						return True
 	return False
 
 def pageIsRubbish(page='', lang=''):
