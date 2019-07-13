@@ -224,7 +224,7 @@ def calculateBirthDateFull(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
-		m = re.findall(r'\{\{(?:B|b)irth (?:D|d)ate and age\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
+		m = re.findall(r'\{\{(?:B|b)irth (?:D|d)ate and age\s*\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
 		if m:
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'\{\{(?:B|b)irth date\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
@@ -552,7 +552,7 @@ def main():
 					print('No useful item found. Creating a new one...')
 					# test = input('Continue?')
 					#create item
-					newitemlabels = { lang: wtitle_ }
+					newitemlabels = {'en': wtitle_,'de': wtitle_,'fr': wtitle_,'es': wtitle_,'pt': wtitle_}
 					newitem = pywikibot.ItemPage(repo)
 					newitem.editLabels(labels=newitemlabels, summary="BOT - Creating item for [[:%s:%s|%s]] (%s): %s %s" % (lang, wtitle, wtitle, lang, 'human', gender))
 					newitem.get()
