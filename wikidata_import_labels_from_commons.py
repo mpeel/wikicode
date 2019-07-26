@@ -12,7 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 10000
+maxnum = 100
 nummodified = 0
 stepsize =  10000
 maximum = 2000000
@@ -23,7 +23,7 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 
 for i in range(0,numsteps):
-    print 'Starting at ' + str(i*stepsize)
+    print('Starting at ' + str(i*stepsize))
 
     query = "SELECT ?item\n"\
     "WITH { \n"\
@@ -40,60 +40,60 @@ for i in range(0,numsteps):
     "    })\n"\
     "}"
 
-    print query
+    print(query)
 
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
     for page in generator:
         # Get the page
         item_dict = page.get()
         qid = page.title()
-        print "\n" + qid
+        print("\n" + qid)
 
         # Check that it hasn't already got an en label
         try:
             label = item_dict['labels']['en']
-            print label
-            print "That shouldn't have worked, continuing"
+            print(label)
+            print("That shouldn't have worked, continuing")
             continue
         except:
-            print 'No English label'
+            print('No English label')
 
         # Get the value for P373
         try:
             p373 = item_dict['claims']['P373']
         except:
-            print 'No P373 value found!'
+            print('No P373 value found!')
             continue
         p373_check = 0
         for clm in p373:
             p373_check += 1
         # Only attempt to do this if there is only one value for P373
         if p373_check != 1:
-            print 'More than one P373 value found! Skipping...'
+            print('More than one P373 value found! Skipping...')
 
         # Make sure that we have a sitelink, and that it's the same as P373
         try:
             sitelink = item_dict['sitelinks']['commonswiki']
             sitelink = sitelink.replace('Category:','')
         except:
-            print 'No sitelink'
+            print('No sitelink')
             continue
 
         # Check to see if we're looking at a category item
         catitem = 0
         try:
             p31 = item_dict['claims']['P31']
-            print p31
+            # print p31
             for clm in p31:
                 if 'Q4167836' in clm.getTarget().title():
                     catitem = 1
         except:
-            print 'No P31 in target'
+            print('No P31 in target')
 
         for clm in p373:
             new_label = clm.getTarget()
             if sitelink != new_label:
-                print "Sitelink and P373 don't match, skipping"
+                print("Sitelink and P373 don't match, skipping")
                 continue
             if catitem:
                 new_label = 'Category:' + new_label
@@ -101,18 +101,20 @@ for i in range(0,numsteps):
             # if we don't have an English language label, add it.
             try:
                 label = val.labels['en']
-                print label
+                print(label)
             except:
+                if '(' in new_label:
+                    new_label = new_label.split('(')[0]
                 try:
                     page.editLabels(labels={'en': new_label}, summary=u'Add en label to match Commons category name')
                     nummodified += 1
                 except:
-                    print 'Unable to save label edit on Wikidata!'
+                    print('Unable to save label edit on Wikidata!')
 
             if nummodified >= maxnum:
-                print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
                 exit()
 
-    print 'Done! Edited ' + str(nummodified) + ' entries'
+    print('Done! Edited ' + str(nummodified) + ' entries')
          
 # EOF
