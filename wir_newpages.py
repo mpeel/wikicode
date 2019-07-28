@@ -441,9 +441,9 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 			addHumanClaim(repo=repo, item=item, lang=lang)
 		if not 'P21' in item.claims and gender:
 			addGenderClaim(repo=repo, item=item, gender=gender, lang=lang)
-		if not 'P569' in item.claims and birthdate:
+		if not 'P569' in item.claims and birthdate and birthdate != '0-0-0':
 			addBirthDateClaim(repo=repo, item=item, date=birthdate, lang=lang)
-		if not 'P570' in item.claims and deathdate:
+		if not 'P570' in item.claims and deathdate and deathdate != '0-0-0':
 			addDeathDateClaim(repo=repo, item=item, date=deathdate, lang=lang)
 		if not 'P106' in item.claims and occupations:
 			addOccupationsClaim(repo=repo, item=item, occupations=occupations, lang=lang)
