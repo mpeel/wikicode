@@ -33,6 +33,7 @@ import urllib
 import urllib.request
 import urllib.parse
 import dateparser
+import datetime
 
 def removeAccents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
