@@ -32,12 +32,12 @@ debug = 1
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
 # targetcat = 'Category:Commons category link is the pagename'
-# targetcat = 'Category:Commons category link is defined as the pagename'
-targetcat = 'Category:Commons category link is on Wikidata using P373'
+targetcat = 'Category:Commons category link is defined as the pagename'
+# targetcat = 'Category:Commons category link is on Wikidata using P373'
 # targetcat = 'Category:Commons category link is locally defined'
 cat = pywikibot.Category(enwp, targetcat)
 
-category = 0
+category = 1
 
 if category:
 	pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
@@ -45,7 +45,7 @@ else:
 	pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 for page in pages:
 	if trip == 0:
-		if "Del Norte County" in page.title():
+		if "Category:Cabinets of Albania" in page.title():
 			trip = 1
 		else:
 			print(page.title())
@@ -178,7 +178,7 @@ for page in pages:
 					if nummodified >= maxnum:
 						print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
 						exit()
-			if commonscat_sitelink_exists and not have_followed_p910:
+			if 0 and commonscat_sitelink_exists and not have_followed_p910:
 				# print('Hi')
 				# print(commonscat_item_dict)
 				if category == 0:
@@ -199,6 +199,15 @@ for page in pages:
 							skipthis = True
 					if skipthis:
 						continue
+					try:
+						p31val = item_dict['claims']['P31']
+					except:
+						continue
+					print(p31val)
+					for p31clm in p31val:
+						p31_item = p31clm.getTarget()
+						if p31_item.title() == "Q13406463":
+							islist = True
 					print(islist)
 					try:
 						if islist:
@@ -236,9 +245,9 @@ for page in pages:
 								print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
 								if islist:
 									newclaim = pywikibot.Claim(repo, 'P1753')
-									newclaim.setTarget(commonscat_item)
+									newclaim.setTarget(wd_item)
 									newclaim2 = pywikibot.Claim(repo, 'P1754')
-									newclaim2.setTarget(wd_item)
+									newclaim2.setTarget(commonscat_item)
 									text = input("Link list? ")
 									if text != 'n':
 										wd_item.addClaim(newclaim2, summary=u'Linking to category item')

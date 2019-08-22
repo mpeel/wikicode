@@ -477,8 +477,11 @@ def main():
 			if item:
 				print('Page has item')
 				print('https://www.wikidata.org/wiki/%s' % (item.title()))
-				# test = input('Continue?')
-				addBiographyClaims(repo=repo, wikisite=wikisite, item=item, page=page, lang=lang)
+				if (datetime.datetime.now()-wd_item.editTime()).seconds < 120:
+					print('... but is being edited')
+				else:
+					# test = input('Continue?')
+					addBiographyClaims(repo=repo, wikisite=wikisite, item=item, page=page, lang=lang)
 			else:
 				print('Page without item')
 				#search for a valid item, otherwise create

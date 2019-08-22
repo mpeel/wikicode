@@ -1,5 +1,7 @@
 # Import modules
 import pywikibot
+import datetime
+import dateparser
 from wir_newpages import *
 
 lang = 'en'
@@ -20,5 +22,8 @@ deathdate = calculateDeathDateFull(page=page,lang=lang)
 if deathdate != '0-0-0':
 	print(deathdate)
 wd_item = pywikibot.ItemPage.fromPage(page)
+print()
+print(datetime.datetime.now())
+print((datetime.datetime.now()-wd_item.editTime()).seconds)
 # addBirthDateClaim(repo=repo,item=wd_item,date=birthdate,lang=lang)
 # addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)

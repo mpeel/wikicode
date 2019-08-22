@@ -65,12 +65,12 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎']#, 'Commons category link is locally defined‎']
+targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎']
 
 for categories in range(0,1):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 1:
+		if categories == 0:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
