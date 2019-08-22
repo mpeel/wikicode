@@ -478,7 +478,7 @@ def main():
 			if item:
 				print('Page has item')
 				print('https://www.wikidata.org/wiki/%s' % (item.title()))
-				if (datetime.datetime.now()-wd_item.editTime()).seconds < 120:
+				if (datetime.datetime.now()-item.editTime()).seconds < 120:
 					print('... but is being edited')
 				else:
 					# test = input('Continue?')
