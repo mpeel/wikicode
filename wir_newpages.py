@@ -397,6 +397,8 @@ def pageIsBiography(page='', lang=''):
 	if lang == 'en':
 		if re.search('(?im)Category\s*:\s*\d+ animal (births|deaths)', page.text):
 			return False
+		if 'racehorse' in page.text:
+			return False
 		elif not page.title().startswith('List ') and not page.title().startswith('Lists '):
 			if len(page.title().split(' ')) <= 5:
 				if re.search(r'(?im)(\'{3} \(born \d|Category\s*:\s*\d+ (births|deaths)|Category\s*:\s*Living people|birth_date\s*=|birth_place\s*=|death_date\s*=|death_place\s*=|Category\s*:\s*People from)', page.text):
@@ -523,6 +525,11 @@ def main():
 						if not pagebirthyear:
 							print("Page doesnt have birthdate, skiping")
 							break #break, dont continue. Without birthdate we cant decide correctly
+						try:
+							test = itemfound.claims['P569'][0].getTarget().precision
+						except:
+							print('There is something odd with the birth date, skipping')
+							break
 						if 'P569' in itemfound.claims and itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11]:
 							#https://www.wikidata.org/wiki/Help:Dates#Precision
 							itemfoundbirthyear = int(itemfound.claims['P569'][0].getTarget().year)
