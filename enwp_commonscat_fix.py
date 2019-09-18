@@ -246,8 +246,8 @@ for categories in range(0,2):
 									sitelink_redirect = (category_text.split("{{" + option + " |"))[1].split("}}")[0]
 								except:
 									print('Wikitext parsing issue!')
-							sitelink_redirect = sitelink_redirect.replace(u":Category:","").strip()
-							sitelink_redirect = sitelink_redirect.replace(u"Category:","").strip()
+							sitelink_redirect = sitelink_redirect.replace(u":Category:","").replace('‎','').strip()
+							sitelink_redirect = sitelink_redirect.replace(u"Category:","").replace('‎','').strip()
 							print('Redirect target:' + sitelink_redirect)
 					if sitelink_redirect != '':
 						if sitelink == 'Category:'+sitelink_redirect:
