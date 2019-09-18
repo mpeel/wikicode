@@ -41,12 +41,12 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎'] 
+targetcats = ['Category:Commons category link is the pagename‎', 'Category:Commons category link is defined as the pagename', 'Category:Commons category link is locally defined‎']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 1:
+		if categories == 0:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -54,7 +54,7 @@ for categories in range(0,2):
 
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Exposition Internationale des Arts" in page.title():
+				if "People" in page.title():
 					trip = 1
 				else:
 					print(page.title())
@@ -237,6 +237,7 @@ for categories in range(0,2):
 				# Now check to see if the local one is a redirect to the wikidata one
 				if 'Category:'+id_val != sitelink:
 					sitelink_redirect = ''
+					# print (category_text)
 					for option in catredirect_templates:
 						if "{{" + option in category_text:
 							try:
@@ -246,11 +247,15 @@ for categories in range(0,2):
 									sitelink_redirect = (category_text.split("{{" + option + " |"))[1].split("}}")[0]
 								except:
 									print('Wikitext parsing issue!')
-							sitelink_redirect = sitelink_redirect.replace(u":Category:","").strip()
-							sitelink_redirect = sitelink_redirect.replace(u"Category:","").strip()
+							sitelink_redirect = sitelink_redirect.replace(u":Category:","").replace('‎','').strip()
+							sitelink_redirect = sitelink_redirect.replace(u"Category:","").replace('‎','').strip()
 							print('Redirect target:' + sitelink_redirect)
+					# print('Category:'+sitelink_redirect.strip())
+					# print(sitelink.strip())
+					# print('Category:'+sitelink_redirect == sitelink)
+					# exit()
 					if sitelink_redirect != '':
-						if sitelink == 'Category:'+sitelink_redirect:
+						if sitelink.strip() == 'Category:'+sitelink_redirect.strip():
 							print('We have a redirect to the Wikidata entry, so use the wikidata entry')
 							target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 							page.text = target_text
