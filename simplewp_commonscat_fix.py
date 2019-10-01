@@ -17,36 +17,36 @@ import string
 from pywikibot import pagegenerators
 import urllib
 from pibot_functions import *
-import mysql.connector
-from database_login import *
+# import mysql.connector
+# from database_login import *
 
-mydb = mysql.connector.connect(
-  host=database_host,
-  user=database_user,
-  passwd=database_password,
-  database=database_database
-)
-mycursor = mydb.cursor()
+# mydb = mysql.connector.connect(
+#   host=database_host,
+#   user=database_user,
+#   passwd=database_password,
+#   database=database_database
+# )
+# mycursor = mydb.cursor()
 
-maxnum = 100000
+maxnum = 1000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-enwp = pywikibot.Site('en', 'wikipedia')
+enwp = pywikibot.Site('simple', 'wikipedia')
 debug = 0
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎']
+targetcats = ['Category:Commons category link is the pagename‎', 'Category:Commons category link is defined as the pagename', 'Category:Commons category link is locally defined‎']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 1:
+		if categories == 0:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -54,7 +54,7 @@ for categories in range(0,2):
 
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Exposition Internationale des Arts" in page.title():
+				if "People" in page.title():
 					trip = 1
 				else:
 					print(page.title())
@@ -187,22 +187,22 @@ for categories in range(0,2):
 							continue
 
 				# It exists, but the Wikidata item has no sitelink, so add it as a tile in the game
-				if qid != 0:
-					try:
-						commonscat = u"Category:" + id_val
-						mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + commonscat + '"')
-						myresult = mycursor.fetchone()
-						# print(myresult)
-						if not myresult:
-							sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
-							val = (qid, commonscat)
-							print(sql)
-							print(val)
-							mycursor.execute(sql, val)
-							mydb.commit()
-							nummodified += 1
-					except:
-						print('Something went wrong when adding it to the database!')
+				# if qid != 0:
+				# 	try:
+				# 		commonscat = u"Category:" + id_val
+				# 		mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + commonscat + '"')
+				# 		myresult = mycursor.fetchone()
+				# 		# print(myresult)
+				# 		if not myresult:
+				# 			sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
+				# 			val = (qid, commonscat)
+				# 			print(sql)
+				# 			print(val)
+				# 			mycursor.execute(sql, val)
+				# 			mydb.commit()
+				# 			nummodified += 1
+				# 	except:
+				# 		print('Something went wrong when adding it to the database!')
 
 
 			# Only attempt to do the next part if we have a commons category link both locally and on wikidata
@@ -237,6 +237,7 @@ for categories in range(0,2):
 				# Now check to see if the local one is a redirect to the wikidata one
 				if 'Category:'+id_val != sitelink:
 					sitelink_redirect = ''
+					# print (category_text)
 					for option in catredirect_templates:
 						if "{{" + option in category_text:
 							try:
@@ -249,8 +250,12 @@ for categories in range(0,2):
 							sitelink_redirect = sitelink_redirect.replace(u":Category:","").replace('‎','').strip()
 							sitelink_redirect = sitelink_redirect.replace(u"Category:","").replace('‎','').strip()
 							print('Redirect target:' + sitelink_redirect)
+					# print('Category:'+sitelink_redirect.strip())
+					# print(sitelink.strip())
+					# print('Category:'+sitelink_redirect == sitelink)
+					# exit()
 					if sitelink_redirect != '':
-						if sitelink == 'Category:'+sitelink_redirect:
+						if sitelink.strip() == 'Category:'+sitelink_redirect.strip():
 							print('We have a redirect to the Wikidata entry, so use the wikidata entry')
 							target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 							page.text = target_text
