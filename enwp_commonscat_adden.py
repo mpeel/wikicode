@@ -19,7 +19,11 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 enwp = pywikibot.Site('en', 'wikipedia')
-
+enwp_site = 'enwiki'
+prefix = 'en'
+# enwp = pywikibot.Site('simple', 'wikipedia')
+# enwp_site = 'simplewiki'
+# prefix = 'simple'
 def newitem(category, enwp, items,commonscat_has_item=False):
 	new_item = pywikibot.ItemPage(repo)
 	new_item.editLabels(labels={"en":enwp.title()}, summary="Creating item")
@@ -27,11 +31,11 @@ def newitem(category, enwp, items,commonscat_has_item=False):
 	print(candidate_item)
 
 	if commonscat_has_item:
-		data = {'sitelinks': [{'site': 'commonswiki', 'title': category.title()}, {'site': 'enwiki', 'title': enwp.title()}]}
-		candidate_item.editEntity(data, summary=u'Add commons and enwp sitelink')
+		data = {'sitelinks': [{'site': 'commonswiki', 'title': category.title()}, {'site': enwp_site, 'title': enwp.title()}]}
+		candidate_item.editEntity(data, summary=u'Add commons and '+enwp_site+' sitelink')
 	else:
-		data = {'sitelinks': [{'site': 'enwiki', 'title': enwp.title()}]}
-		candidate_item.editEntity(data, summary=u'Add enwp sitelink')
+		data = {'sitelinks': [{'site': enwp_site, 'title': enwp.title()}]}
+		candidate_item.editEntity(data, summary=u'Add '+enwp_site+' sitelink')
 
 
 	for item in items:
@@ -67,7 +71,7 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 
 targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎']
 
-for categories in range(0,1):
+for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
 		if categories == 0:
@@ -143,8 +147,9 @@ for categories in range(0,1):
 						null = 2
 			if id_val == 0:
 				# We didn't find the commons category link, skip this one.
-				print('No commonscat')
-				continue
+				id_val = page.title()
+				# print('No commonscat')
+				# continue
 
 			# Do some tidying of the link
 			if "|" in id_val:
@@ -204,7 +209,7 @@ for categories in range(0,1):
 
 				# Skip if there is already a sitelink on Wikidata
 				try:
-					sitelink = item_dict['sitelinks']['enwiki']
+					sitelink = item_dict['sitelinks'][enwp_site]
 					sitelink_check = 1
 				except:
 					sitelink_check = 0
@@ -214,23 +219,23 @@ for categories in range(0,1):
 					continue
 
 				# If we're here, then we can add a sitelink
-				data = {'sitelinks': [{'site': 'enwiki', 'title': page.title()}]}
+				data = {'sitelinks': [{'site': enwp_site, 'title': page.title()}]}
 				print('http://www.wikidata.org/wiki/'+qid)
 				try:
 					print(item_dict['labels']['en'])
 				except:
 					print('')
-				print('http://en.wikipedia.org/wiki/' + page.title())
-				print('http://commons.wikimedia.org/wiki/'+commonscat)
+				print('http://'+prefix+'.wikipedia.org/wiki/' + page.title().replace(' ','_'))
+				print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
 				text = input("Save? ")
 				if text != 'n':
-					wd_item.editEntity(data, summary=u'Add enwp sitelink')
+					wd_item.editEntity(data, summary=u'Add '+enwp_site+' sitelink')
 					nummodified += 1
 			else:
 				print('Searching for a match...')
 				wikidataEntries = search_entities(repo, page.title())
 				print(wikidataEntries)
-				data = {'sitelinks': [{'site': 'enwiki', 'title': page.title()}]}
+				data = {'sitelinks': [{'site': enwp_site, 'title': page.title()}]}
 				print(wikidataEntries['searchinfo'])
 				done = 0
 				if wikidataEntries['search'] != []:
@@ -247,8 +252,8 @@ for categories in range(0,1):
 							print(item_dict['labels']['en'])
 						except:
 							print('')
-						print('http://en.wikipedia.org/wiki/' + page.title())
-						print('http://commons.wikimedia.org/wiki/'+commonscat)
+						print('http://'+prefix+'.wikipedia.org/wiki/' + page.title().replace(' ','_'))
+						print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
 						text = input("Save? ")
 						if text != 'n':
 							targetpage.editEntity(data, summary=u'Add enwp sitelink')

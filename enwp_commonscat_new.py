@@ -28,16 +28,18 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 enwp = pywikibot.Site('en', 'wikipedia')
+# enwp = pywikibot.Site('simple', 'wikipedia')
 debug = 1
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
-# targetcat = 'Category:Commons category link is the pagename'
-targetcat = 'Category:Commons category link is defined as the pagename'
+targetcat = 'Category:Commons category link is the pagename'
+# targetcat = 'Category:Commons category link is defined as the pagename'
 # targetcat = 'Category:Commons category link is on Wikidata using P373'
 # targetcat = 'Category:Commons category link is locally defined'
 cat = pywikibot.Category(enwp, targetcat)
 
-category = 1
+category = 0
+dolinkcheck = 0
 
 if category:
 	pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
@@ -178,7 +180,7 @@ for page in pages:
 					if nummodified >= maxnum:
 						print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
 						exit()
-			if 0 and commonscat_sitelink_exists and not have_followed_p910:
+			if dolinkcheck and commonscat_sitelink_exists and not have_followed_p910:
 				# print('Hi')
 				# print(commonscat_item_dict)
 				if category == 0:

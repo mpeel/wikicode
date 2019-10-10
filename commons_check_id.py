@@ -43,13 +43,11 @@ properties = ['P809']
 shortname = 'WDPA ID'
 
 def checkid(targetcat):
-    print targetcat
-    # print target_text
+    print(targetcat)
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
-        # print targetcat + "is already on Wikidata"
     except:
-        print "No Wikidata sitelink found"
+        print("No Wikidata sitelink found")
         target_text = targetcat.get()
 
         id_val = 0
@@ -64,13 +62,13 @@ def checkid(targetcat):
             # Special for Mirimee
             try:
                 value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
-                print value
+                print(value)
                 values = (value.split("|"))
                 if "type" not in values[0]:
                     value = values[0]
                 if "type" not in values[1]:
                     value = values[1]
-                print value
+                print(value)
                 if value and id_val == 0:
                     id_val = value
             except:
@@ -82,54 +80,49 @@ def checkid(targetcat):
                     id_val = value
             except:
                 null = 2
-                # print '2'
             try:
                 value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0]
                 if value and id_val == 0:
                     id_val = value
             except:
                 null = 3
-                # print '3'
             try:
                 value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
                 if value and id_val == 0:
                     id_val = value
             except:
                 null = 1
-                # print '1'
-        print id_val
-        # exit()
+        print(id_val)
         if id_val != 0:
             try:
                 query = 'SELECT ?item WHERE { ?item wdt:'+str(properties[0])+' ?id . FILTER (?id = "'+str(id_val)+'") . } LIMIT 10'
-                # print query
                 generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
             except:
-                print 'Unable to run the query! Skipping this one.'
+                print('Unable to run the query! Skipping this one.')
                 time.sleep(3)
                 return 0
             count = 0
             for testpage in generator:
                 page = testpage
                 count+=1
-            print count
+            print(count)
             if count == 1:
                 try:
                     item_dict = page.get()
                     qid = page.title()
                 except:
-                    print 'Huh - no page found'
+                    print('Huh - no page found')
                 try:
                     sitelink = item_dict['sitelinks']['commonswiki']
                 except:
                     # No existing sitelink found, add the new one
                     data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
                     try:
-                        print "\n\n"
-                        print qid
-                        print id_val
-                        print item_dict['labels']
-                        print data
+                        print("\n\n")
+                        print(qid)
+                        print(id_val)
+                        print(item_dict['labels'])
+                        print(data)
                         # text = raw_input("Save? ")
                         # if text == 'y':
                         page.editEntity(data, summary=u'Add commons sitelink based on '+shortname+'')
@@ -137,7 +130,7 @@ def checkid(targetcat):
                         # else:
                         #     return 0
                     except:
-                        print 'Edit failed'
+                        print('Edit failed')
                         return 0
 
                 return 0
@@ -162,12 +155,12 @@ for targetcat in targetcats:
     # print "\n" + targetcat.title()
     # print target.text
     nummodified += checkid(targetcat)
-    print str(nummodified) + "/" + str(i)
+    print(str(nummodified) + "/" + str(i))
     i += 1
     if nummodified >= maxnum:
-        print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+        print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
         exit()
 
-print 'Done! Edited ' + str(nummodified) + ' entries'
+print('Done! Edited ' + str(nummodified) + ' entries')
                 
 # EOF
