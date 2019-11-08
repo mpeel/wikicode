@@ -103,8 +103,8 @@ for categories in range(0,2):
 			# Do some tidying of the link
 			if "|" in id_val:
 				try:
-					if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0]:
-						if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1]:
+					if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0] or 'nowrap' in id_val.split("|")[0] or 'lcfirst' in id_val.split("|")[0] or 'lcf' in id_val.split("|")[0]:
+						if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1] or 'nowrap' in id_val.split("|")[1] or 'lcfirst' in id_val.split("|")[1] or 'lcf' in id_val.split("|")[1]:
 							id_val = id_val.split("|")[2]
 						else:
 							id_val = id_val.split("|")[1]
@@ -118,7 +118,7 @@ for categories in range(0,2):
 				null = 1
 
 			# Check for bad characters
-			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val or 'bullet=' in id_val or 'bullet =' in id_val:
+			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val or 'bullet=' in id_val or 'bullet =' in id_val or 'nowrap' in id_val or 'lcfirst' in id_val:
 				continue
 
 			print(id_val)
