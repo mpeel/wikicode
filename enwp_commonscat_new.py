@@ -32,14 +32,14 @@ enwp = pywikibot.Site('en', 'wikipedia')
 debug = 1
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
-targetcat = 'Category:Commons category link is the pagename'
-# targetcat = 'Category:Commons category link is defined as the pagename'
+# targetcat = 'Category:Commons category link is the pagename'
+targetcat = 'Category:Commons category link is defined as the pagename'
 # targetcat = 'Category:Commons category link is on Wikidata using P373'
 # targetcat = 'Category:Commons category link is locally defined'
 cat = pywikibot.Category(enwp, targetcat)
 
 category = 0
-dolinkcheck = 0
+dolinkcheck = 1
 
 if category:
 	pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
@@ -93,6 +93,9 @@ for page in pages:
 					print('Found multiple IDs')
 			except:
 				null = 2
+
+	# if id_val == 0:
+		# id_val = page.title().replace('Category:','')
 
 	# Do some tidying of the link
 	if id_val != 0:
@@ -184,21 +187,24 @@ for page in pages:
 				# print('Hi')
 				# print(commonscat_item_dict)
 				if category == 0:
-					try:
-						p31val = commonscat_item_dict['claims']['P31']
-					except:
-						continue
 					skipthis = False
 					islist = False
-					for p31clm in p31val:
-						p31_item = p31clm.getTarget()
-						# print(p31clm)
-						if p31_item.title() == "Q13406463":
-							islist = True
-						elif p31_item.title() == "Q4167836":
-							print('OK')
-						else:
-							skipthis = True
+					try:
+						p31val = commonscat_item_dict['claims']['P31']
+						for p31clm in p31val:
+							p31_item = p31clm.getTarget()
+							# print(p31clm)
+							if p31_item.title() == "Q13406463":
+								islist = True
+							elif p31_item.title() == "Q4167836":
+								if category:
+									skipthis = True
+								else:
+									print('OK')
+							else:
+								skipthis = True
+					except:
+						continue
 					if skipthis:
 						continue
 					try:
@@ -266,21 +272,24 @@ for page in pages:
 										commonscat_item.addClaim(newclaim, summary=u'Linking to topic item')
 										continue
 				else:
-					try:
-						p31val = commonscat_item_dict['claims']['P31']
-					except:
-						continue
 					skipthis = False
 					islist = False
-					for p31clm in p31val:
-						p31_item = p31clm.getTarget()
-						# print(p31clm)
-						if p31_item.title() == "Q13406463":
-							islist = True
-						elif p31_item.title() == "Q4167836":
-							print('OK')
-						else:
-							skipthis = True
+					try:
+						p31val = commonscat_item_dict['claims']['P31']
+						for p31clm in p31val:
+							p31_item = p31clm.getTarget()
+							# print(p31clm)
+							if p31_item.title() == "Q13406463":
+								islist = True
+							elif p31_item.title() == "Q4167836":
+								if category:
+									skipthis = True
+								else:
+									print('OK')
+							else:
+								skipthis = True
+					except:
+						null = 1
 					if skipthis:
 						continue
 					try:
