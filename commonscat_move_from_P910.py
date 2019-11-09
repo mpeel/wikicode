@@ -50,7 +50,10 @@ for i in range(0,numsteps):
     interwiki_conflicts = []
     for page in generator:
         # Get the page
-        item_dict = page.get()
+        try:
+            item_dict = page.get()
+        except:
+            continue
         qid = page.title()
         print "\n" + qid
         try:
