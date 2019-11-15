@@ -16,11 +16,11 @@ import pprint
 import csv
 import random
 
-database = True
-manual = False
+database = False
+manual = True
 maxnum = 1000000
 usetemplate = 0
-usecategory = 1
+usecategory = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -50,14 +50,14 @@ def prettyPrint(variable):
     pp.pprint(variable)
 
 def runimport(targetcat):
-    print targetcat.title()
+    print(targetcat.title())
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
         item_dict = wd_item.get()
-        print wd_item.title()
+        print('http://www.wikidata.org/wiki/'+wd_item.title())
         return 0
     except:
-        print 'No existing link'
+        print('No existing link')
 
     searchname = targetcat.title().replace('Category:','')
     searchname2 = searchname.split('(', 1)[0]
@@ -75,7 +75,7 @@ def runimport(targetcat):
                 candidate_item = pywikibot.ItemPage(repo, qid)
                 candidate_item_dict = candidate_item.get()
             except:
-                print 'Huh - no page found'
+                print('Huh - no page found')
 
             skip = 0
             try:
@@ -92,7 +92,7 @@ def runimport(targetcat):
                 p18 = candidate_item_dict['claims']['P18']
                 for clm in p18:
                     title = clm.getTarget()
-                    print title.title()
+                    print(title.title())
                     page = pywikibot.Page(commons, title.title())
                     test = page.get()
                     if '[['+targetcat.title()+']]' in test:
@@ -103,17 +103,17 @@ def runimport(targetcat):
                 if incat == 1:
                     continue
             except:
-                print 'No image found'
+                print('No image found')
         try:
             sitelink = candidate_item_dict['sitelinks']['commonswiki']
         except:
             try:
                 existing_id = candidate_item_dict['claims']['P910']
-                print 'P910 exists, following that.'
+                print('P910 exists, following that.')
                 for clm2 in existing_id:
                     candidate_item = clm2.getTarget()
                     candidate_item_dict = candidate_item.get()
-                    print candidate_item.title()
+                    print(candidate_item.title())
             except:
                 null = 0
             # Try the sitelink check again
@@ -124,23 +124,24 @@ def runimport(targetcat):
                 data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
                 try:
                     if manual:
-                        print "\n\n"
+                        print("\n\n")
                         prettyPrint(candidate_item_dict)
-                        print data
-                        print qid
-                        print targetcat.title()
+                        print(data)
+                        print('http://www.wikidata.org/wiki/'+qid)
+                        print('http://commons.wikimedia.org/wiki/'+targetcat.title().replace(" ",'_'))
                         if incat == 1:
-                            print 'Image is in category'
+                            print('Image is in category')
                         elif incat == 2:
-                            print 'Image not in category'
+                            print('Image not in category')
                         else:
-                            print 'No image'
-                        text = raw_input("Save? ")
-                        if text == 'y':
-                            candidate_item.editEntity(data, summary=u'Add commons sitelink')
-                            return 1
-                        else:
-                            return 0
+                            print('No image')
+                        if incat == 1:
+                            text = input("Save? ")
+                            if text == 'y':
+                                candidate_item.editEntity(data, summary=u'Add commons sitelink')
+                                return 1
+                            else:
+                                return 0
                     else:
                         if incat == 1:
                             candidate_item.editEntity(data, summary=u'Add commons sitelink based on label and image')
@@ -148,17 +149,17 @@ def runimport(targetcat):
                         else:
                             return 0
                 except:
-                    print 'Edit failed'
+                    print('Edit failed')
         return 0
     return 0
 
 existing_uses = {}
 if database:
-    print 'Loading database...'
+    print('Loading database...')
     with open('commons_wikidata_infobox_uses.csv', mode='r') as infile:
         reader = csv.reader(infile)
         existing_uses = {rows[0] for rows in reader}
-    print 'Database loaded!'
+    print('Database loaded!')
 
 nummodified = 0
 if usetemplate:
@@ -167,15 +168,15 @@ if usetemplate:
     targetcats = template.embeddedin(namespaces='14')
 
     for targetcat in targetcats:
-        print targetcat.title()
+        print(targetcat.title())
 
         if targetcat.title() in existing_uses:
-            print 'In database'
+            print('In database')
             continue
         else:
             runimport(targetcat)
 elif usecategory:
-    targetcats = ['Category:CommonsRoot']
+    targetcats = ['Category:Uses of Wikidata Infobox with problems']#'Category:CommonsRoot']
     # targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
     # New style of category walker
     numchecked = 0
@@ -192,9 +193,9 @@ elif usecategory:
             if cat.title() not in existing_uses:
                 nummodified += runimport(cat)
             else:
-                print 'Already in database'
+                print('Already in database')
             numchecked += 1
-            print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
+            print(str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active)))
 
             # See if there are subcategories that we want to check in the future
             # if i == 1:
@@ -206,20 +207,20 @@ elif usecategory:
         random.shuffle(temp)
         active = set(temp)
         if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 else:
     # Pick random categories
     while nummodified < maxnum:
         targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
         for target in targets:
-            print target.title()
+            print(target.title())
             if target.title() not in existing_uses:
                 nummodified += runimport(target)
-                print nummodified
+                print(nummodified)
             
             if nummodified >= maxnum:
-                print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
                 break
 
 # EOF
