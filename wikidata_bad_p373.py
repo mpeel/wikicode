@@ -19,11 +19,11 @@ nummodified = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-debug = 0
+debug = 1
 attempts = 0
 count = 0
 
-usereport = False
+usereport = True
 candidates = []
 if usereport:
     reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P373')
@@ -52,12 +52,12 @@ else:
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
 
 
-for page in generator:
-# for pageid in candidates:
-#     page = pywikibot.ItemPage(repo, pageid)
+# for page in generator:
+for pageid in candidates:
+    page = pywikibot.ItemPage(repo, pageid)
     item_dict = page.get()
     qid = page.title()
-    print("\n" + qid)
+    print("\nhttp://www.wikidata.org/wiki/" + qid)
     # print(item_dict)
     try:
         p373 = item_dict['claims']['P373']
@@ -80,38 +80,60 @@ for page in generator:
                 if debug == 1:
                     print(original)
                     print(commonscat)
-                    test = raw_input("Continue? ")
+                    test = input("Continue? ")
                 if test == 'y':
                     clm.changeTarget(commonscat.replace('Category:',''), summary=u"Correct P373")
                     nummodified += 1
+                    continue
         except:
+            null = 1
+        print('hi1')
+        try:
+            tocheck = commonscat
+            if 'Category:' not in tocheck:
+                tocheck = 'Category:'+tocheck
+            commonscat_page = pywikibot.Page(commons, tocheck)
+            text = commonscat_page.get()
+            print('Category exists')
+            continue
+        except:
+            null = 0
+
+        print('hi2')
+        try:
+            last_check = check_if_category_has_contents(commonscat,site=commons)
+        except:
+            null = 1
+        if last_check == False:
+            print('hi3')
+            # See if we have a sitelink we can copy from
             try:
-                last_check = check_if_category_has_contents(commonscat,site=commons)
+                sitelink = item_dict['sitelinks']['commonswiki']
             except:
+                sitelink = ''
+            if sitelink != '' and 'Category:' in sitelink:
+                test = 'y'
+                if debug == 1:
+                    print(clm)
+                    print(sitelink)
+                    test = raw_input("Continue? ")
+                if test == 'y':
+                    clm.changeTarget(sitelink.replace('Category:',''), summary=u"Update (non-existant) P373 to match the sitelink")
+                    nummodified += 1
+            else:
+                test = 'y'
+                if debug == 1:
+                    print(clm)
+                    test = raw_input("Continue? ")
+                if test == 'y':
+                    page.removeClaims(clm, summary=u"Remove P373 to a non-existent Commons category")
+                    nummodified += 1
+        else: # last_check == True
+            if debug == 1:
+                print('Category has content')
+                print('http://commons.wikimedia.org/wiki/'+commonscat.replace(" ",'_'))
+                test = input("Continue? ")
                 continue
-            if last_check == False:
-                # See if we have a sitelink we can copy from
-                try:
-                    sitelink = item_dict['sitelinks']['commonswiki']
-                except:
-                    sitelink = ''
-                if sitelink != '' and 'Category:' in sitelink:
-                    test = 'y'
-                    if debug == 1:
-                        print(clm)
-                        print(sitelink)
-                        test = raw_input("Continue? ")
-                    if test == 'y':
-                        clm.changeTarget(sitelink.replace('Category:',''), summary=u"Update (non-existant) P373 to match the sitelink")
-                        nummodified += 1
-                else:
-                    test = 'y'
-                    if debug == 1:
-                        print(clm)
-                        test = raw_input("Continue? ")
-                    if test == 'y':
-                        page.removeClaims(clm, summary=u"Remove P373 to a non-existent Commons category")
-                        nummodified += 1
 
         if nummodified >= maxnum:
             print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')

@@ -41,12 +41,12 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Category:Commons category link is on Wikidata using P373']
+targetcats = ['Category:Commons category link is locally defined‎','Category:Commons category link is on Wikidata using P373']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 1:
+		if categories == 0:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -72,6 +72,26 @@ for categories in range(0,2):
 				exit()
 
 			print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
+
+			# See if we can get a Commons page with the same name
+			try:
+				if 'Category:' in page.title():
+					commonscat_page = pywikibot.Page(commons, page.title())
+				else:
+					commonscat_page = pywikibot.Page(commons, 'Category:'+page.title())
+				category_text = commonscat_page.get()
+			except:
+				try:
+					if 'Category:' in page.title():
+						commonscat_page = pywikibot.Page(commons, page.title()[:-1])
+					else:
+						commonscat_page = pywikibot.Page(commons, 'Category:'+page.title()[:-1])
+					category_text = commonscat_page.get()
+				except:
+					continue
+
+			if any(option in category_text for option in catredirect_templates):
+				continue
 
 			# Get the candidate commonscat link
 			try:
@@ -105,15 +125,7 @@ for categories in range(0,2):
 				except:
 					null = 0
 
-			# See if we can get a Commons page with the same name
-			try:
-				if 'Category:' in page.title():
-					commonscat_page = pywikibot.Page(commons, page.title())
-				else:
-					commonscat_page = pywikibot.Page(commons, 'Category:'+page.title())
-				category_text = commonscat_page.get()
-			except:
-				continue
+
 
 			# Double-check that there is no a sitelink on Wikidata
 			try:

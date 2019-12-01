@@ -32,14 +32,14 @@ enwp = pywikibot.Site('en', 'wikipedia')
 debug = 1
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
-# targetcat = 'Category:Commons category link is the pagename'
-targetcat = 'Category:Commons category link is defined as the pagename'
+targetcat = 'Category:Commons category link is the pagename'
+# targetcat = 'Category:Commons category link is defined as the pagename'
 # targetcat = 'Category:Commons category link is on Wikidata using P373'
 # targetcat = 'Category:Commons category link is locally defined'
 cat = pywikibot.Category(enwp, targetcat)
 
 category = 0
-dolinkcheck = 1
+dolinkcheck = 0
 
 if category:
 	pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);

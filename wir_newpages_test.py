@@ -4,14 +4,14 @@ import datetime
 import dateparser
 from wir_newpages import *
 
-lang = 'en'
+lang = 'de'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
 repo = enwiki.data_repository()  # this is a DataSite object
 
 
-page = pywikibot.Page(enwiki, 'Golden Ballet')
+page = pywikibot.Page(enwiki, 'Ernst Krohn')
 print(page.text)
 print(authorIsNewbie(page=page,lang=lang))
 print(pageIsRubbish(page,lang=lang))

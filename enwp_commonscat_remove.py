@@ -41,7 +41,7 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Category:Commons category link is locally defined‎','Category:Commons category link is defined as the pagename','Category:Commons category link is on Wikidata using P373']
+targetcats = ['Category:Commons category link is on Wikidata using P373','Category:Commons category link is locally defined‎','Category:Commons category link is defined as the pagename']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
@@ -54,7 +54,7 @@ for categories in range(0,2):
 
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Fundraising" in page.title():
+				if "AC Nagano Parceiro" in page.title():
 					trip = 1
 				else:
 					print(page.title())
@@ -72,6 +72,66 @@ for categories in range(0,2):
 				exit()
 
 			print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
+
+			# Get the Wikidata item
+			try:
+				wd_item = pywikibot.ItemPage.fromPage(page)
+				item_dict = wd_item.get()
+				qid = wd_item.title()
+				print(qid)
+			except:
+				# If that didn't work, go no further
+				print(page.title() + ' - no page found')
+				wd_item = 0
+				item_dict = 0
+				qid = 0
+				sitelink_check = 0
+				# continue
+
+			# If we have a P910 value, switch to using that Wikidata item
+			if qid != 0:
+				try:
+					existing_id = item_dict['claims']['P910']
+					print('P910 exists, following that.')
+					for clm2 in existing_id:
+						wd_item = clm2.getTarget()
+						item_dict = wd_item.get()
+						qid = wd_item.title()
+						print(wd_item.title())
+				except:
+					null = 0
+
+				# Double-check that there is a sitelink on Wikidata
+				try:
+					sitelink = item_dict['sitelinks']['commonswiki']
+					sitelink_check = 1
+				except:
+					sitelink_check = 0
+				print("sitelink: " + str(sitelink_check))
+
+			if sitelink_check == 1:
+				continue
+
+			print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
+
+			try:
+				p373 = item_dict['claims']['P373']
+				for clm in p373:
+					val = clm.getTarget()
+					p373cat = u"Category:" + val
+					print('Remove P373?')
+					print(' http://www.wikidata.org/wiki/'+qid)
+					print(' ' + str(p373cat))
+					test = 'y'
+					savemessage = 'Remove incorrect P373 value'
+					if debug == 1:
+						print(savemessage)
+						test = input("Continue? ")
+					if test == 'y':
+						wd_item.removeClaims(clm,summary=savemessage)
+			except:
+				null = 0
+
 
 			# Get the candidate commonscat link
 			try:
@@ -110,6 +170,9 @@ for categories in range(0,2):
 						null = 2
 			if id_val == 0:
 				# We didn't find the commons category link, skip this one.
+				# for i in range(0,len(templates)):
+					# if '{{'+templates[i]+'}}' in target_text:
+
 				continue
 
 			# Do some tidying of the link
@@ -136,142 +199,29 @@ for categories in range(0,2):
 			print(id_val)
 			commonscat = u"Category:" + id_val
 
-			# Get the Wikidata item
-			try:
-				wd_item = pywikibot.ItemPage.fromPage(page)
-				item_dict = wd_item.get()
-				qid = wd_item.title()
-				print(qid)
-			except:
-				# If that didn't work, go no further
-				print(page.title() + ' - no page found')
-				wd_item = 0
-				item_dict = 0
-				qid = 0
-				sitelink_check = 0
-				# continue
+			print('Current category is:')
+			print(' http://commons.wikimedia.org/wiki/Category:'+id_val.replace(' ','_'))
+			print('Remove from enwp?')
 
-			# If we have a P910 value, switch to using that Wikidata item
-			if qid != 0:
-				try:
-					existing_id = item_dict['claims']['P910']
-					print('P910 exists, following that.')
-					for clm2 in existing_id:
-						wd_item = clm2.getTarget()
-						item_dict = wd_item.get()
-						qid = wd_item.title()
-						print(wd_item.title())
-				except:
-					null = 0
-
-				# Double-check that there is a sitelink on Wikidata
-				try:
-					sitelink = item_dict['sitelinks']['commonswiki']
-					sitelink_check = 1
-				except:
-					sitelink_check = 0
-				print("sitelink: " + str(sitelink_check))
-
-
-			# Only attempt to do the next part if we have a commons category link both locally and on wikidata
-			if id_val != 0 and sitelink_check == 1:
-				print(sitelink)
-
-				# First, fix broken commons category links
-				try:
-					commonscat_page = pywikibot.Page(commons, commonscat)
-					category_text = commonscat_page.get()
-				except:
-					continue
-
-				try:
-					commonscat_page2 = pywikibot.Page(commons, sitelink)
-					category_text2 = commonscat_page2.get()
-				except:
-					continue
-
-				print('We have a different local sitelink to the Wikidata entry. New Commons category text is:')
-				print('')
-				print(category_text2)
-				print('')
-				
-				print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
-				print('Current category is:')
-				print(' http://commons.wikimedia.org/wiki/Category:'+id_val.replace(' ','_'))
-				print('Change to this?')
-				print(' http://commons.wikimedia.org/wiki/' + sitelink.replace(' ','_'))
-
-				try:
-					p373 = item_dict['claims']['P373']
-					for clm in p373:
-						val = clm.getTarget()
-						p373cat = u"Category:" + val
-						if p373cat != sitelink:
-							print('Remove P373?')
-							print(' http://www.wikidata.org/wiki/'+qid)
-							print(' ' + str(p373cat))
-							test = 'y'
-							savemessage = 'Remove incorrect P373 value'
-							if debug == 1:
-								print(savemessage)
-								test = input("Continue? ")
-							if test == 'y':
-								wd_item.removeClaims(clm,summary=savemessage)
-				except:
-					null = 0
-
-				if not 'inline' in commonscat_string2a:
-					sitelink_lc = sitelink.replace('Category:','')
-					sitelink_lc = sitelink_lc[0].lower() + sitelink_lc[1:]
-					if sitelink_lc == id_val:
-						test = 'y'
-						if numtemplates != 1:
-							print('Number of commons links: ' + str(numtemplates))
-						savemessage = 'Using lcfirst parameter in the Commons category link'
-						if debug == 1:
-							# print(target_text)
-							# print(id_val)
-							print(savemessage)
-							test = input("Continue? ")
-						if test == 'y':
-							target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:','')+"|lcfirst=yes")
-							page.text = target_text
-							nummodified += 1
-							page.save(savemessage)
-							continue
-					if "&nbsp;" in id_val:
-						test = 'y'
-						if numtemplates != 1:
-							print('Number of commons links: ' + str(numtemplates))
-						savemessage = 'Using nowrap parameter in the Commons category link'
-						if debug == 1:
-							# print(target_text)
-							# print(id_val)
-							print(savemessage)
-							test = input("Continue? ")
-						if test == 'y':
-							target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:','')+"|nowrap=yes")
-							page.text = target_text
-							nummodified += 1
-							page.save(savemessage)
-							continue
-
-
-				target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
-				page.text = target_text
-				test = 'y'
-				if numtemplates != 1:
-					print('Number of commons links: ' + str(numtemplates))
-				savemessage = 'Changing the Commons category from "Category:'+id_val+'" to "' + sitelink + '"'
-				if debug == 1:
-					# print(target_text)
-					# print(id_val)
-					print(savemessage)
-					test = input("Continue? ")
-				if test == 'y':
-					nummodified += 1
-					page.save(savemessage)
-					continue
+			target_text = target_text.replace(commonscat_string2a + commonscat_string2+'}}\n', '')
+			page.text = target_text
+			test = 'y'
+			if numtemplates != 1:
+				print('Number of commons links: ' + str(numtemplates))
+			savemessage = "Removing Commons category link that doesn't match this "
+			if categories == 0:
+				savemessage = savemessage + "category"
+			else:
+				savemessage = savemessage + "article"
+			if debug == 1:
+				# print(target_text)
+				# print(id_val)
+				print(savemessage)
+				test = input("Continue? ")
+			if test == 'y':
+				nummodified += 1
+				page.save(savemessage)
+				continue
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')

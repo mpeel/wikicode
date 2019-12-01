@@ -163,6 +163,9 @@ testqid = 'Q4115189' # Wikidata sandbox
 testproperty = 'P31' # instance of
 testvalue = 'Q3938'  # Sandbox
 wd_item = pywikibot.ItemPage(ptwiki_repo, testqid)
-print editwikidata(wd_item, testproperty, testvalue)
+dictionary = wd_item.get()
+print(dictionary)
+print(api.normalize_paraminfo(dictionary))
+# print editwikidata(wd_item, testproperty, testvalue)
 
-parsesite('http://www.museusdoestado.rj.gov.br/sisgam/index.php?pagina=1&operador=or&busca=a%20b%20c%20d%20e%20f%20g%20h%20i%20j%20k%20l%20m%20n%20o%20p%20q%20r%20s%20t%20u%20v%20w%20x%20y%20z&museu=todos&qresultados=40')
+# parsesite('http://www.museusdoestado.rj.gov.br/sisgam/index.php?pagina=1&operador=or&busca=a%20b%20c%20d%20e%20f%20g%20h%20i%20j%20k%20l%20m%20n%20o%20p%20q%20r%20s%20t%20u%20v%20w%20x%20y%20z&museu=todos&qresultados=40')
