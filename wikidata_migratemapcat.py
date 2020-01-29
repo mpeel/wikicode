@@ -110,15 +110,15 @@ for target in generator:
 				items.append(['P971',wd_item.title()]) # combines main item
 
 				print(items)
-				test = input('Create new item?')
-				if test != 'n':
-					wd_item2 = newitem(commonscat_page, items)
+				# test = input('Create new item?')
+				# if test != 'n':
+				wd_item2 = newitem(commonscat_page, items)
 
 
 			newclaim = pywikibot.Claim(repo, 'P7867')
 			newclaim.setTarget(wd_item2)
 			print(newclaim)
-			test = input('Save new P7867 value?')
-			if test == 'y':
-				wd_item.addClaim(newclaim, summary=u'Setting P7867 value')
-				wd_item.removeClaims(clm, summary=u"Remove obsolete P3722 value")
+			# test = input('Save new P7867 value?')
+			# if test == 'y':
+			wd_item.addClaim(newclaim, summary=u'Setting P7867 value')
+			wd_item.removeClaims(clm, summary=u"Remove obsolete P3722 value")
