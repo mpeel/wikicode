@@ -23,7 +23,7 @@ retrieved = pywikibot.Claim(repo, u'P813')
 date = pywikibot.WbTime(year=2018, month=12, day=1)
 retrieved.setTarget(date)
 
-debug = True
+debug = False
 
 def newitem(category, items,cat=True):
 	new_item = pywikibot.ItemPage(repo)
