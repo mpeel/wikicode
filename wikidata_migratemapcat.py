@@ -104,7 +104,10 @@ for target in generator:
 
 			if existing_id == False:
 				# Start assembling the Wikdata entry
-				commonscat_page = pywikibot.Page(commons, commonscat)
+				try:
+					commonscat_page = pywikibot.Page(commons, commonscat)
+				except:
+					continue
 				items = [['P31','Q4167836']] # Instance of Wikimedia category
 				items.append(['P971','Q4006']) # combines map
 				items.append(['P971',wd_item.title()]) # combines main item
