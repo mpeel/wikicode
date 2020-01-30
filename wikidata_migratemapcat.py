@@ -79,7 +79,10 @@ for target in generator:
 		else:
 			trip = 1
 
-		item_dict = wd_item.get()
+		try:
+			item_dict = wd_item.get()
+		except:
+			continue
 
 		try:
 			P3722 = item_dict['claims']['P3722']
