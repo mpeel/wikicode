@@ -98,6 +98,7 @@ for target in generator:
 			existing_id = False
 			try:
 				commonscat_page = pywikibot.Page(commons, commonscat)
+				content = commonscat_page.get()
 				wd_item2 = pywikibot.ItemPage.fromPage(commonscat_page)
 				item_dict2 = wd_item2.get()
 				print('http://www.wikidata.org/wiki/'+str(wd_item2.title()))
@@ -109,6 +110,7 @@ for target in generator:
 				# Start assembling the Wikdata entry
 				try:
 					commonscat_page = pywikibot.Page(commons, commonscat)
+					content = commonscat_page.get()
 				except:
 					continue
 				items = [['P31','Q4167836']] # Instance of Wikimedia category
