@@ -25,7 +25,7 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 debug = 1
-for i in range(0,numsteps):
+for i in range(5,numsteps):
     print('Starting at ' + str(i*stepsize))
 
     query = 'SELECT ?item\n'\
