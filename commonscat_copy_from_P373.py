@@ -14,7 +14,7 @@ import urllib
 
 maxnum = 100000
 nummodified = 0
-stepsize =  10000
+stepsize =  1000
 maximum = 3500000
 numsteps = int(maximum / stepsize)
 
@@ -25,7 +25,7 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 debug = 1
-for i in range(10,numsteps):
+for i in range(0,numsteps):
     print('Starting at ' + str(i*stepsize))
 
     query = 'SELECT ?item\n'\
