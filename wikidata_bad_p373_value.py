@@ -34,16 +34,18 @@ for page in generator:
         print('No sitelink')
         continue
 
-    p373 = item_dict['claims']['P373']
-    for clm in p373:
-        val = clm.getTarget()
-        p373cat = u"Category:" + val
-        if p373cat != sitelink:
-            print('Remove P373?')
-            print(' http://www.wikidata.org/wiki/'+qid)
-            print('http://commons.wikimedia.org/wiki/' + str(p373cat))
-            savemessage = "Remove P373 value that doesn't match the sitelink"
-            # print(savemessage)
-            page.removeClaims(clm,summary=savemessage)
-
+    try:
+        p373 = item_dict['claims']['P373']
+        for clm in p373:
+            val = clm.getTarget()
+            p373cat = u"Category:" + val
+            if p373cat != sitelink:
+                print('Remove P373?')
+                print(' http://www.wikidata.org/wiki/'+qid)
+                print('http://commons.wikimedia.org/wiki/' + str(p373cat))
+                savemessage = "Remove P373 value that doesn't match the sitelink"
+                # print(savemessage)
+                page.removeClaims(clm,summary=savemessage)
+    except:
+        continue
 # EOF
