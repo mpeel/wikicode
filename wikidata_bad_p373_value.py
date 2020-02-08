@@ -43,6 +43,7 @@ for page in generator:
                 print('Remove P373?')
                 print(' http://www.wikidata.org/wiki/'+qid)
                 print('http://commons.wikimedia.org/wiki/' + str(p373cat))
+                # input('OK?')
                 savemessage = "Remove P373 value that doesn't match the sitelink"
                 # print(savemessage)
                 page.removeClaims(clm,summary=savemessage)
