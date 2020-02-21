@@ -414,6 +414,9 @@ def pageIsBiography(page='', lang=''):
 				if re.search(r'(?im)((Kategorie|Category)\s*:\s*(Geboren|Gestorben) \d+)', page.text):
 					return True
 	elif lang == 'fr':
+		if 'Décès' in page.title():
+			# Probably a list item.
+			return False
 		if re.search('(?im)(Catégorie|Category)\s*:\s*Animal (né|mort)', page.text):
 			return False
 		elif not page.title().startswith('Liste ') and not page.title().startswith('Listes '):

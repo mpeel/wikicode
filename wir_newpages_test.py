@@ -4,14 +4,15 @@ import datetime
 import dateparser
 from wir_newpages import *
 
-lang = 'en'
+lang = 'fr'
+article = 'Décès en février 2020'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
 repo = enwiki.data_repository()  # this is a DataSite object
 
 
-page = pywikibot.Page(enwiki, 'James Beckett (water polo)')
+page = pywikibot.Page(enwiki, article)
 print(page.text)
 print(authorIsNewbie(page=page,lang=lang))
 print(pageIsRubbish(page,lang=lang))
@@ -26,4 +27,4 @@ print(wd_item.editTime())
 print(datetime.datetime.now())
 print((datetime.datetime.now()-wd_item.editTime()).seconds)
 # addBirthDateClaim(repo=repo,item=wd_item,date=birthdate,lang=lang)
-addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)
+# addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)
