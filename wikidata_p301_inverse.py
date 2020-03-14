@@ -13,13 +13,13 @@ from pywikibot import pagegenerators
 import urllib
 from pibot_functions import *
 
-maxnum = 1000
+maxnum = 10
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-debug = 1
+debug = 0
 attempts = 0
 count = 0
 
@@ -84,7 +84,10 @@ for page in generator:
 
 		newclaim = pywikibot.Claim(repo, 'P910')
 		newclaim.setTarget(page)
-		text = input("Save link? ")
+		if debug == 1:
+			text = input("Save link? ")
+		else:
+			text = 'y'
 		if text != 'n':
 			val.addClaim(newclaim, summary=u'Adding reciprocal P910 value to match P301 in target')
 
