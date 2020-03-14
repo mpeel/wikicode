@@ -90,6 +90,7 @@ for page in generator:
 			text = 'y'
 		if text != 'n':
 			val.addClaim(newclaim, summary=u'Adding reciprocal P910 value to match P301 in target')
+			nummodified += 1
 
 		if nummodified >= maxnum:
 			print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
