@@ -14,3 +14,4 @@ cd /home/pi/Documents/wikicode/
 /usr/bin/python commonscat_check.py
 /usr/bin/python commonscat_p910_tidy.py
 /usr/bin/python commonscat_copy_from_P373.py
+/usr/bin/python3 wikidata_p301_inverse.py
