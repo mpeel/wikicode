@@ -61,7 +61,10 @@ else:
 for page in generator:
 # for pageid in candidates:
 	# page = pywikibot.ItemPage(repo, pageid)
-	item_dict = page.get()
+	try:
+		item_dict = page.get()
+	except:
+		continue
 	qid = page.title()
 	print("\nhttp://www.wikidata.org/wiki/" + qid)
 	# print(item_dict)
