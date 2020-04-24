@@ -307,6 +307,9 @@ def calculateDeathDateFull(page='', lang=''):
 		m = re.findall(r'\{\{(?:D|d)eath date and age\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
 		if m:
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
+		m = re.findall(r'\{\{(?:D|d)eath year and age\|(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
+		if m:
+			return str(m[0])
 		m = re.findall(r'\{\{(?:D|d)eath date\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
 		if m:
 			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
@@ -411,6 +414,9 @@ def pageIsBiography(page='', lang=''):
 				if re.search(r'(?im)((Kategorie|Category)\s*:\s*(Geboren|Gestorben) \d+)', page.text):
 					return True
 	elif lang == 'fr':
+		if 'Décès' in page.title():
+			# Probably a list item.
+			return False
 		if re.search('(?im)(Catégorie|Category)\s*:\s*Animal (né|mort)', page.text):
 			return False
 		elif not page.title().startswith('Liste ') and not page.title().startswith('Listes '):

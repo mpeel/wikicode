@@ -14,8 +14,8 @@ import urllib
 
 maxnum = 100000
 nummodified = 0
-stepsize =  10000
-maximum = 3000000
+stepsize =  1000
+maximum = 3500000
 numsteps = int(maximum / stepsize)
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
@@ -26,7 +26,7 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 debug = 1
 for i in range(0,numsteps):
-    print 'Starting at ' + str(i*stepsize)
+    print('Starting at ' + str(i*stepsize))
 
     query = 'SELECT ?item\n'\
     'WITH {\n'\
@@ -59,24 +59,27 @@ for i in range(0,numsteps):
     # '    MINUS {?item wdt:P910 [] }\n'\
     # '}'
 
-    print query
+    print(query)
 
-    generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+    try:
+        generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+    except:
+        continue
     for page in generator:
         try:
             item_dict = page.get()
             qid = page.title()
         except:
-            print 'Huh - no page found'
+            print('Huh - no page found')
             continue
 
 
-        print "\n" + qid
-        print page.labels
+        print("\n" + qid)
+        print(page.labels)
         try:
             p373 = item_dict['claims']['P373']
         except:
-            print 'Huh - no P373 found'
+            print('Huh - no P373 found')
             continue
         p373_check = 0
         for clm in p373:
@@ -85,11 +88,11 @@ for i in range(0,numsteps):
         # If we have a P910 value, switch to using that item
         try:
             existing_id = item_dict['claims']['P910']
-            print 'P910 exists, following that.'
+            print('P910 exists, following that.')
             for clm2 in existing_id:
                 page = clm2.getTarget()
                 item_dict = page.get()
-                print page.title()
+                print(page.title())
         except:
             null = 0
 
@@ -109,7 +112,7 @@ for i in range(0,numsteps):
                 try:
                     targetpage = pywikibot.Page(commons, commonscat)
                 except:
-                    print 'Found a bad sitelink'
+                    print('Found a bad sitelink')
                 else:
                     redirect = ''
                     for option in catredirect_templates:
@@ -120,7 +123,7 @@ for i in range(0,numsteps):
                                 try:
                                     redirect = (targetpage.text.split("{{" + option + " |"))[1].split("}}")[0]
                                 except:
-                                    print 'Wikitext parsing bug!'
+                                    print('Wikitext parsing bug!')
                             redirect = redirect.replace(u":Category:","")
                             redirect = redirect.replace(u"Category:","")
                     if redirect != '':
@@ -143,7 +146,7 @@ for i in range(0,numsteps):
                 try:
                     sitelink_page = pywikibot.Page(commons, commonscat)
                 except:
-                    print 'Found a bad sitelink'
+                    print('Found a bad sitelink')
                     # clm.changeTarget("", summary=u"Remove non-functional value of P373")
                 else:
                     # Check the category to see if it already has a Wikidata item
@@ -161,14 +164,14 @@ for i in range(0,numsteps):
                             # if text == 'y':
                             page.editEntity(data, summary=u'Copy from P373 to commons sitelink')
                             nummodified += 1
-                            print nummodified
+                            print(nummodified)
                         except:
-                            print 'Edit failed'
+                            print('Edit failed')
 
                 if nummodified >= maxnum:
-                    print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                    print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
                     exit()
 
-print 'Done! Edited ' + str(nummodified) + ' entries'
+print('Done! Edited ' + str(nummodified) + ' entries')
             
 # EOF
