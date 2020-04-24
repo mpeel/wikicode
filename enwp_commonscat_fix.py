@@ -7,6 +7,7 @@
 # Mike Peel     21-Jan-2019      v1.3 - tweaks to removal code and template list
 # Mike Peel     13-Apr-2019      v1.4 - add matches to the wikidata game database
 # Mike Peel     15-Jun-2019      v1.5 - tweaks + handle cases with no wikidata or commons category
+# Mike Peel     24-Apr-2020      v1.6 - handle cases where the link is the pagename, and disable tiles for now
 
 from __future__ import unicode_literals
 
@@ -17,16 +18,16 @@ import string
 from pywikibot import pagegenerators
 import urllib
 from pibot_functions import *
-import mysql.connector
-from database_login import *
+# import mysql.connector
+# from database_login import *
 
-mydb = mysql.connector.connect(
-  host=database_host,
-  user=database_user,
-  passwd=database_password,
-  database=database_database
-)
-mycursor = mydb.cursor()
+# mydb = mysql.connector.connect(
+#   host=database_host,
+#   user=database_user,
+#   passwd=database_password,
+#   database=database_database
+# )
+# mycursor = mydb.cursor()
 
 maxnum = 100000
 nummodified = 0
@@ -46,7 +47,7 @@ targetcats = ['Commons category link is the pagename‎', 'Commons category link
 for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 1:
+		if categories == 0:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -54,7 +55,7 @@ for categories in range(0,2):
 
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Exposition Internationale des Arts" in page.title():
+				if "Zizia" in page.title():
 					trip = 1
 				else:
 					print(page.title())
@@ -98,31 +99,41 @@ for categories in range(0,2):
 						null = 2
 			if id_val == 0:
 				# We didn't find the commons category link, skip this one.
-				continue
-
-			# Do some tidying of the link
-			if "|" in id_val:
-				try:
-					if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0] or 'nowrap' in id_val.split("|")[0] or 'lcfirst' in id_val.split("|")[0] or 'lcf' in id_val.split("|")[0]:
-						if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1] or 'nowrap' in id_val.split("|")[1] or 'lcfirst' in id_val.split("|")[1] or 'lcf' in id_val.split("|")[1]:
-							id_val = id_val.split("|")[2]
+				# continue
+				for i in range(0,len(templates)):
+					if '{{'+templates[i]+'}}' in target_text:
+						id_val = ''
+						commonscat_string = '{{'+templates[i]+'}}'
+						commonscat_string2 = ''
+						commonscat_string2a = '{{'+templates[i]
+			else:
+				# Do some tidying of the link
+				if "|" in id_val:
+					try:
+						if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0] or 'nowrap' in id_val.split("|")[0] or 'lcfirst' in id_val.split("|")[0] or 'lcf' in id_val.split("|")[0]:
+							if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1] or 'nowrap' in id_val.split("|")[1] or 'lcfirst' in id_val.split("|")[1] or 'lcf' in id_val.split("|")[1]:
+								id_val = id_val.split("|")[2]
+							else:
+								id_val = id_val.split("|")[1]
 						else:
-							id_val = id_val.split("|")[1]
-					else:
-						id_val = id_val.split("|")[0]
+							id_val = id_val.split("|")[0]
+					except:
+						continue
+				try:
+					id_val = id_val.strip()
 				except:
+					null = 1
+
+				# Check for bad characters
+				if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val or 'bullet=' in id_val or 'bullet =' in id_val or 'nowrap' in id_val or 'lcfirst' in id_val:
 					continue
-			try:
-				id_val = id_val.strip()
-			except:
-				null = 1
 
-			# Check for bad characters
-			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val or 'bullet=' in id_val or 'bullet =' in id_val or 'nowrap' in id_val or 'lcfirst' in id_val:
-				continue
-
-			print(id_val)
-			commonscat = u"Category:" + id_val
+			if id_val != 0:
+				print(id_val)
+				if id_val == '':
+					commonscat = u"Category:" + page.title().replace('Category:','')
+				else:
+					commonscat = u"Category:" + id_val
 
 			# Get the Wikidata item
 			try:
@@ -166,7 +177,7 @@ for categories in range(0,2):
 					commonscat_page = pywikibot.Page(commons, commonscat)
 					text = commonscat_page.get()
 				except:
-					last_check = check_if_category_has_contents(id_val,site=commons)
+					last_check = check_if_category_has_contents(commonscat,site=commons)
 					if last_check == False:
 						print('Found a bad sitelink - removing it')
 						target_text = target_text.replace("* " + commonscat_string+"\n", '')
@@ -175,34 +186,34 @@ for categories in range(0,2):
 						target_text = target_text.replace(commonscat_string, '')
 						page.text = target_text
 						test = 'y'
-						savemessage = "Removing Commons category ("+id_val+") as it does not exist"
+						savemessage = "Removing Commons category ("+commonscat+") as it does not exist"
 						if debug == 1:
 							print(target_text)
 							print(id_val)
 							print(savemessage)
-							test = raw_input("Continue? ")
+							test = input("Continue? ")
 						if test == 'y':
 							nummodified += 1
 							page.save(savemessage)
 							continue
 
 				# It exists, but the Wikidata item has no sitelink, so add it as a tile in the game
-				if qid != 0:
-					try:
-						commonscat = u"Category:" + id_val
-						mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + commonscat + '"')
-						myresult = mycursor.fetchone()
-						# print(myresult)
-						if not myresult:
-							sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
-							val = (qid, commonscat)
-							print(sql)
-							print(val)
-							mycursor.execute(sql, val)
-							mydb.commit()
-							nummodified += 1
-					except:
-						print('Something went wrong when adding it to the database!')
+				# if qid != 0:
+				# 	try:
+				# 		commonscat = u"Category:" + id_val
+				# 		mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + commonscat + '"')
+				# 		myresult = mycursor.fetchone()
+				# 		# print(myresult)
+				# 		if not myresult:
+				# 			sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
+				# 			val = (qid, commonscat)
+				# 			print(sql)
+				# 			print(val)
+				# 			mycursor.execute(sql, val)
+				# 			mydb.commit()
+				# 			nummodified += 1
+				# 	except:
+				# 		print('Something went wrong when adding it to the database!')
 
 
 			# Only attempt to do the next part if we have a commons category link both locally and on wikidata
@@ -228,7 +239,7 @@ for categories in range(0,2):
 							print(target_text)
 							print(id_val)
 							print(savemessage)
-							test = raw_input("Continue? ")
+							test = input("Continue? ")
 						if test == 'y':
 							nummodified += 1
 							page.save(savemessage)
@@ -260,7 +271,7 @@ for categories in range(0,2):
 								print(target_text)
 								print(id_val)
 								print(savemessage)
-								test = raw_input("Continue? ")
+								test = input("Continue? ")
 							if test == 'y':
 								nummodified += 1
 								page.save(savemessage)
