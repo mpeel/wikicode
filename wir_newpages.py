@@ -151,16 +151,18 @@ def addDeathDateClaim(repo='', item='', date='', lang=''):
 		return addDateClaim(repo=repo, item=item, claim='P570', date=date, lang=lang)
 
 def addDateClaim(repo='', item='', claim='', date='', lang=''):
-	if repo and item and claim and date and lang:
-		claim = pywikibot.Claim(repo, claim)
-		if len(date.split('-')) == 3:
-			claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0]), month=int(date.split('-')[1]), day=int(date.split('-')[2])))
-		elif len(date.split('-')) == 2:
-			claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0]), month=int(date.split('-')[1])))
-		elif len(date.split('-')) == 1:
-			claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0])))
-		item.addClaim(claim, summary='BOT - Adding 1 claim')
-		addImportedFrom(repo=repo, claim=claim, lang=lang)
+	now = datetime.datetime.now()
+	if int(date.split('-')[0]) <= now.year:
+		if repo and item and claim and date and lang:
+			claim = pywikibot.Claim(repo, claim)
+			if len(date.split('-')) == 3:
+				claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0]), month=int(date.split('-')[1]), day=int(date.split('-')[2])))
+			elif len(date.split('-')) == 2:
+				claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0]), month=int(date.split('-')[1])))
+			elif len(date.split('-')) == 1:
+				claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0])))
+			item.addClaim(claim, summary='BOT - Adding 1 claim')
+			addImportedFrom(repo=repo, claim=claim, lang=lang)
 
 def addOccupationsClaim(repo='', item='', occupations=[], lang=''):
 	if repo and item and occupations and lang:
