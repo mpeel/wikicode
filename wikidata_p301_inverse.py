@@ -77,7 +77,10 @@ for page in generator:
 		val = clm.getTarget()
 		print(val)
 		wd_id = val.title()
-		target_dict = val.get()
+		try:
+			target_dict = val.get()
+		except:
+			continue
 
 		try:
 			p910 = target_dict['claims']['P910']
