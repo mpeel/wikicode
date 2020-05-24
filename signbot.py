@@ -24,7 +24,8 @@
 # You should have received a copy of the GNU General License
 # along with self program.  If not, see <http://www.gnu.org/licenses/>
 #
-
+import sys
+sys.path.append("/home/pi/Documents/media-dubiety/")
 from __future__ import unicode_literals
 
 import hashlib
