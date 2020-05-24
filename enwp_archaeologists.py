@@ -21,7 +21,7 @@ trip = 1
 maxnum = 10000
 usecats = False
 targetitem = 'Q3621491'
-otheritems = ['Q56842676','Q15983985','Q25915497','Q1350189','Q52231239']
+otheritems = ['Q56842676','Q15983985','Q25915497','Q1350189','Q52231239','Q26261971','Q26424344']
 banner = ['WikiProject Archaeology','WP Archaeology','WP Archeology']
 tags = ['women=yes','women=y','women=Yes']
 cats = ['Category:Women archaeologists','Category:British women archaeologists','Category:Indian women archaeologists']
@@ -82,7 +82,7 @@ for targetcat in targetcats:
 			item_dict = wd_item.get()
 			qid = wd_item.title()
 			page = pywikibot.Page(enwp, item_dict['sitelinks']['enwiki'])
-			print("\nhttp://en.wikipedia.org/wiki/" + page.title().replace(' ','_'))
+		print("\nhttp://en.wikipedia.org/wiki/" + page.title().replace(' ','_'))
 
 
 		check_human = False
@@ -191,6 +191,7 @@ for targetcat in targetcats:
 			target_text = target_text[:pos+1] + '\n[['+cats[0]+']]'+target_text[pos+1:]
 			if target_text != page.get():
 				print(target_text)
+				print("\nhttp://en.wikipedia.org/wiki/" + page.title().replace(' ','_'))
 				savemessage = 'Add [['+cats[0]+']]'
 				print(savemessage)
 				savepage = input('Save article?')
