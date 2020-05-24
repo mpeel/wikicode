@@ -38,16 +38,16 @@ import traceback
 import pywikibot
 from pywikibot.diff import PatchManager
 
-from redis import Redis
-from redisconfig import KEYSIGN
+# from redis import Redis
+# from redisconfig import KEYSIGN
 
 # from media-dubiety
 from threads import SSEClient, ThreadPool
 
-SITE = pywikibot.Site(user='SignBot')
+SITE = pywikibot.Site(user='Pi bot')
 SITE.login()
 
-REDIS = Redis(host='tools-redis')
+# REDIS = Redis(host='tools-redis')
 
 threads = []
 
@@ -92,14 +92,15 @@ def locknotify(user, lock=True):
     reset = int(time.time()) + 86400
     key = KEYSIGN + ':' + 'lock' + ':'
     key += hashlib.md5(user.username.encode('utf-8')).hexdigest()
-    p = REDIS.pipeline()
-    p.exists(key)
-    if lock:
-        p.set(key, '1')
-        p.expireat(key, reset + 10)
-    else:
-        p.delete(key)
-    return p.execute()[0]
+    # p = REDIS.pipeline()
+    # p.exists(key)
+    # if lock:
+    #     p.set(key, '1')
+    #     p.expireat(key, reset + 10)
+    # else:
+    #     p.delete(key)
+    # return p.execute()[0]
+    return 0
 
 
 def checknotify(user):
@@ -108,11 +109,11 @@ def checknotify(user):
     reset = int(time.time()) + 86400
     key = KEYSIGN + ':' + 'counter' + ':'
     key += hashlib.md5(user.username.encode('utf-8')).hexdigest()
-    p = REDIS.pipeline()
-    p.incr(key)
-    p.expireat(key, reset + 10)
-    return p.execute()[0] >= 3
-
+    # p = REDIS.pipeline()
+    # p.incr(key)
+    # p.expireat(key, reset + 10)
+    # return p.execute()[0] >= 3
+    return 0
 
 def get_signature(event, tosignstr, user):
     p = ''
