@@ -26,7 +26,6 @@
 #
 import sys
 sys.path.append("/home/pi/Documents/media-dubiety/")
-from __future__ import unicode_literals
 
 import hashlib
 import random
