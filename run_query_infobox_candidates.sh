@@ -1,0 +1,1 @@
+python3 /data/project/pibot/query_infobox_candidates.py > /data/project/pibot/quarry_test.csv
