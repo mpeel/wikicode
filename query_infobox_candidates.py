@@ -19,7 +19,7 @@ conn = pymysql.connect(
     password=password,
     port=port
 )
-print(conn)
+# print(conn)
 
 # From https://paws-public.wmflabs.org/paws-public/User:YuviPanda/examples/revisions-sql.ipynb
 # with conn.cursor() as cur:
@@ -34,7 +34,7 @@ print(conn)
 #     """)
 #     print(cur.fetchall())
 # exit()
-print('Hi!')
+# print('Hi!')
 start = 0
 step = 10
 run = True
@@ -46,17 +46,17 @@ with conn.cursor() as cur:
     " JOIN page AS p1 ON c1.cl_from=p1.page_id AND p1.page_namespace=14 AND p1.page_is_redirect=0"\
     " JOIN page_props AS pp ON pp.pp_page = p1.page_id AND pp.pp_propname = 'wikibase_item'"\
     " LEFT JOIN templatelinks AS tl ON tl.tl_from = p1.page_id AND tl.tl_from_namespace = 14 AND tl.tl_namespace = 10 AND tl.tl_title = 'Wikidata_Infobox' "\
-    # " WHERE tl.tl_title IS NULL")
+    " WHERE tl.tl_title IS NULL")
     # " LEFT JOIN templatelinks AS t2 ON t2.tl_from = p1.page_id AND t2.tl_from_namespace = 14 AND t2.tl_namespace = 10 AND t2.tl_title = 'Date navbox' "\
     # " LEFT JOIN templatelinks AS t3 ON t3.tl_from = p1.page_id AND t3.tl_from_namespace = 14 AND t3.tl_namespace = 10 AND t3.tl_title = 'Category redirect' "\
     # " LEFT JOIN templatelinks AS t4 ON t4.tl_from = p1.page_id AND t4.tl_from_namespace = 14 AND t4.tl_namespace = 10 AND t4.tl_title = 'Disambig' "\
     # " WHERE tl.tl_title IS NULL AND t2.tl_title IS NULL AND t3.tl_title IS NULL AND t4.tl_title IS NULL"\
-    " WHERE tl.tl_title IS NULL"\
-    " LIMIT " + str(step) + " OFFSET " + str(start))
+    # " WHERE tl.tl_title IS NULL"\
+    # " LIMIT " + str(step) + " OFFSET " + str(start))
     vals = cur.fetchall()
     if len(vals) > 0:
         start += step
         [print(x[1]) for x in vals]
     else:
         run = False
-print(1)
+# print(1)
