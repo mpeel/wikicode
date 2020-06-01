@@ -152,7 +152,12 @@ def addDeathDateClaim(repo='', item='', date='', lang=''):
 
 def addDateClaim(repo='', item='', claim='', date='', lang=''):
 	now = datetime.datetime.now()
-	if int(date.split('-')[0]) <= now.year:
+	check_ok = True
+	if int(date.split('-')[0]) > now.year:
+		check_ok = False
+	if int(date.split('-')[0]) == now.year and int(date.split('-')[1]) > now.month:
+		check_ok = False
+	if check_ok:
 		if repo and item and claim and date and lang:
 			claim = pywikibot.Claim(repo, claim)
 			if len(date.split('-')) == 3:
@@ -241,7 +246,7 @@ def calculateBirthDateFull(page='', lang=''):
 			return str(m[0][0]) + '-' + str(m[0][1]) + '-' + str(m[0][2])
 		m = re.findall(r'\|\s*(?:B|b)irth(?:_| )date\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
 		if m:
-			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+			if (len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5) and m[0][2].isnumeric():
 				try:
 					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
 					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
@@ -253,7 +258,7 @@ def calculateBirthDateFull(page='', lang=''):
 	elif lang == 'de':
 		m = re.findall(r'(?im)\|\s*GEBURTSDATUM\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('.',''))
 		if m:
-			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+			if (len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5) and m[0][2].isnumeric():
 				try:
 					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
 					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
@@ -271,7 +276,7 @@ def calculateBirthDateFull(page='', lang=''):
 			return str(m[0][2]) + '-' + str(m[0][1]) + '-' + str(m[0][0])
 		m = re.findall(r'\{\{(?:D|d)ate de naissance\|(\d+)\s*\|\s*(\w+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y','').replace('|âge=oui',''))
 		if m:
-			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+			if (len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5) and m[0][2].isnumeric():
 				try:
 					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
 					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
@@ -314,7 +319,7 @@ def calculateDeathDateFull(page='', lang=''):
 			return str(m[0])
 		m = re.findall(r'\{\{(?:D|d)eath date\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
 		if m:
-			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+			if (len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5) and m[0][2].isnumeric():
 				try:
 					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
 					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
@@ -322,7 +327,7 @@ def calculateDeathDateFull(page='', lang=''):
 					m = False
 		m = re.findall(r'\|\s*(?:D|d)eath(?:_| )date\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('|df=yes','').replace('|df=y','').replace(',','').replace('[','').replace(']',''))
 		if m:
-			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+			if (len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5) and m[0][2].isnumeric():
 				try:
 					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
 					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
@@ -334,7 +339,7 @@ def calculateDeathDateFull(page='', lang=''):
 	elif lang == 'de':
 		m = re.findall(r'(?im)\|\s*STERBEDATUM\s*=\s*(\w+)\s*(\w+)\s*(\w+)', page.text.replace('.',''))
 		if m:
-			if len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5:
+			if (len(m[0][0]) + len(m[0][1]) + len(m[0][2]) > 5) and m[0][2].isnumeric():
 				try:
 					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
 					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
@@ -519,6 +524,7 @@ def main():
 					numcandidates = len(m)
 					print("Found %s candidates" % (numcandidates))
 					if numcandidates > 5: #too many candidates, skiping
+						print("SKIP [[" + lang + ":" + page.title() + "]] - too many matches")
 						print("Too many, skiping")
 						continue
 					for itemfoundq in m:
@@ -532,10 +538,12 @@ def main():
 						pagebirthyear = pagebirthyear and int(pagebirthyear.split('-')[0]) or ''
 						if not pagebirthyear:
 							print("Page doesnt have birthdate, skiping")
+							print("SKIP [[" + lang + ":" + page.title() + "]] - has no birthdate")
 							break #break, dont continue. Without birthdate we cant decide correctly
 						try:
 							test = itemfound.claims['P569'][0].getTarget().precision
 						except:
+							print("SKIP [[" + lang + ":" + page.title() + "]] - [[:d:" + itemfound.title() + "]] has wierd birthdate")
 							print('There is something odd with the birth date, skipping')
 							break
 						if 'P569' in itemfound.claims and itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11]:
@@ -565,7 +573,9 @@ def main():
 								# test = input('Continue?')
 								addBiographyClaims(repo=repo, wikisite=wikisite, item=itemfound, page=page, lang=lang)
 								break
-				
+						else:
+							print("SKIP [[" + lang + ":" + page.title() + "]] - [[:d:" + itemfound.title() + "]] has no birthdate")
+
 				#no item found, or no candidates are useful
 				if '<search />' in raw or (numcandidates == 0):
 					print('No useful item found. Creating a new one...')
