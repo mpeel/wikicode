@@ -7,7 +7,7 @@ import datetime
 from pywikibot import pagegenerators
 
 debug = False
-maxnum = 500
+maxnum = 10
 
 def update_report(page, old_pmid, new_pmid, ):
     report = pywikibot.Page(site, 'Wikipedia:WikiProject_Medicine/Cochrane_update')
@@ -114,7 +114,6 @@ for regex in regexes:
                     checkedpages[str(pmid)] = 0
             else:
                 print('using cache for ' + str(pmid))
-                exit()
             print(checkedpages[str(pmid)])
             if checkedpages[str(pmid)] != 0:
                 if '<!-- No update needed: ' + str(pmid) + ' -->' not in text:
