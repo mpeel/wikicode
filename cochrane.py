@@ -7,7 +7,7 @@ import datetime
 from pywikibot import pagegenerators
 
 debug = False
-maxnum = 10
+maxnum = 500
 
 def update_report(page, old_pmid, new_pmid, ):
     report = pywikibot.Page(site, 'Wikipedia:WikiProject_Medicine/Cochrane_update')
@@ -119,7 +119,7 @@ for regex in regexes:
                 if '<!-- No update needed: ' + str(pmid) + ' -->' not in text:
                     up = u'{{Update inline|reason=Updated version https://www.ncbi.nlm.nih.gov/pubmed/' + checkedpages[str(pmid)]
                     if not up in text:
-                        # text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\< *?\/ *?ref *?\>)' % pmid,ur'\1%s}}' % (up+str(datestr)), text, re.DOTALL)
+                        text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\< *?\/ *?ref *?\>)' % pmid,ur'\1%s}}' % (up+str(datestr)), text, re.DOTALL)
                         print('Would update report')
                         if debug == False:
                             update_report(page, pmid, checkedpages[str(pmid)])
