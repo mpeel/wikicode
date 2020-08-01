@@ -90,6 +90,7 @@ def migratecat(targetcat):
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"|defaultsort=no|qid="+wd_item.title(),'{{Wikidata Infobox|defaultsort=no')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid= "+wd_item.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid ="+wd_item.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid = "+wd_item.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid="+wd_item.title(),'{{Wikidata Infobox')
@@ -102,6 +103,7 @@ def migratecat(targetcat):
         if wd_item2 != 0:
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item2.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item2.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid="+wd_item2.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid ="+wd_item2.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid = "+wd_item2.title(),'{{Wikidata Infobox')
