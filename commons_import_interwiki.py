@@ -22,7 +22,7 @@ def prettyPrint(variable):
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-languages = ['en','de','fr','es','pt']
+languages = ['en','de','fr','es','pt','it','pl','ru']
 for language in languages:
 	enwiki = pywikibot.Site(language, 'wikipedia')
 
@@ -46,8 +46,8 @@ for language in languages:
 
 		enwp = ''
 		for iw in category.interwiki():
-			print(iw)
 			try:
+				print(iw)
 				if 'wikipedia:'+language in str(iw):
 					enwp = str(iw).replace('[[wikipedia:'+language+':','').replace(']]','')
 			except:
