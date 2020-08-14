@@ -57,7 +57,7 @@ for category in gen:
 		print('Has sitelink')
 	except:
 		# No existing sitelink found, add the new one
-		data = {'sitelinks': [{'site': 'commonswiki', 'title': category}]}
+		data = {'sitelinks': [{'site': 'commonswiki', 'title': category.title()}]}
 		print("\n\n")
 		# prettyPrint(item_dict)
 		# print(data)
@@ -67,7 +67,7 @@ for category in gen:
 			# text = input("Save? ")
 			# if text == 'y':
 			wd_item.editEntity(data, summary=u'Add commons sitelink based on interwiki on Commons')
-			# continue
+			# 	continue
 			# else:
 			# 	continue
 		except:
