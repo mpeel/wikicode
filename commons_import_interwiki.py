@@ -52,6 +52,8 @@ for language in languages:
 					enwp = str(iw).replace('[[wikipedia:'+language+':','').replace(']]','')
 			except:
 				continue
+		if enwp == '':
+			continue
 		page = pywikibot.Page(enwiki, enwp)
 		try:
 			wd_item = pywikibot.ItemPage.fromPage(page)
