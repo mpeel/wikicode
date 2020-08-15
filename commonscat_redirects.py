@@ -21,7 +21,7 @@ trap = 0
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-report = pywikibot.Page(commons, reportpage)
+# report = pywikibot.Page(commons, reportpage)
 # if trap != 1:
 #     report.text = ''
 #     report.save('Blanking to restart logging')
