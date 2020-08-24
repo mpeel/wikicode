@@ -39,7 +39,7 @@ for lang in langs:
 	if len(sys.argv) >= 2:
 		total = int(sys.argv[1])
 
-	pages = parseduplicity('https://tools.wmflabs.org/wikidata-todo/duplicity.php?cat=&mode=list&wiki='+lang+'wiki',lang=lang)
+	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+lang+'wiki',lang=lang)
 	print(pages)
 	for pagename in pages:
 		page = pywikibot.Page(wikisite, pagename)

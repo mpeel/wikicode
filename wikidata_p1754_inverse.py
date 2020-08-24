@@ -23,10 +23,10 @@ debug = 0
 attempts = 0
 count = 0
 
-for option in range(0,2):
+for option in range(0,3):
 	candidates = []
 	if option == 1:
-		reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P301')
+		reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P1754')
 		text = reportpage.get()
 		text = text.split('== "Inverse" violations ==')[1].split('== "Single value" violations ==')[0]
 		lines = text.splitlines()
@@ -39,22 +39,21 @@ for option in range(0,2):
 				continue
 	else:
 		if option == 2:
-			# This times out, so isn't currently running
-			query = 'SELECT ?item ?itemLabel ?should_link_via_P910_to ?should_link_via_P910_toLabel '\
+			query = 'SELECT ?item ?itemLabel ?should_link_via_P1753_to ?should_link_via_P1753_toLabel '\
 			'WHERE {'\
-			'?should_link_via_P910_to wdt:P301 ?item .'\
-			'FILTER NOT EXISTS { ?item wdt:P910 ?should_link_via_P910_to } .'\
+			'?should_link_via_P1753_to wdt:P1754 ?item .'\
+			'FILTER NOT EXISTS { ?item wdt:P1753 ?should_link_via_P1753_to } .'\
 			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
 			'}'
 		else:
 			query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
-			'?statement wikibase:hasViolationForConstraint wds:P301-0EC7969D-436B-4365-B6B5-59454795403E .'\
+			'?statement wikibase:hasViolationForConstraint wds:P1754-015956CB-8C8E-49C9-9E43-ABA092CEE6A7 .'\
 			'?item ?p ?statement .'\
 			'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
 			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
 			'}'
 		if debug:
-			query = query + " LIMIT 10"
+			query = query + " LIMIT 20"
 
 		print(query)
 
@@ -72,9 +71,9 @@ for option in range(0,2):
 		print("\nhttp://www.wikidata.org/wiki/" + qid)
 		# print(item_dict)
 		try:
-			p301 = item_dict['claims']['P301']
+			p301 = item_dict['claims']['P1754']
 		except:
-			print('No P301')
+			print('No P1754')
 			continue
 		for clm in p301:
 			val = clm.getTarget()
@@ -86,19 +85,19 @@ for option in range(0,2):
 				continue
 
 			try:
-				p910 = target_dict['claims']['P910']
+				p910 = target_dict['claims']['P1753']
 				continue
 			except:
-				print('No P910 in target')
+				print('No P1753 in target')
 
-			newclaim = pywikibot.Claim(repo, 'P910')
+			newclaim = pywikibot.Claim(repo, 'P1753')
 			newclaim.setTarget(page)
 			if debug == 1:
 				text = input("Save link? ")
 			else:
 				text = 'y'
 			if text != 'n':
-				val.addClaim(newclaim, summary=u'Adding reciprocal P910 value to match P301 in target')
+				val.addClaim(newclaim, summary=u'Adding reciprocal P1753 value to match P1754 in target')
 				nummodified += 1
 
 			if nummodified >= maxnum:

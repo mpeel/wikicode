@@ -92,29 +92,29 @@ for page in generator:
         # Remove 'Category' from the first item
         new_labels = item_dict['labels']
         new_labels['en'] = new_labels['en'].replace('Category:','')
-        # test = input('Remove category from label?')
-        # if test != 'n':
-        page.editLabels(labels=new_labels, summary="Remove misplaced 'Category' in label")
+        test = input('Remove category from label?')
+        if test != 'n':
+            page.editLabels(labels=new_labels, summary="Remove misplaced 'Category' in label")
 
         # If we have two sitelinks, remove one of them
         if sitelink != '' and sitelink2 != '':
             if 'IMO' not in sitelink:
-                # test = input('Remove first sitelink?')
-                # if test != 'n':
-                page.removeSitelink('commonswiki',summary=u'removing commons sitelink in preparation for merge.')
+                test = input('Remove first sitelink?')
+                if test != 'n':
+                    page.removeSitelink('commonswiki',summary=u'removing commons sitelink in preparation for merge.')
             elif 'IMO' not in sitelink2:
-                # test = input('Remove second sitelink?')
-                # if test != 'n':
-                page2.removeSitelink('commonswiki',summary=u'removing commons sitelink in preparation for merge.')
+                test = input('Remove second sitelink?')
+                if test != 'n':
+                    page2.removeSitelink('commonswiki',summary=u'removing commons sitelink in preparation for merge.')
 
         # Merge an item into the one with the lowest qid
         if int(qid.replace('Q','')) < int(qid2.replace('Q','')):
-            # test = input('Merge into item 1?')
-            # if test != 'n':
-            page2.mergeInto(page,summary='Merging duplicate ship items')
+            test = input('Merge into item 1?')
+            if test != 'n':
+                page2.mergeInto(page,summary='Merging duplicate ship items')
         else:
-            # test = input('Merge into item 2?')
-            # if test != 'n':
-            page.mergeInto(page2,summary='Merging duplicate ship items')
+            test = input('Merge into item 2?')
+            if test != 'n':
+                page.mergeInto(page2,summary='Merging duplicate ship items')
 
 # EOF
