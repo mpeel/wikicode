@@ -16,8 +16,8 @@ import csv
 
 import sys
 # sys.setdefaultencoding() does not exist, here!
-reload(sys)  # Reload does the trick!
-sys.setdefaultencoding('UTF8')
+# reload(sys)  # Reload does the trick!
+# sys.setdefaultencoding('UTF8')
 
 maxnum = 1000
 nummodified = 0
@@ -28,25 +28,25 @@ manual = False
 random = False
 usequery = False
 usetemplate = ''#'Creator'#'Individual aircraft'
-usequarry = 'quarry_new.csv'
-quarry_reference = 'quarry.csv'
+usequarry = 'quarry_full.csv'
+quarry_reference = ''#'quarry.csv'
 useimport = 'import.csv'
 newstyle = False
 database = False
 
 existing_uses = {}
 if database:
-    print 'Loading database...'
+    print('Loading database...')
     with open('commons_wikidata_infobox_uses.csv', mode='r') as infile:
         reader = csv.reader(infile)
         existing_uses = {rows[0] for rows in reader}
-    print 'Database loaded!'
+    print('Database loaded!')
 
 targetcats = ['Category:CommonsRoot']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wdbox", "wdbox", "{{Institution", "{{institution", "{{Creator|", "{{creator|", "{{Creator:", "{{creator:", "User:Rama/Catdef", "Building address", "building address", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", "{{Artwork", "{{artwork", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai', 'Finlandyear', 'finlandyear', 'Finlandyear-Sweden', 'finlandyear-Sweden', 'Finlanddisestablishmentyear' 'AirDisasters', 'airDisasters', 'Finland decade', 'finland decade'] + catredirect_templates
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wdbox", "wdbox", "MDcat", "mDcat", "Date navbox", "date navbox", 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai', 'Finlandyear', 'finlandyear', 'Finlandyear-Sweden', 'finlandyear-Sweden', 'Finlanddisestablishmentyear' 'AirDisasters', 'airDisasters', 'Finland decade', 'finland decade'] + catredirect_templates #"{{Institution", "{{institution", "{{Creator|", "{{creator|", "{{Creator:", "{{creator:", "{{Artwork", "{{artwork", "Building address", "building address", "Monthbyyear", "monthbyyear", "User:Rama/Catdef", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 
 templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw", "en", "En", "individual aircraft", "Individual aircraft", "Wikidata person", "wikidata person"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
@@ -60,7 +60,7 @@ def addtemplate(target):
         return 0
     try:
         item_dict = wd_item.get()
-        print wd_item.title()
+        print(wd_item.title())
     except:
         return 0
     try:
@@ -70,7 +70,7 @@ def addtemplate(target):
         return 0
 
     redirect = ''
-    print "\n" + target.title()
+    print("\n" + target.title())
 
     # Quick-check for an existing infobox, and skip this if found before doing more processing
     if "Wikidata Infobox" in target_text:
@@ -81,7 +81,7 @@ def addtemplate(target):
     test_item_dict = item_dict
     try:
         existing_id = test_item_dict['claims']['P301']
-        print 'P301 exists, following that.'
+        print('P301 exists, following that.')
         for clm2 in existing_id:
             test_item = clm2.getTarget()
             test_item_dict = test_item.get()
@@ -92,12 +92,12 @@ def addtemplate(target):
         # print p1472
         for clm in p1472:
             creator_template = clm.getTarget()
-            print target_text
+            print(target_text)
             target_text = target_text.replace("{{Creator:"+creator_template+"}}","")
             target_text = target_text.replace("{{creator:"+creator_template+"}}","")
             target_text = target_text.replace("{{Creator:"+creator_template+"|autocategorize}}","")
             target_text = target_text.replace("{{creator:"+creator_template+"|autocategorize}}","")
-            print target_text
+            print(target_text)
     except:
         null = 0
     # ... and the Institution template
@@ -106,10 +106,10 @@ def addtemplate(target):
         # print p1812
         for clm in p1612:
             institution_template = clm.getTarget()
-            print target_text
+            print(target_text)
             target_text = target_text.replace("{{Institution:"+institution_template+"}}","")
             target_text = target_text.replace("{{institution:"+institution_template+"}}","")
-            print target_text
+            print(target_text)
     except:
         null = 0
 
@@ -117,7 +117,7 @@ def addtemplate(target):
     if any(option in target_text for option in templatestoavoid):
         for option in templatestoavoid:
             if option in target_text:
-                print 'Category uses ' + option + ', skipping'
+                print('Category uses ' + option + ', skipping')
         return 0
 
     # Check the Wikidata item to see if we want to skip this.
@@ -125,7 +125,7 @@ def addtemplate(target):
     try:
         p301 = item_dict['claims']['P301']
         for clm in p301:
-            print clm
+            print(clm)
             # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
             savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
             wd_id = clm.getTarget().title()
@@ -242,9 +242,9 @@ def addtemplate(target):
     target_text = "\n".join(lines)
 
     # Time to save it
-    print target_text
+    print(target_text)
     target.text = target_text.strip()
-    print savemessage
+    print(savemessage)
     if manual:
         text = raw_input("Save on Commons? ")
         if text == 'y':
@@ -252,7 +252,7 @@ def addtemplate(target):
                 target.save(savemessage)
                 return 1
             except:
-                print "That didn't work!"
+                print("That didn't work!")
                 return 0
         else:
             return 0
@@ -261,7 +261,7 @@ def addtemplate(target):
             target.save(savemessage)
             return 1
         except:
-            print "That didn't work!"
+            print("That didn't work!")
             return 0
 
 # That's the end of the function, now on to the category walkers
@@ -274,29 +274,29 @@ if random:
     while nummodified < maxnum:
         targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
         for target in targets:
-            print target.title()
+            print(target.title())
             if target.title() not in existing_uses:
                 nummodified += addtemplate(target)
-                print nummodified
+                print(nummodified)
             
             if nummodified >= maxnum:
-                print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
                 break
 elif usetemplate:
     # Go through uses of a template
     template = pywikibot.Page(commons, 'Template:'+usetemplate)
     targetcats = template.embeddedin(namespaces='14')
     for target in targetcats:
-        print target.title()
+        print(target.title())
         if target.title() not in existing_uses:
             nummodified += addtemplate(target)
-            print nummodified
+            print(nummodified)
         
         if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 elif usequarry:
-    print 'hello'
+    print('hello')
     quarry_ref = []
     if quarry_reference != '':
         with open(quarry_reference, mode='r') as infile:
@@ -312,12 +312,12 @@ elif usequarry:
             continue
         # else:
             # test = 1
-        print target
+        print(target)
         cat = pywikibot.Category(commons,'Category:'+target)
         if cat.title() not in existing_uses:
             nummodified += addtemplate(cat)
         else:
-            print 'Already in database'
+            print('Already in database')
 elif useimport:
     with open(useimport, mode='r') as infile:
         reader = csv.reader(infile)
@@ -327,7 +327,7 @@ elif useimport:
         if cat.title() not in existing_uses:
             nummodified += addtemplate(cat)
         else:
-            print 'Already in database'
+            print('Already in database')
 elif usequery:
     query = 'SELECT (COUNT(DISTINCT ?cat) AS ?count) ?item ?itemCat WHERE {\n'\
         '  ?cat wdt:P971 ?item .\n'\
@@ -337,7 +337,7 @@ elif usequery:
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
     for page in generator:
         try:
-            print page.title()
+            print(page.title())
             item_dict = page.get()
             p373 = item_dict['claims']['P373']
             for clm in p373:
@@ -345,14 +345,14 @@ elif usequery:
                 commonscat = u"Category:" + val
             # sitelink = item_dict['sitelinks']['commonswiki']
         except:
-            print 'Something went wrong'
-        print commonscat
+            print('Something went wrong')
+        print(commonscat)
         if commonscat not in existing_uses:
             nummodified += addtemplate(pywikibot.Category(commons,commonscat))
         else:
-            print 'Already in database'
+            print('Already in database')
         if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 
 
@@ -371,9 +371,9 @@ elif newstyle:
             if cat.title() not in existing_uses:
                 nummodified += addtemplate(cat)
             else:
-                print 'Already in database'
+                print('Already in database')
             numchecked += 1
-            print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
+            print(str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active)))
 
             # See if there are subcategories that we want to check in the future
             for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
@@ -382,7 +382,7 @@ elif newstyle:
                     next_active.add(result.title())
         active = next_active
         if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 else:
     # Old style of category walker
@@ -391,9 +391,9 @@ else:
         if cat.title() not in existing_uses:
             nummodified += addtemplate(cat)
         else:
-            print 'Already in database'
+            print('Already in database')
         numchecked += 1
-        print str(nummodified) + " - " + str(numchecked) + "/" + str(len(targetcats))
+        print(str(nummodified) + " - " + str(numchecked) + "/" + str(len(targetcats)))
 
         # See if there are subcategories that we want to check in the future
         subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
@@ -404,9 +404,9 @@ else:
                 targetcats.append(subcat.title())
 
         if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 
-print 'Done! Edited ' + str(nummodified) + ' entries'
+print('Done! Edited ' + str(nummodified) + ' entries')
 
 # EOF
