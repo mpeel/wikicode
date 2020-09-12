@@ -2,6 +2,7 @@
 # -*- coding: utf-8  -*-
 # Synchronise enwp short description and wikidata en descriptions
 # Mike Peel     03-Aug-2020     v1 - start
+# Mike Peel     12-Sep-2020     v2 - reconfigure just for empty Wikidata descriptions.
 
 import pywikibot
 from pywikibot import pagegenerators
@@ -19,15 +20,17 @@ maxnum = 10000
 nummodified = 0
 debug = True
 trip = True
-replace_existing = True
+# replace_existing = False
+maxwords = 10
+
+targetcat = 'Category:Short description with empty Wikidata description'
+lower_exceptions = ['English', 'British', 'Spanish', 'French', 'France', 'Spain']
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 wikipedia = pywikibot.Site('en', 'wikipedia')
 
-templates = ['Short description', 'short description']
-targetcat = 'Category:Articles with short description'
 
 cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -57,8 +60,17 @@ for page in pages:
 	for item in test['query']['pages']:
 		enwiki_description = test['query']['pages'][item]['pageprops']['wikibase-shortdesc']
 	if len(enwiki_description) > 0:
-		enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
+		if enwiki_description.split()[0] not in lower_exceptions:
+			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
+		if enwiki_description[-1] == '.':
+			enwiki_description = enwiki_description[0:-1]
 	else:
+		continue
+
+	# Check the length of the short description
+	print(enwiki_description)
+	if len(enwiki_description.split()) > maxwords:
+		print('enwiki description is too long, skipping')
 		continue
 
 	# Get the description from Wikidata
@@ -79,18 +91,18 @@ for page in pages:
 		if test == 'y':
 			wd_item.editDescriptions(mydescriptions, summary=u'Importing short description from the English Wikipedia')
 			nummodified += 1
-	elif wikidata_description.lower() != enwiki_description.lower() and replace_existing:
-		# The Wikidata description doesn't match enwp, update it using enwp
-		print('enwp: ' + enwiki_description)
-		print('wikidata: ' + wikidata_description)
-		if debug:
-			test = input('Change description?')
-		else:
-			test = 'y'
-		mydescriptions = {u'en': enwiki_description}
-		if test == 'y':
-			wd_item.editDescriptions(mydescriptions, summary=u'Matching short description from the English Wikipedia')
-			nummodified += 1
+	# elif wikidata_description.lower() != enwiki_description.lower() and replace_existing:
+	# 	# The Wikidata description doesn't match enwp, update it using enwp
+	# 	print('enwp: ' + enwiki_description)
+	# 	print('wikidata: ' + wikidata_description)
+	# 	if debug:
+	# 		test = input('Change description?')
+	# 	else:
+	# 		test = 'y'
+	# 	mydescriptions = {u'en': enwiki_description}
+	# 	if test == 'y':
+	# 		wd_item.editDescriptions(mydescriptions, summary=u'Matching short description from the English Wikipedia')
+	# 		nummodified += 1
 
 	if nummodified > maxnum:
 		break
