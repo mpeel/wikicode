@@ -24,13 +24,19 @@ trip = True
 maxwords = 10
 
 targetcat = 'Category:Short description with empty Wikidata description'
-lower_exceptions = ['English', 'British', 'Spanish', 'French', 'France', 'Spain']
 
+# Set up the wikimedia site links
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 wikipedia = pywikibot.Site('en', 'wikipedia')
 
+# Fetch the exclusion list for lower case for the first letter
+page = pywikibot.Page(repo, 'User:Pi bot/lowercase_exceptions')
+items = page.text
+lowercase_exceptions = items.split()
+print(items)
+exit()
 
 cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -60,7 +66,7 @@ for page in pages:
 	for item in test['query']['pages']:
 		enwiki_description = test['query']['pages'][item]['pageprops']['wikibase-shortdesc']
 	if len(enwiki_description) > 0:
-		if enwiki_description.split()[0] not in lower_exceptions:
+		if enwiki_description.split()[0] not in lowercase_exceptions:
 			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
 		if enwiki_description[-1] == '.':
 			enwiki_description = enwiki_description[0:-1]
