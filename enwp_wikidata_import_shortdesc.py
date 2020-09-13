@@ -35,8 +35,12 @@ wikipedia = pywikibot.Site('en', 'wikipedia')
 page = pywikibot.Page(repo, 'User:Pi bot/lowercase_exceptions')
 items = page.text
 lowercase_exceptions = items.split()
-print(items)
-exit()
+
+# Fetch the exclusion list for bad enwp short descriptions
+page = pywikibot.Page(repo, 'User:Pi bot/shortdesc_exclusions')
+items = page.text
+shortdesc_exclusions = items.split('\n')
+print(shortdesc_exclusions)
 
 cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -65,19 +69,27 @@ for page in pages:
 	test = get_pageinfo(wikipedia,page)
 	for item in test['query']['pages']:
 		enwiki_description = test['query']['pages'][item]['pageprops']['wikibase-shortdesc']
-	if len(enwiki_description) > 0:
-		if enwiki_description.split()[0] not in lowercase_exceptions:
-			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
-		if enwiki_description[-1] == '.':
-			enwiki_description = enwiki_description[0:-1]
-	else:
+
+	if len(enwiki_description) == 0:
+		print('No enwiki description found')
+		continue
+	print(enwiki_description)
+
+	# Check that the short description isn't in the exclusion list
+	if enwiki_description.strip() in shortdesc_exclusions:
+		print('enwiki description is in the exclusion list, skipping')
 		continue
 
 	# Check the length of the short description
-	print(enwiki_description)
 	if len(enwiki_description.split()) > maxwords:
 		print('enwiki description is too long, skipping')
 		continue
+
+	# Change the first letter to lower case unless it's an exception
+	if enwiki_description.split()[0] not in lowercase_exceptions:
+		enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
+	if enwiki_description[-1] == '.':
+		enwiki_description = enwiki_description[0:-1]
 
 	# Get the description from Wikidata
 	try:
