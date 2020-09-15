@@ -12,11 +12,18 @@ import requests
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
 langs = ['en']
+exclusions = ['Category:','Template:','Wikipedia:','Help:','Portal:','Book:','Module:','Gadget:']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
 	pages = wikisite.querypage('UnconnectedPages')
 	for page in pages:
 		print(page.title())
+		need_to_skip = False
+		for exclusion in exclusions:
+			if exclusion in title:
+				need_to_skip = True
+		if need_to_skip:
+			continue
 		if page.isRedirectPage():
 			continue
 		if not pageIsBiography(page=page, lang=lang):
