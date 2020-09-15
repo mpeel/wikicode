@@ -155,8 +155,11 @@ def addDateClaim(repo='', item='', claim='', date='', lang=''):
 	check_ok = True
 	if int(date.split('-')[0]) > now.year:
 		check_ok = False
-	if int(date.split('-')[0]) == now.year and int(date.split('-')[1]) > now.month:
-		check_ok = False
+	try:
+		if int(date.split('-')[0]) == now.year and int(date.split('-')[1]) > now.month:
+			check_ok = False
+	except:
+		null = 0
 	if check_ok:
 		if repo and item and claim and date and lang:
 			claim = pywikibot.Claim(repo, claim)
