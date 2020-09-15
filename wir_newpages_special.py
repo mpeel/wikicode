@@ -20,7 +20,7 @@ for lang in langs:
 		print(page.title())
 		need_to_skip = False
 		for exclusion in exclusions:
-			if exclusion in title:
+			if exclusion in page.title():
 				need_to_skip = True
 		if need_to_skip:
 			continue
