@@ -14,12 +14,12 @@ from pywikibot import textlib
 import urllib
 import csv
 
-import sys
+# import sys
 # sys.setdefaultencoding() does not exist, here!
 # reload(sys)  # Reload does the trick!
 # sys.setdefaultencoding('UTF8')
 
-maxnum = 1000
+maxnum = 1
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
@@ -28,9 +28,10 @@ manual = False
 random = False
 usequery = False
 usetemplate = ''#'Creator'#'Individual aircraft'
-usequarry = 'quarry_full.csv'
-quarry_reference = ''#'quarry.csv'
-useimport = 'import.csv'
+usequarry = ''#'quarry.csv'
+quarry_reference = 'quarry_test_old.csv'
+usequarry2 = 'quarry_test.csv'
+useimport = '' #'import.csv'
 newstyle = False
 database = False
 
@@ -46,27 +47,29 @@ targetcats = ['Category:CommonsRoot']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wdbox", "wdbox", "MDcat", "mDcat", "Date navbox", "date navbox", 'Disambig', 'disambig', 'Disambiguation', 'disambiguation', 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Dab', 'dab', 'Aimai', 'aimai', 'Finlandyear', 'finlandyear', 'Finlandyear-Sweden', 'finlandyear-Sweden', 'Finlanddisestablishmentyear' 'AirDisasters', 'airDisasters', 'Finland decade', 'finland decade'] + catredirect_templates #"{{Institution", "{{institution", "{{Creator|", "{{creator|", "{{Creator:", "{{creator:", "{{Artwork", "{{artwork", "Building address", "building address", "Monthbyyear", "monthbyyear", "User:Rama/Catdef", "Taxonavigation", "taxonavigation", "Category definition:", "category definition:", 'Lepidoptera', 'lepidoptera', 'Coleoptera', 'coleoptera', 
+templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", "Wdbox", "wdbox", "MDcat", "mDcat", "Date navbox", "date navbox", "Monthbyyear", "monthbyyear", 'Razločitev', 'razločitev', 'Begriffsklärung', 'begriffsklärung', 'Aimai', 'aimai', 'Finlanddisestablishmentyear' 'AirDisasters', 'airDisasters', 'Finland decade', 'finland decade'] + catredirect_templates
 templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw", "en", "En", "individual aircraft", "Individual aircraft", "Wikidata person", "wikidata person"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
 
 # This is the main template
 def addtemplate(target):
+    print(target.title())
     try:
         wd_item = pywikibot.ItemPage.fromPage(target)
     except:
-        # print "No Wikidata sitelink found"
+        print("No Wikidata sitelink found")
         return 0
     try:
         item_dict = wd_item.get()
         print(wd_item.title())
     except:
+        print('No item')
         return 0
     try:
         target_text = target.get()
     except:
-        # print 'Error, page not found!'
+        print('Error, page not found!')
         return 0
 
     redirect = ''
@@ -74,7 +77,7 @@ def addtemplate(target):
 
     # Quick-check for an existing infobox, and skip this if found before doing more processing
     if "Wikidata Infobox" in target_text:
-        'Already uses Wikidata Infobox!'
+        print('Already uses Wikidata Infobox!')
         return 0
 
     # Replace the Creator template if it is present
@@ -89,7 +92,7 @@ def addtemplate(target):
         null = 0    
     try:
         p1472 = test_item_dict['claims']['P1472']
-        # print p1472
+        # print(p1472)
         for clm in p1472:
             creator_template = clm.getTarget()
             print(target_text)
@@ -103,7 +106,7 @@ def addtemplate(target):
     # ... and the Institution template
     try:
         p1612 = test_item_dict['claims']['P1612']
-        # print p1812
+        # print(p1812)
         for clm in p1612:
             institution_template = clm.getTarget()
             print(target_text)
@@ -136,12 +139,12 @@ def addtemplate(target):
             #     test_p31 = testitem['claims']['P31']
             #     for clm in test_p31:
             #         if 'Q13406463' in clm.getTarget().title():
-            #             print 'Category linked to a list item'
+            #             print('Category linked to a list item')
             #             return 0
             # except:
-            #     print 'nm'
+            #     print('nm')
     except:
-        # print 'P301 not found'
+        # print('P301 not found')
         # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
         savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
         # try:
@@ -153,22 +156,22 @@ def addtemplate(target):
         #         for clm in p31:
         #             if 'Q4167836' in clm.getTarget().title():
         #                 # We have a Wikimedia category with no P301, skip it
-        #                 print 'Wikimedia category, no P301'
+        #                 print('Wikimedia category, no P301')
         #                 return 0
         #             if 'Q14204246' in clm.getTarget().title():
         #                 # We have a Wikimedia category with no P301, skip it
-        #                 print 'Wikimedia project page'
+        #                 print('Wikimedia project page')
         #                 return 0
         #             if 'Q13406463' in clm.getTarget().title():
         #                 # We have a Wikimedia category with no P301, skip it
-        #                 print 'Wikimedia list page'
+        #                 print('Wikimedia list page')
         #                 return 0
         #             if 'Q4167410' in clm.getTarget().title():
         #                 # We have a Wikimedia category with no P301, skip it
-        #                 print 'Wikimedia disambiguation page'
+        #                 print('Wikimedia disambiguation page')
         #                 return 0
         #     except:
-        #         print 'P31 not found'
+        #         print('P31 not found')
 
     # Remove unneeded templates
     for option in templatestoremove:
@@ -218,7 +221,7 @@ def addtemplate(target):
                 target_text = target_text.replace("{{"+option+"|Wikidata="+wd_id+"}}", "")
 
     # if "Wikidata person" in target_text or "wikidata person" in target_text:
-    #     print 'Failed to remove the existing Wikidata person template!'
+    #     print('Failed to remove the existing Wikidata person template!')
     #     return 0
 
     # We're good to go. Look for the best line to add the template in.
@@ -295,6 +298,31 @@ elif usetemplate:
         if nummodified >= maxnum:
             print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
+elif usequarry2:
+    quarry_ref = []
+    if quarry_reference != '':
+        with open(quarry_reference, mode='r') as infile:
+            # reader = csv.reader(infile)
+            existing_uses = {rows for rows in infile}
+    with open(usequarry2, mode='r') as infile:
+        # reader = csv.reader(infile)
+        targets = {rows for rows in infile}
+    for target in targets:
+        if target in existing_uses:
+            continue
+        # print(str(target[2:-2]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8'))
+        # exit()
+        try:
+            print(str(target[2:-2]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8'))
+            # print(type(unicode(target,"utf-8")))
+            # print(unicode(target,"utf-8"))
+            cat = pywikibot.Category(commons,str(target[2:-2]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8'))
+        except:
+            continue
+        if cat.title() not in existing_uses:
+            nummodified += addtemplate(cat)
+        else:
+            print('Already in database')
 elif usequarry:
     print('hello')
     quarry_ref = []
