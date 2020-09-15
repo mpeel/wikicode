@@ -467,15 +467,13 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
 	repo = wdsite.data_repository()
-	langs = ['en', 'fr']
+	langs = ['en', 'fr', 'de']
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
 		total = 100
 		if len(sys.argv) >= 2:
 			total = int(sys.argv[1])
 		gen = pagegenerators.NewpagesPageGenerator(site=wikisite, namespaces=[0], total=total)
-		#cat = pywikibot.Category(wikisite, 'Category:Articles without Wikidata item')
-		#gen = pagegenerators.CategorizedPageGenerator(cat, recurse=False)
 		pre = pagegenerators.PreloadingGenerator(gen, groupsize=total)
 		for page in pre:
 			print(page.title())
