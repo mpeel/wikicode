@@ -1,58 +1,12 @@
 # -*- coding: utf-8  -*-
-from __future__ import unicode_literals
-#from __future__ import absolute_import, unicode_literals
-
-# This is an automatically generated file. You can find more configuration
-# parameters in 'config.py' file.
-
-# The family of sites to work on by default.
-#
-# ‘site.py’ imports ‘families/xxx_family.py’, so if you want to change
-# this variable, you need to use the name of one of the existing family files
-# in that folder or write your own, custom family file.
-#
-# For ‘site.py’ to be able to read your custom family file, you must
-# save it to ‘families/xxx_family.py’, where ‘xxx‘ is the codename of the
-# family that your custom ‘xxx_family.py’ family file defines.
-#
-# You can also save your custom family files to a different folder. As long
-# as you follow the ‘xxx_family.py’ naming convention, you can register your
-# custom folder in this configuration file with the following global function:
-#
-#   register_families_folder(folder_path)
-#
-# Alternatively, you can register particular family files that do not need
-# to follow the ‘xxx_family.py’ naming convention using the following
-# global function:
-#
-#   register_family_file(family_name, file_path)
-#
-# Where ‘family_name’ is the family code (the ‘xxx’ in standard family file
-# names) and ‘file_path’ is the absolute path to the target family file.
-#
-# If you use either of these functions to define the family to work on by
-# default (the ‘family’ variable below), you must place the function call
-# before the definition of the ‘family’ variable.
-# family = 'meta'
 family = 'commons'
-
-# The language code of the site we're working on.
-# mylang = 'meta'
 mylang = 'commons'
-
-# The dictionary usernames should contain a username for each site where you
-# have a bot account. If you have a unique username for all languages of a
-# family , you can use '*'
-# usernames['meta']['meta'] = u'Mike Peel'
-# usernames['wikipedia']['en'] = u'Mike Peel'
-# usernames['commons']['commons'] = u'Mike Peel'
-# usernames['wikidata']['wikidata'] = u'Mike Peel'
-
 usernames['commons']['commons'] = u'Pi bot'
 usernames['wikipedia']['en'] = u'Pi bot'
 usernames['wikipedia']['simple'] = u'Pi bot'
 usernames['wikidata']['wikidata'] = u'Pi bot'
 usernames['meta']['meta'] = u'Pi bot'
+password_file = "user-password.py"
 
 # ############# LOGFILE SETTINGS ##############
 
@@ -133,11 +87,6 @@ interwiki_graph_url = None
 # Save file with local articles without interwikis.
 without_interwiki = False
 
-# Experimental feature:
-# Store the page contents on disk (/cache/ directory) instead of loading
-# them in RAM.
-interwiki_contents_on_disk = False
-
 # ############# SOLVE_DISAMBIGUATION SETTINGS ############
 #
 # Set disambiguation_comment[FAMILY][LANG] to a non-empty string to override
@@ -185,11 +134,6 @@ noisysleep = 0.5
 # at least 1 second.
 maxlag = 5
 
-# Maximum of pages which can be retrieved by special pages. Increase this if
-# you heavily use redirect.py with action "double", and especially if you're
-# running solve_disambiguation.py with the -primary argument.
-special_page_limit = 500
-
 # Maximum number of times to retry an API request before quitting.
 max_retries = 25
 # Minimum time to wait before resubmitting a failed API request.
@@ -215,49 +159,6 @@ deIndentTables = True
 max_external_links = 50
 
 report_dead_links_on_talk = False
-
-# Don't alert on links days_dead old or younger
-# weblink_dead_days = 7
-
-# ############# DATABASE SETTINGS ##############
-# Setting to connect the database or replica of the database of the wiki.
-# db_name_format can be used to manipulate the dbName of site.
-# Example for a pywikibot running on wmflabs:
-# db_hostname = 'enwiki.labsdb'
-# db_name_format = '{0}_p'
-# db_connect_file = user_home_path('replica.my.cnf')
-db_hostname = 'localhost'
-db_username = ''
-db_password = ''
-db_name_format = '{0}'
-db_connect_file = user_home_path('.my.cnf')
-
-# ############# SEARCH ENGINE SETTINGS ##############
-
-# Yahoo! Search Web Services are not operational.
-# See https://phabricator.wikimedia.org/T106085
-yahoo_appid = ''
-
-# To use Windows Live Search web service you must get an AppID from
-# http://www.bing.com/dev/en-us/dev-center
-msn_appid = ''
-
-# ############# FLICKR RIPPER SETTINGS ##############
-
-# Using the Flickr api
-flickr = {
-    'api_key': u'',  # Provide your key!
-    'api_secret': u'',  # Api secret of your key (optional)
-    'review': False,  # Do we use automatically make our uploads reviewed?
-    'reviewer': u'',  # If so, under what reviewer name?
-}
-
-# Using the Panoramio api
-# panoramio = {
-#     'review': False,  # Do we use automatically make our uploads reviewed?
-#     'reviewer': u'',  # If so, under what reviewer name?
-# }
-
 
 # ############# COPYRIGHT SETTINGS ##############
 
@@ -367,24 +268,7 @@ cosmetic_changes_disable = {}
 cosmetic_changes_deny_script = ['category_redirect', 'cosmetic_changes',
                                 'newitem', 'touch']
 
-# ############# REPLICATION BOT ################
-# You can add replicate_replace to your user_config.py, which has the following
-# format:
-#
-# replicate_replace = {
-#            'wikipedia:li': {'Hoofdpagina': 'Veurblaad'}
-# }
-#
-# to replace all occurrences of 'Hoofdpagina' with 'Veurblaad' when writing to
-# liwiki. Note that this does not take the origin wiki into account.
-replicate_replace = {}
-
 # ############# FURTHER SETTINGS ##############
-
-# Proxy configuration
-
-# TODO: proxy support
-proxy = None
 
 # Simulate settings
 
@@ -402,19 +286,6 @@ simulate = False
 # Increasing this value will increase memory space but could speed up
 # processing. As higher this value this effect will decrease.
 max_queue_size = 64
-
-# Define the line separator. Pages retrieved via API have "\n" whereas
-# pages fetched from screen (mostly) have "\r\n". Interwiki and category
-# separator settings in family files should use multiplied of this.
-# LS is a shortcut alias.
-line_separator = LS = u'\n'
-
-# Settings to enable mwparserfromhell
-# <https://mwparserfromhell.readthedocs.org/en/latest/>
-# Currently used in textlib.extract_templates_and_params
-# This is more accurate than our current regex, but only works
-# if the user has already installed the library.
-use_mwparserfromhell = True
 
 # Pickle protocol version to use for storing dumps.
 # This config variable is not used for loading dumps.
