@@ -53,12 +53,15 @@ for run in range(0,1):
 
 		print(query)
 
-		generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+		candidates = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
 
 
 	# for page in generator:
 	for pageid in candidates:
-		page = pywikibot.ItemPage(repo, pageid)
+		if usereport:
+			page = pywikibot.ItemPage(repo, pageid)
+		else:
+			page = pageid
 		try:
 			item_dict = page.get()
 		except:
