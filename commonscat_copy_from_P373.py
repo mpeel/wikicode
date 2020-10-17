@@ -129,8 +129,8 @@ for i in range(0,numsteps):
                     if redirect != '':
                         # print clm
                         # print redirect
-                        # print sitelink
-                        if redirect == sitelink.replace(u'Category:',''):
+                        print(sitelink)
+                        if redirect == str(sitelink).replace(u'Category:',''):
                             # text = raw_input("Save? ")
                             # if text == 'y':
                             clm.changeTarget(redirect, summary=u"Update P373 to avoid commons category redirect")
