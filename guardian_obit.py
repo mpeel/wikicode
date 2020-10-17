@@ -6,14 +6,10 @@
 # Mike Peel    18 Mar 2017    Bug fixes (catch more titles in nameattempt, unicode issue)
 # Mike Peel    14 Apr 2017    Tweaks (split on ':')
 # Mike Peel     2 Jul 2017    Bug fix (catch blank nameattempt)
+# Mike Peel    17 Oct 2020    Update to python3
 import datetime
 import feedparser
 import pywikibot
-import sys
-import urllib2
-
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 # Get the page we want to save the table to
 site = pywikibot.Site('en', 'wikipedia')
@@ -49,7 +45,7 @@ for item in entries:
         i += 1
     nameattempt = nameattempt.replace(' I ','')
     nameattempt = nameattempt.strip()
-    print nameattempt
+    print(nameattempt)
     # Reformat the date
     date = datetime.datetime.strptime(item['published'], '%a, %d %b %Y %H:%M:%S %Z').strftime('%d %b %Y')
 
@@ -60,7 +56,7 @@ for item in entries:
         if target_page.exists() == True:
             # Is this a redirect?
             if target_page.isRedirectPage():
-                print target_page.getRedirectTarget()
+                print(target_page.getRedirectTarget())
                 target_page = target_page.getRedirectTarget()
                 # Just in case we have a double-redirect
                 if target_page.isRedirectPage():
@@ -107,4 +103,4 @@ if (test1 != test2):
     page.text = text
     page.save(u"Updating")
 else:
-    print 'Not updating: page is identical'
+    print('Not updating: page is identical')
