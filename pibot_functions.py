@@ -29,3 +29,15 @@ def check_if_category_has_contents(category, site=''):
 	return False
 
 
+def create_commons_category(category, site, qid=''):
+	category = pywikibot.Category(site, category)
+	category.text = "{{Wikidata Infobox}}\n[[Category:Uncategorized categories]]"
+	try:
+		category.save("Creating category text for a phantom category")
+	except:
+		print("That didn't work!")
+		return 0
+
+
+	return category
+	
