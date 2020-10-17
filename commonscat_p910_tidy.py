@@ -1,10 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8  -*-
 # Check for cases where there is a commons sitelink and a P910 value also with a sitelink,
 # to see if one redirects to the other
 # Mike Peel     18-May-2019      v1 - start
-
-from __future__ import unicode_literals
+# Mike Peel     17 Oct 2020      python3
 
 import pywikibot
 import numpy as np
@@ -38,7 +37,7 @@ def get_commons_redirect_target(category):
                 try:
                     redirect = (sitelink_page.text.split("{{" + option + " |"))[1].split("}}")[0]
                 except:
-                    print 'Wikitext parsing bug!'
+                    print('Wikitext parsing bug!')
             redirect = redirect.replace(u":Category:","")
             redirect = redirect.replace(u"Category:","")
     return redirect
@@ -54,7 +53,7 @@ for i in range(0,num):
     '  ?commonscategory schema:isPartOf <https://commons.wikimedia.org/> .'\
     '  FILTER REGEX(STR(?commonscategory), "https://commons.wikimedia.org/wiki/Category:") .'\
     '  } LIMIT ' + str(step) + ' OFFSET ' + str(i*step)
-    print query
+    print(query)
 
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
     bad_commonscat_count = 0
@@ -64,7 +63,7 @@ for i in range(0,num):
         # Get the info about the topic item
         item_dict = page.get()
         qid = page.title()
-        print "\n" + qid
+        print("\n" + qid)
         try:
             sitelink = item_dict['sitelinks']['commonswiki']
         except:
@@ -74,7 +73,7 @@ for i in range(0,num):
         try:
             p910 = item_dict['claims']['P910']
         except:
-            print 'No P910 value found!'
+            print('No P910 value found!')
             continue
 
         # Get the info about the category item
@@ -84,7 +83,7 @@ for i in range(0,num):
             p910_id = val.title()
             p910_dict = val.get()
             # except:
-            #     print 'Unable to get target!'
+            #     print('Unable to get target!')
             #     continue
             # print(p910_id)
 

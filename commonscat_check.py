@@ -1,10 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8  -*-
 # Check for consistency in commons category usage
 # Mike Peel     08-Feb-2018      v1 - start
 # Mike Peel     19-Apr-2018      Add in repeat attempts at the query if it returns nothing
-
-from __future__ import unicode_literals
+# Mike Peel     17 Oct 2020      python3
 
 import pywikibot
 import numpy as np
@@ -21,7 +20,7 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-debug = 1
+debug = 0
 attempts = 0
 count = 0
 while True:
@@ -41,7 +40,7 @@ while True:
     # if debug:
     #     query = query + " LIMIT 100"
 
-    print query
+    print(query)
 
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
     bad_commonscat_count = 0
@@ -51,7 +50,7 @@ while True:
         count += 1
         item_dict = page.get()
         qid = page.title()
-        print "\n" + qid
+        print("\n" + qid)
         sitelink = item_dict['sitelinks']['commonswiki']
         sitelink_redirect = ""
         commonscat_redirect = ""
@@ -71,7 +70,7 @@ while True:
                 except:
                     bad_sitelink = 1
                     bad_sitelink_count += 1
-                    print 'Found a bad sitelink'
+                    print('Found a bad sitelink')
                 else:
                     for option in catredirect_templates:
                         if "{{" + option in sitelink_page.text:
@@ -81,7 +80,7 @@ while True:
                                 try:
                                     sitelink_redirect = (sitelink_page.text.split("{{" + option + " |"))[1].split("}}")[0]
                                 except:
-                                    print 'Wikitext parsing bug!'
+                                    print('Wikitext parsing bug!')
                             sitelink_redirect = sitelink_redirect.replace(u":Category:","")
                             sitelink_redirect = sitelink_redirect.replace(u"Category:","")
                 try:
@@ -89,7 +88,7 @@ while True:
                 except:
                     bad_commonscat = 1
                     bad_commonscat_count += 1
-                    print 'Found a bad commonscat'
+                    print('Found a bad commonscat')
                 else:
                     for option in catredirect_templates:
                         if "{{" + option in commonscat_page.text:
@@ -99,18 +98,18 @@ while True:
                                 try:
                                     commonscat_redirect = (commonscat_page.text.split("{{" + option +" |"))[1].split("}}")[0]
                                 except:
-                                    print 'Wikitext parsing bug!'
+                                    print('Wikitext parsing bug!')
                             commonscat_redirect = commonscat_redirect.replace(u":Category:","")
                             commonscat_redirect = commonscat_redirect.replace(u"Category:","")
                 
-                print sitelink + " - " + commonscat
+                print(sitelink + " - " + commonscat)
                 if (sitelink_redirect or commonscat_redirect):
-                    print " " + sitelink_redirect + " - " + commonscat_redirect
+                    print(" " + sitelink_redirect + " - " + commonscat_redirect)
 
                 # Sort out the case where one is a redirect to the other
                 if (u"Category:" + sitelink_redirect) == commonscat:
                     if debug:
-                        print 'Would change commons sitelink to ' + sitelink_redirect
+                        print('Would change commons sitelink to ' + sitelink_redirect)
                     data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + sitelink_redirect}]}
                     try:
                         page.editEntity(data, summary=u'Update commons sitelink to avoid commons category redirect')
@@ -119,12 +118,12 @@ while True:
                         interwiki_conflicts.append(qid)
                 if (u"Category:" + commonscat_redirect) == sitelink:
                     if debug:
-                        print "Would change P373 to " + commonscat_redirect
+                        print("Would change P373 to " + commonscat_redirect)
                     try:
                         clm.changeTarget(commonscat_redirect, summary=u"Update P373 to avoid commons category redirect")
                         nummodified += 1
                     except:
-                        print '... but there was a problem doing so!'
+                        print('... but there was a problem doing so!')
                 # # Sort out the case where the commonscat has been moved, and one of the two hasn't been updated.
                 # if bad_sitelink and bad_commonscat == 0:
                 #     # We have a bad sitelink
@@ -154,18 +153,18 @@ while True:
                 #         nummodified += 1
 
                 if nummodified >= maxnum:
-                    print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
-                    print 'Bad commonscats: ' + str(bad_commonscat_count) + ", bad sitelinks:" + str(bad_sitelink_count)
-                    print 'Interwiki conflicts in: '
-                    print interwiki_conflicts
+                    print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
+                    print('Bad commonscats: ' + str(bad_commonscat_count) + ", bad sitelinks:" + str(bad_sitelink_count))
+                    print('Interwiki conflicts in: ')
+                    print(interwiki_conflicts)
                     exit()
-    print count
+    print(count)
     attempts += 1
 
 
-print 'Done! Edited ' + str(nummodified) + ' entries'
-print 'Bad commonscats: ' + str(bad_commonscat_count) + ', bad sitelinks: ' + str(bad_sitelink_count)
-print 'Interwiki conflicts in: '
-print interwiki_conflicts
+print('Done! Edited ' + str(nummodified) + ' entries')
+print('Bad commonscats: ' + str(bad_commonscat_count) + ', bad sitelinks: ' + str(bad_sitelink_count))
+print('Interwiki conflicts in: ')
+print(interwiki_conflicts)
             
 # EOF
