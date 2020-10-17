@@ -28,7 +28,7 @@ for i in range(0,len(rss_url)):
 
 for item in entries:
     # Try to identify the name of the subject from the title of the page
-    nameattempt = item['title'].decode('utf-8')
+    nameattempt = item['title']
     nameattempt = nameattempt.replace('obituary','').replace('Letter:','').replace('Letters: ','').replace('Right Rev','').replace('Most Rev','').replace('Sir','').replace('Dame','').replace('Dr ','')
     nameattempt = nameattempt.split(u'–',1)[0]
     nameattempt = nameattempt.split(u':',1)[0]
