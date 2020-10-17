@@ -1,9 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8  -*-
 # Check for consistency in commons category usage
 # Mike Peel     18-Apr-2018      v1 - start
-
-from __future__ import unicode_literals
+# Mike Peel     17 Oct 2020      Update to python3
 
 import pywikibot
 import numpy as np
@@ -11,12 +10,6 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
-
-import sys
-# sys.setdefaultencoding() does not exist, here!
-reload(sys)  # Reload does the trick!
-sys.setdefaultencoding('UTF8')
-
 
 maxnum = 10000
 nummodified = 0
@@ -36,7 +29,7 @@ def fixcat(targetcat):
 
     # Time to save it
     if (target_text != targetcat.get()):
-        print target_text
+        print(target_text)
         targetcat.text = target_text.strip()
         if manual == 1:
             text = raw_input("Save on Commons? ")
@@ -45,7 +38,7 @@ def fixcat(targetcat):
                     targetcat.save(savemessage)
                     return 1
                 except:
-                    print "That didn't work!"
+                    print("That didn't work!")
                     return 0
             else:
                 return 0
@@ -54,7 +47,7 @@ def fixcat(targetcat):
                 targetcat.save(savemessage)
                 return 1
             except:
-                print "That didn't work!"
+                print("That didn't work!")
                 return 0
     else:
         return 0
@@ -72,15 +65,15 @@ cat = pywikibot.Category(commons,startcat)
 targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 
 for targetcat in targetcats:
-    print targetcat
-    print "\n" + targetcat.title()
-    # print target.text
+    print(targetcat)
+    print("\n" + targetcat.title())
+    # print(target.text)
     nummodified += fixcat(targetcat)
 
     if nummodified >= maxnum:
-        print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+        print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
         exit()
 
-print 'Done! Edited ' + str(nummodified) + ' entries'
+print('Done! Edited ' + str(nummodified) + ' entries')
                 
 # EOF
