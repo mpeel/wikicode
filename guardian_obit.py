@@ -88,7 +88,7 @@ for item in entries:
                 death_date2 = death_date.toTimestr()
                 death_date2 = death_date2.replace("+0000000",'').replace('T00:00:00Z','')
                 text = text + "<br />d: " + death_date2
-        text = text + ' || [' + item['link'] + ' ' + item['title'] + '], ' + date +' || <nowiki>{{cite news | url = ' + item['link'] + ' | title = ' + item['title'] + ' | work = [[The Guardian]] | date = ' + date + '}}</nowiki> || {{Find sources|' + nameattempt + '}}\n'
+        text = text + ' || [' + item['link'] + ' ' + item['title'].replace("|","{{!}}") + '], ' + date +' || <nowiki>{{cite news | url = ' + item['link'] + ' | title = ' + item['title'].replace("|","{{!}}") + ' | work = [[The Guardian]] | date = ' + date + '}}</nowiki> || {{Find sources|' + nameattempt + '}}\n'
 
 text = text + u"\n|}\n"
 
