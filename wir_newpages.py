@@ -184,9 +184,9 @@ def addOccupationsClaim(repo='', item='', occupations=[], lang=''):
 
 def authorIsNewbie(page='', lang=''):
 	if page:
-		hist = page.getVersionHistory(reverse=True, total=1)
-		if hist:
-			editcount = getUserEditCount(user=hist[0].user, site='%s.wikipedia.org' % (lang))
+		history = page.revisions(reverse=True, total=1)
+		for hist in history:
+			editcount = getUserEditCount(user=hist.user, site='%s.wikipedia.org' % (lang))
 			if editcount >= 200:
 				return False
 	return True
