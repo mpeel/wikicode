@@ -12,10 +12,10 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 100
+maxnum = 10000
 nummodified = 0
 stepsize =  10000
-maximum = 2000000
+maximum = 4000000
 numsteps = int(maximum / stepsize)
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")

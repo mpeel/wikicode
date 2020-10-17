@@ -5,6 +5,4 @@ export PYTHONPATH=/home/pi/Documents/git/core:$PYTHONPATH
 cd /home/pi/Documents/git/wikicode/
 
 /usr/bin/python3 commonscat_copy_from_P373.py
-
-
-
+/usr/bin/python3 wikidata_import_labels_from_commons.py
