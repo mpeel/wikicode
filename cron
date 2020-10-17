@@ -1,24 +1,8 @@
 SHELL=/bin/bash
-
 TERM=xterm
 PYTHONIOENCODING=UTF-8
 LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8
-# /etc/crontab: system-wide crontab
-# Unlike any other crontab you don't have to run the `crontab'
-# command to install the new version when you edit this file
-# and files in /etc/cron.d. These files also have username fields,
-# that none of the other crontabs do.
-
-#SHELL=/bin/sh
-#PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-
-# m h dom mon dow user  command
-#17 *   * * *   root    cd / && run-parts --report /etc/cron.hourly
-#25 6   * * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --repo$
-#47 6   * * 7   root    test -x /usr/sbin/anacron || ( cd / && run-parts --repo$
-#52 6   1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --repo$
-#
 0 * * * * /home/pi/Documents/wikicode/pibot_hourly.sh >/dev/null 2>&1
 0 6 * * * /home/pi/Documents/wikicode/pibot_daily_1.sh >/dev/null 2>&1
 0 12 * * * /home/pi/Documents/wikicode/pibot_daily_2.sh >/dev/null 2>&1
@@ -26,4 +10,3 @@ LC_ALL=en_US.UTF-8
 0 7 * * 1,5 /home/pi/Documents/wikicode/pibot_weekly.sh >/dev/null 2>&1
 0 8 1 * * /home/pi/Documents/wikicode/pibot_monthly.sh >/dev/null 2>&1
 44 4 * * * /home/pi/Documents/wikicode/touch_wlm_brazil.sh >/dev/null 2>&1
-
