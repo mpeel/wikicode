@@ -31,6 +31,7 @@ for item in entries:
     nameattempt = item['title']
     nameattempt = nameattempt.replace('obituary','').replace('Letter:','').replace('Letters: ','').replace('Right Rev','').replace('Most Rev','').replace('Sir','').replace('Dame','').replace('Dr ','')
     nameattempt = nameattempt.split(u'–',1)[0]
+    nameattempt = nameattempt.split(u'|',1)[0]
     nameattempt = nameattempt.split(u':',1)[0]
     nameattempt = nameattempt.split(u"’s",1)[0]
     test = nameattempt.split(u"The",1)
