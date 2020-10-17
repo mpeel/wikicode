@@ -104,6 +104,8 @@ elif action == 'tiles':
 				if 'Q4167410' in clm.getTarget().title():
 					# print 'would skip'
 					skip = 1
+				elif 'Q13442814' in clm.getTarget().title():
+					skip = 1
 		except:
 			null = 0
 		if skip == 1:

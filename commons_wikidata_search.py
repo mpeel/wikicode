@@ -20,7 +20,7 @@ database = False
 manual = True
 maxnum = 1000000
 usetemplate = 0
-usecategory = 0
+usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -30,6 +30,15 @@ def search_entities(site, itemtitle):
      params = { 'action' :'wbsearchentities', 
                 'format' : 'json',
                 'language' : 'en',
+                'type' : 'item',
+                'search': itemtitle}
+     request = api.Request(site=site, parameters=params)
+     return request.submit()
+
+def search_entities_es(site, itemtitle):
+     params = { 'action' :'wbsearchentities', 
+                'format' : 'json',
+                'language' : 'es',
                 'type' : 'item',
                 'search': itemtitle}
      request = api.Request(site=site, parameters=params)
@@ -55,19 +64,29 @@ def runimport(targetcat):
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
         item_dict = wd_item.get()
         print('http://www.wikidata.org/wiki/'+wd_item.title())
+        targetcat.touch()
         return 0
     except:
         print('No existing link')
+
+    # searchkeys = ['map', 'Map', 'interior', 'Interior', 'inside', 'Inside']#, 'taken', 'Taken']
+    # for searchkey in searchkeys:
+    #     if searchkey in targetcat.title():
+    #         print(targetcat.title())
+    #         input('continue?')
+    #         break
 
     searchname = targetcat.title().replace('Category:','')
     searchname2 = searchname.split('(', 1)[0]
     if searchname2 != '':
         searchname = searchname2
     wikidataEntries = search_entities(wikidata_site, searchname)
-    prettyPrint(wikidataEntries)
-    if wikidataEntries['search'] != []:
-        results = wikidataEntries['search']
-        prettyPrint(results)
+    wikidataEntries_es = search_entities_es(wikidata_site, searchname)
+    results = wikidataEntries['search'] + wikidataEntries_es['search']
+    prettyPrint(results)
+    if results != []:
+        # results = wikidataEntries['search']
+        # prettyPrint(results)
         numresults = len(results)
         for i in reversed(range(0,numresults)):
             qid = results[i]['id']
@@ -135,13 +154,14 @@ def runimport(targetcat):
                             print('Image not in category')
                         else:
                             print('No image')
-                        if incat == 1:
-                            text = input("Save? ")
-                            if text == 'y':
-                                candidate_item.editEntity(data, summary=u'Add commons sitelink')
-                                return 1
-                            else:
-                                return 0
+                        # if incat == 1:
+                        text = input("Save? ")
+                        if text == 'y':
+                            candidate_item.editEntity(data, summary=u'Add commons sitelink')
+                            targetcat.touch()
+                            return 1
+                        else:
+                            return 0
                     else:
                         if incat == 1:
                             candidate_item.editEntity(data, summary=u'Add commons sitelink based on label and image')
@@ -176,7 +196,12 @@ if usetemplate:
         else:
             runimport(targetcat)
 elif usecategory:
-    targetcats = ['Category:Uses of Wikidata Infobox with problems']#'Category:CommonsRoot']
+    # targetcats = ['Category:Galleries, Libraries, Archives and Museums (GLAM)']
+    # targetcats = ['Category:Canary Islands']
+    # targetcats = ['Category:Astronomy']
+    # targetcats = ['Category:COVID-19 pandemic']
+    targetcats = ['Category:Uses of Wikidata Infobox with no item']#'Category:CommonsRoot']
+    # targetcats = ['Category:Santa Cruz de Tenerife']
     # targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
     # New style of category walker
     numchecked = 0
@@ -188,7 +213,7 @@ elif usecategory:
     while active:
         i+=1
         next_active = set()
-        for item in active:
+        for item in sorted(active):
             cat = pywikibot.Category(commons,item)
             if cat.title() not in existing_uses:
                 nummodified += runimport(cat)
@@ -198,11 +223,11 @@ elif usecategory:
             print(str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active)))
 
             # See if there are subcategories that we want to check in the future
-            # if i == 1:
-            for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
-                if result.title() not in seen:
-                    seen.add(result.title())
-                    next_active.add(result.title())
+            if i == 1:
+                for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
+                    if result.title() not in seen:
+                        seen.add(result.title())
+                        next_active.add(result.title())
         temp = list(next_active)
         random.shuffle(temp)
         active = set(temp)
