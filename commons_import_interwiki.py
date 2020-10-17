@@ -22,7 +22,7 @@ def prettyPrint(variable):
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-languages = ['en','de','fr','es','pt','it','pl','ru']
+languages = ['en','de','fr','es','pt','it','nl','pl','ru']
 for language in languages:
 	enwiki = pywikibot.Site(language, 'wikipedia')
 

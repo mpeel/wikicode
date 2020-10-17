@@ -19,7 +19,7 @@ import csv
 # reload(sys)  # Reload does the trick!
 # sys.setdefaultencoding('UTF8')
 
-maxnum = 1
+maxnum = 10000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
