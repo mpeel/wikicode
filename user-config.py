@@ -113,8 +113,8 @@ upload_to_commons = False
 # By default, the get_throttle is turned off, and 'maxlag' is used to
 # control the rate of server access.  Set minthrottle to non-zero to use a
 # throttle on read access.
-minthrottle = 1
-maxthrottle = 1
+minthrottle = 0
+maxthrottle = 5
 
 # Slow down the robot such that it never makes a second page edit within
 # 'put_throttle' seconds.
