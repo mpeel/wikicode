@@ -11,15 +11,16 @@
 import csv
 import datetime
 import pywikibot
-import urllib2
+import urllib
 import sys
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 # Fetch the spreadsheet
 url = 'https://docs.google.com/spreadsheets/d/1DruVc7T9ZqTcfGwFAlxQrBMR4QBSD_DtjpDtGqMAAi0/pub?output=csv'
-response = urllib2.urlopen(url)
+response = urllib.request.urlopen(url)
+response = [l.decode('utf-8') for l in response.readlines()]
 cr = csv.reader(response)
 
 # Get the page we want to save the table to
