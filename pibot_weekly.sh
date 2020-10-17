@@ -1,7 +1,9 @@
 #!/bin/bash
 source /home/pi/.profile
-cd /home/pi/Documents/wikicode/
+source /home/pi/.bashrc
+export PYTHONPATH=/home/pi/Documents/git/core:$PYTHONPATH
+cd /home/pi/Documents/git/wikicode/
 
-/usr/bin/python enwp_commonscat_fix.py
+/usr/bin/python3 enwp_commonscat_fix.py
 /usr/bin/python3 simplewp_commonscat_fix.py
-/usr/bin/python commons_wikidata_infobox_tidy.py
+/usr/bin/python3 commons_wikidata_infobox_tidy.py
