@@ -1,7 +1,8 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8  -*-
 # Move commons category sitelinks to category items where needed
 # Mike Peel     10-Jun-2018      v1
+# Mike Peel     17 Oct 2020      python3
 
 from __future__ import unicode_literals
 
@@ -27,7 +28,7 @@ debug = 1
 # if debug:
 #     query = query + " LIMIT 1000"
 for i in range(0,numsteps):
-    print 'Starting at ' + str(i*stepsize)
+    print('Starting at ' + str(i*stepsize))
 
     query = 'SELECT ?item ?categoryitem ?commonscategory\n'\
         'WITH { \n'\
@@ -42,7 +43,7 @@ for i in range(0,numsteps):
         '  FILTER (STRSTARTS(STR(?commonscategory), "https://commons.wikimedia.org/wiki/Category:")) . \n'\
         '}'
 
-    print query
+    print(query)
 
     generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
     bad_commonscat_count = 0
@@ -55,18 +56,18 @@ for i in range(0,numsteps):
         except:
             continue
         qid = page.title()
-        print "\n" + qid
+        print("\n" + qid)
         try:
             sitelink = item_dict['sitelinks']['commonswiki']
-            print sitelink
+            print(sitelink)
         except:
-            print 'No sitelink found in main item! Skipping!'
+            print('No sitelink found in main item! Skipping!')
             continue
         # Get the value for P910
         try:
             p910 = item_dict['claims']['P910']
         except:
-            print 'No P910 value found!'
+            print('No P910 value found!')
             continue
 
         p910_check = 0
@@ -74,7 +75,7 @@ for i in range(0,numsteps):
             p910_check += 1
         # Only attempt to do this if there is only one value for P910
         if p910_check != 1:
-            print 'More than one P910 value found! Skipping...'
+            print('More than one P910 value found! Skipping...')
             continue
 
         for clm in p910:
@@ -83,28 +84,28 @@ for i in range(0,numsteps):
                 wd_id = val.title()
                 target_dict = val.get()
             except:
-                print 'Unable to get target!'
+                print('Unable to get target!')
                 continue
-            print wd_id
+            print(wd_id)
 
             try:
                 p31 = target_dict['claims']['P31']
-                print p31
+                print(p31)
             except:
-                print 'No P31 in target - skipping!'
+                print('No P31 in target - skipping!')
                 continue
             test_p31 = 0
             for clm in p31:
                 if 'Q4167836' in clm.getTarget().title():
                     test_p31 = 1
             if test_p31 != 1:
-                print 'Target is not a category item - skipping!'
+                print('Target is not a category item - skipping!')
                 continue
                 
             try:
                 sitelink = target_dict['sitelinks']['commonswiki']
-                print sitelink
-                print 'We have a sitelink in the target! Skipping...'
+                print(sitelink)
+                print('We have a sitelink in the target! Skipping...')
                 continue
             except:
                 null = 1
@@ -113,7 +114,7 @@ for i in range(0,numsteps):
             try:
                 p301 = target_dict['claims']['P301']
             except:
-                print 'No P301 value found!'
+                print('No P301 value found!')
                 continue
             p301_check = 0
             retarget = 0
@@ -121,45 +122,45 @@ for i in range(0,numsteps):
                 p301_check += 1
             # Only attempt to do this if there is only one value for P910
             if p301_check != 1:
-                print 'More than one P301 value found! Skipping...'
+                print('More than one P301 value found! Skipping...')
             for clm2 in p301:
                 retarget = clm2.getTarget().title()
-            print retarget
+            print(retarget)
 
             if retarget != qid:
-                print "P910 and P301 don't match! Skipping!"
+                print("P910 and P301 don't match! Skipping!")
                 continue
 
             # Remove it from the current entry and add it to the new entry
             data = {'sitelinks': [{'site': 'commonswiki', 'title': sitelink}]}
             try:
-                print data
+                print(data)
                 # text = raw_input("Save? ")
                 # if text == 'y':
-                print 'Saving!'
+                print('Saving!')
                 page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item (' + str(wd_id) + ')')
                 time.sleep(5)
                 val.editEntity(data, summary=u'Moving commons category sitelink from main item (' + str(qid) + ')')
                 nummodified += 1
             except:
-                print 'Edit failed!'
+                print('Edit failed!')
 
             # Bonus: if we don't have an English language label, add it.
             try:
                 label = val.labels['en']
-                print label
+                print(label)
             except:
                 # text = raw_input("Save? ")
                 # if text == 'y':
                 try:
                     val.editLabels(labels={'en': sitelink}, summary=u'Add en label to match Commons sitelink')
                 except:
-                    print 'Unable to save label edit on Wikidata!'
+                    print('Unable to save label edit on Wikidata!')
 
             if nummodified >= maxnum:
-                print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
                 exit()
 
-    print 'Done! Edited ' + str(nummodified) + ' entries'
+    print('Done! Edited ' + str(nummodified) + ' entries')
          
     # EOF

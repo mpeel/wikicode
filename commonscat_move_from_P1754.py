@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8  -*-
 # Move commons category sitelinks to category items where needed
 # Mike Peel     10-Jun-2018      v1
