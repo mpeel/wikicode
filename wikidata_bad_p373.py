@@ -23,7 +23,7 @@ attempts = 0
 count = 0
 removeall = False
 
-for run in range(0,1):
+for run in range(0,2):
 	if run == 0:
 		usereport = False
 	else:
