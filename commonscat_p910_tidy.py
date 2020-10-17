@@ -45,7 +45,7 @@ def get_commons_redirect_target(category):
 
 maxnum = 10000
 step = 100
-num = maxnum/step
+num = int(maxnum/step)
 for i in range(0,num):
     query = 'SELECT ?item ?categoryitem ?commonscategory WHERE {'\
     '  ?item wdt:P910 ?categoryitem .'\
