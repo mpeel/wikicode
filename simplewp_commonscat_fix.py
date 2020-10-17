@@ -180,7 +180,7 @@ for categories in range(0,2):
 							print(target_text)
 							print(id_val)
 							print(savemessage)
-							test = raw_input("Continue? ")
+							test = input("Continue? ")
 						if test == 'y':
 							nummodified += 1
 							page.save(savemessage)
@@ -228,7 +228,7 @@ for categories in range(0,2):
 							print(target_text)
 							print(id_val)
 							print(savemessage)
-							test = raw_input("Continue? ")
+							test = input("Continue? ")
 						if test == 'y':
 							nummodified += 1
 							page.save(savemessage)
@@ -265,7 +265,7 @@ for categories in range(0,2):
 								print(target_text)
 								print(id_val)
 								print(savemessage)
-								test = raw_input("Continue? ")
+								test = input("Continue? ")
 							if test == 'y':
 								nummodified += 1
 								page.save(savemessage)
