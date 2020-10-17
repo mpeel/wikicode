@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8  -*-
 # 
 # Script to fetch the Google Spreadsheet with the info in, and write it to a meta page.
@@ -7,7 +7,7 @@
 # Mike Peel        01 Sep 2017    Encoding fixes
 # Joe Sutherland   01 Sep 2017    Updating to match new sheet
 # Mike Peel        14 Feb 2019    Update URL to source code
-
+# Mike Peel        17 Oct 2020    python3
 import csv
 import datetime
 import pywikibot
@@ -63,4 +63,4 @@ if (test1 != test2):
     page.text = text
     page.save(u"Updating")
 else:
-    print 'Not updating: page is identical'
+    print('Not updating: page is identical')
