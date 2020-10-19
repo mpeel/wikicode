@@ -3,10 +3,10 @@ TERM=xterm
 PYTHONIOENCODING=UTF-8
 LANG=en_US.UTF-8
 LC_ALL=en_US.UTF-8
-0 * * * * /home/pi/Documents/wikicode/pibot_hourly.sh >/dev/null 2>&1
-0 6 * * * /home/pi/Documents/wikicode/pibot_daily_1.sh >/dev/null 2>&1
-0 12 * * * /home/pi/Documents/wikicode/pibot_daily_2.sh >/dev/null 2>&1
-0 18 * * * /home/pi/Documents/wikicode/pibot_daily_3.sh >/dev/null 2>&1
-0 7 * * 1,5 /home/pi/Documents/wikicode/pibot_weekly.sh >/dev/null 2>&1
-0 8 1 * * /home/pi/Documents/wikicode/pibot_monthly.sh >/dev/null 2>&1
-44 4 * * * /home/pi/Documents/wikicode/touch_wlm_brazil.sh >/dev/null 2>&1
+0 * * * * /home/pi/Documents/git/wikicode/pibot_hourly.sh >/home/pi/hourly.log 2>&1
+0 6 * * * /home/pi/Documents/git/wikicode/pibot_daily_1.sh >/home/pi/daily1.log 2>&1
+0 12 * * * /home/pi/Documents/git/wikicode/pibot_daily_2.sh >/home/pi/daily2.log 2>&1
+0 18 * * * /home/pi/Documents/git/wikicode/pibot_daily_3.sh >/home/pi/daily3.log 2>&1
+0 7 * * 1,5 /home/pi/Documents/git/wikicode/pibot_weekly.sh >/home/pi/weekly.log 2>&1
+0 8 1 * * /home/pi/Documents/git/wikicode/pibot_monthly.sh >/home/pi/monthly.log 2>&1
+44 4 * * * /home/pi/Documents/git/wikicode/touch_wlm_brazil.sh >/home/pi/touch_wlm_brazil.log 2>&1

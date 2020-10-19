@@ -42,6 +42,18 @@ items = page.text
 shortdesc_exclusions = items.split('\n')
 print(shortdesc_exclusions)
 
+# List of words to add to the double-check report
+page = pywikibot.Page(repo, 'User:Pi bot/doublecheck_words')
+items = page.text
+doublecheck_words = items.split('\n')
+print(doublecheck_words)
+
+# List of starting words to add to the double-check report
+page = pywikibot.Page(repo, 'User:Pi bot/doublecheck_start_words')
+items = page.text
+doublecheck_start_words = items.split('\n')
+print(doublecheck_start_words)
+
 cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 for page in pages:
@@ -101,14 +113,27 @@ for page in pages:
 	if wikidata_description == '':
 		# We have no en description on Wikidata, so we can add the enwp one
 		print(enwiki_description)
-		if debug:
+		# See if we want to add this to the list to double-check
+		doublecheck = False
+		for word in doublecheck_words:
+			if word in enwiki_description:
+				doublecheck = True
+		for word in doublecheck_start_words:
+			if (enwiki_description.strip())[:len(word)+1] == word+" ":
+				doublecheck = True
+		if debug and doublecheck==True:
 			test = input('No description, import it?')
 		else:
-			test = 'y'
+			test = 'n'
+			# test = 'y'
 		mydescriptions = {u'en': enwiki_description}
 		if test == 'y':
 			wd_item.editDescriptions(mydescriptions, summary=u'Importing short description from the English Wikipedia')
 			nummodified += 1
+		if doublecheck:
+			page = pywikibot.Page(repo, 'User:Pi bot/doublecheck')
+			page.text = page.text + "\n* {{Q|" + str(qid) + "}} - " + enwiki_description
+			page.save("Adding " + str(qid))
 	# elif wikidata_description.lower() != enwiki_description.lower() and replace_existing:
 	# 	# The Wikidata description doesn't match enwp, update it using enwp
 	# 	print('enwp: ' + enwiki_description)
