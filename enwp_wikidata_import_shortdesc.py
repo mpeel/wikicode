@@ -109,7 +109,9 @@ for page in pages:
 
 	# Change the first letter to lower case unless it's an exception
 	if enwiki_description.split()[0] not in lowercase_exceptions:
-		enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
+		# ... and if the second letter isn't also upper case.
+		if enwiki_description[1].lower() == enwiki_description[1]:
+			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
 	if enwiki_description[-1] == '.':
 		enwiki_description = enwiki_description[0:-1]
 
