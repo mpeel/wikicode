@@ -16,7 +16,7 @@ def get_pageinfo(site, itemtitle):
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
 
-maxnum = 100
+maxnum = 10
 nummodified = 0
 debug = False
 trip = True
@@ -142,8 +142,12 @@ for page in pages:
 			test = 'y'
 		mydescriptions = {u'en': enwiki_description}
 		if test == 'y':
-			wd_item.editDescriptions(mydescriptions, summary=u'Importing short description from the English Wikipedia')
-			nummodified += 1
+			try:
+				wd_item.editDescriptions(mydescriptions, summary=u'Importing description from enwiki: ' + enwiki_description)
+				nummodified += 1
+			except:
+				print('Save went wrong')
+				continue
 		if doublecheck:
 			page = pywikibot.Page(repo, 'User:Pi bot/doublecheck')
 			page.text = page.text + "\n* {{Q|" + str(qid) + "}} - " + enwiki_description + " ('"+wordfound+"')"
