@@ -16,9 +16,9 @@ def get_pageinfo(site, itemtitle):
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
 
-maxnum = 10000
+maxnum = 100
 nummodified = 0
-debug = True
+debug = False
 trip = True
 # replace_existing = False
 maxwords = 10
@@ -56,6 +56,13 @@ print(doublecheck_start_words)
 
 cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
+# todo = []
+# for page in pages:
+# 	todo.append(page.title())
+
+# random.shuffle(todo)
+# for item in sorted(todo,reverse=True):
+# for item in todo:
 for page in pages:
 	enwiki_description = ''
 	wikidata_description = ''
@@ -78,9 +85,12 @@ for page in pages:
 	print('https://en.wikipedia.org/wiki/'+page.title().replace(' ','_'))
 
 	# Get the short description from enwp
-	test = get_pageinfo(wikipedia,page)
-	for item in test['query']['pages']:
-		enwiki_description = test['query']['pages'][item]['pageprops']['wikibase-shortdesc']
+	try:
+		test = get_pageinfo(wikipedia,page)
+		for item in test['query']['pages']:
+			enwiki_description = test['query']['pages'][item]['pageprops']['wikibase-shortdesc']
+	except:
+		enwiki_description = ''
 
 	if len(enwiki_description) == 0:
 		print('No enwiki description found')
@@ -115,24 +125,26 @@ for page in pages:
 		print(enwiki_description)
 		# See if we want to add this to the list to double-check
 		doublecheck = False
+		wordfound = ''
 		for word in doublecheck_words:
 			if word in enwiki_description:
 				doublecheck = True
+				wordfound = word
 		for word in doublecheck_start_words:
 			if (enwiki_description.strip())[:len(word)+1] == word+" ":
 				doublecheck = True
-		if debug and doublecheck==True:
+				wordfound = word
+		if debug:
 			test = input('No description, import it?')
 		else:
-			test = 'n'
-			# test = 'y'
+			test = 'y'
 		mydescriptions = {u'en': enwiki_description}
 		if test == 'y':
 			wd_item.editDescriptions(mydescriptions, summary=u'Importing short description from the English Wikipedia')
 			nummodified += 1
 		if doublecheck:
 			page = pywikibot.Page(repo, 'User:Pi bot/doublecheck')
-			page.text = page.text + "\n* {{Q|" + str(qid) + "}} - " + enwiki_description
+			page.text = page.text + "\n* {{Q|" + str(qid) + "}} - " + enwiki_description + " ('"+wordfound+"')"
 			page.save("Adding " + str(qid))
 	# elif wikidata_description.lower() != enwiki_description.lower() and replace_existing:
 	# 	# The Wikidata description doesn't match enwp, update it using enwp
