@@ -17,7 +17,7 @@ def get_pageinfo(site, itemtitle):
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
 
-maxnum = 100
+maxnum = 1000
 nummodified = 0
 debug = False
 trip = True
@@ -122,6 +122,8 @@ for item in todo:
 			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
 	if enwiki_description[-1] == '.':
 		enwiki_description = enwiki_description[0:-1]
+	if enwiki_description[0:2] == 'a ':
+		enwiki_description = enwiki_description[2:]
 
 	# Get the description from Wikidata
 	try:
@@ -173,7 +175,7 @@ for item in todo:
 	# 		wd_item.editDescriptions(mydescriptions, summary=u'Matching short description from the English Wikipedia')
 	# 		nummodified += 1
 
-	if nummodified > maxnum:
+	if nummodified >= maxnum:
 		break
 
 print('Done! Edited ' + str(nummodified) + ' entries')
