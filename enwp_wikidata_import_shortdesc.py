@@ -68,10 +68,10 @@ for page in pages:
 
 random.shuffle(todo)
 # for item in sorted(todo,reverse=True):
-for page in todo:
+for item in todo:
 # for page in pages:
 	if count > 0:
-		page = pywikibot.Page(enwp,item)
+		page = pywikibot.Page(wikipedia,item)
 	enwiki_description = ''
 	wikidata_description = ''
 
