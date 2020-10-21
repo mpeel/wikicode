@@ -7,6 +7,7 @@
 import pywikibot
 from pywikibot import pagegenerators
 from pywikibot.data import api
+import random
 
 def get_pageinfo(site, itemtitle):
 	 params = { 'action' :'query', 
