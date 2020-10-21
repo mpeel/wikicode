@@ -59,7 +59,7 @@ cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 todo = []
 count = 0
-maxcount = 10000
+maxcount = 50000
 for page in pages:
 	todo.append(page.title())
 	count += 1
