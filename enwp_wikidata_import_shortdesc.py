@@ -59,12 +59,12 @@ cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 todo = []
 count = 0
-maxcount = 50000
+# maxcount = 50000
 for page in pages:
 	todo.append(page.title())
 	count += 1
-	if count >= maxcount:
-		break
+	# if count >= maxcount:
+		# break
 
 random.shuffle(todo)
 # for item in sorted(todo,reverse=True):
