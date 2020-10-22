@@ -57,21 +57,21 @@ print(doublecheck_start_words)
 
 cat = pywikibot.Category(wikipedia, targetcat)
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
-todo = []
-count = 0
+# todo = []
+# count = 0
 # maxcount = 50000
-for page in pages:
-	todo.append(page.title())
-	count += 1
+# for page in pages:
+# 	todo.append(page.title())
+# 	count += 1
 	# if count >= maxcount:
 		# break
 
-random.shuffle(todo)
+# random.shuffle(todo)
 # for item in sorted(todo,reverse=True):
-for item in todo:
-# for page in pages:
-	if count > 0:
-		page = pywikibot.Page(wikipedia,item)
+# for item in todo:
+for page in pages:
+	# if count > 0:
+		# page = pywikibot.Page(wikipedia,item)
 	enwiki_description = ''
 	wikidata_description = ''
 

@@ -19,7 +19,7 @@ maxnum = 10000
 nummodified = 0
 debug = True
 trip = True
-replace_existing = True
+replace_existing = False
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
@@ -28,7 +28,7 @@ wikipedia = pywikibot.Site('en', 'wikipedia')
 
 templates = ['Short description', 'short description']
 
-for page in pagegenerators.RandomPageGenerator(total=num, site=wikipedia, namespaces=[0]):
+for page in pagegenerators.RandomPageGenerator(total=100, site=wikipedia, namespaces=[0]):
 	enwiki_description = ''
 	wikidata_description = ''
 
