@@ -17,7 +17,7 @@ def get_pageinfo(site, itemtitle):
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
 
-maxnum = 1000
+maxnum = 5000
 nummodified = 0
 debug = False
 trip = True
