@@ -125,9 +125,11 @@ for page in pages:
 			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
 
 	# Catch some common things we want to remove
-	enwiki_description = enwiki_description.replace('?'"`UNIQ--ref-00000000-QINU`"'?','')
-	enwiki_description = enwiki_description.replace('?'"`UNIQ--ref-00000001-QINU`"'?','')
-	enwiki_description = enwiki_description.replace('?'"`UNIQ--ref-00000002-QINU`"'?','')
+	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000000-QINU`"\'?','')
+	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000001-QINU`"\'?','')
+	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000002-QINU`"\'?','')
+	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000003-QINU`"\'?','')
+	enwiki_description = enwiki_description.replace("  "," ")
 	enwiki_description = enwiki_description.replace("  "," ")
 	if enwiki_description[-1] == '.':
 		enwiki_description = enwiki_description[0:-1]
