@@ -103,6 +103,9 @@ for page in pages:
 	if len(enwiki_description) == 0:
 		print('No enwiki description found')
 		continue
+	if len(enwiki_description) < 5:
+		print('Very short enwiki description found! ' + str(enwiki_description))
+		continue
 	print(enwiki_description)
 
 	# Check that the short description isn't in the exclusion list
