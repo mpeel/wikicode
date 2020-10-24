@@ -123,10 +123,22 @@ for page in pages:
 		# ... and if the second letter isn't also upper case.
 		if enwiki_description[1].lower() == enwiki_description[1] and 'football season' not in enwiki_description and 'basketball season' not in enwiki_description:
 			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
+
+	# Catch some common things we want to remove
+	enwiki_description = enwiki_description.replace('?'"`UNIQ--ref-00000000-QINU`"'?','')
+	enwiki_description = enwiki_description.replace('?'"`UNIQ--ref-00000001-QINU`"'?','')
+	enwiki_description = enwiki_description.replace('?'"`UNIQ--ref-00000002-QINU`"'?','')
+	enwiki_description = enwiki_description.replace("  "," ")
 	if enwiki_description[-1] == '.':
 		enwiki_description = enwiki_description[0:-1]
 	if enwiki_description[0:2] == 'a ':
 		enwiki_description = enwiki_description[2:]
+	if enwiki_description[0:3] == 'an ':
+		enwiki_description = enwiki_description[3:]
+	if enwiki_description[0:4] == 'the ':
+		enwiki_description = enwiki_description[4:]
+	enwiki_description = enwiki_description.replace("'''","")
+	enwiki_description = enwiki_description.replace("''","")
 
 	# Get the description from Wikidata
 	try:
