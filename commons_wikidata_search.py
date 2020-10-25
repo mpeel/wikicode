@@ -17,10 +17,10 @@ import csv
 import random
 
 database = False
-manual = True
+manual = False
 maxnum = 1000000
 usetemplate = 0
-usecategory = 1
+usecategory = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -64,7 +64,7 @@ def runimport(targetcat):
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
         item_dict = wd_item.get()
         print('http://www.wikidata.org/wiki/'+wd_item.title())
-        targetcat.touch()
+        # targetcat.touch()
         return 0
     except:
         print('No existing link')
