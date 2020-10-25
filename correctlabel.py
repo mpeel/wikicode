@@ -12,7 +12,7 @@ lang = 'lb'
 string = 'chemesch Verbindung'
 replacement = 'cheemesch Verbindung'
 savemessage = 'Change ' + lang + ' label to '
-debug = True
+debug = False
 query = 'SELECT '\
 '	?search '\
 '	?item ?itemLabel ?itemDescription '\
