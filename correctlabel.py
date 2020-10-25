@@ -27,7 +27,6 @@ query = 'SELECT '\
 '		 bd:serviceParam wikibase:endpoint "www.wikidata.org" .'\
 '		 bd:serviceParam mwapi:srnamespace "0" .'\
 '		 bd:serviceParam mwapi:srsearch ?search .'\
-'        bd:serviceParam wikibase:limit 1000 .'\
 '		 ?item wikibase:apiOutputItem mwapi:title.'\
 '	 }'\
 '	 FILTER EXISTS {   ?item schema:description ?desc . '\
