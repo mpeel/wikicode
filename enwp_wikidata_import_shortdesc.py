@@ -23,6 +23,7 @@ debug = False
 trip = True
 # replace_existing = False
 maxwords = 10
+minwords = 2
 
 targetcat = 'Category:Short description with empty Wikidata description'
 
@@ -113,11 +114,6 @@ for page in pages:
 		print('enwiki description is in the exclusion list, skipping')
 		continue
 
-	# Check the length of the short description
-	if len(enwiki_description.split()) > maxwords:
-		print('enwiki description is too long, skipping')
-		continue
-
 	# Change the first letter to lower case unless it's an exception
 	if enwiki_description.split()[0] not in lowercase_exceptions:
 		# ... and if the second letter isn't also upper case.
@@ -125,10 +121,12 @@ for page in pages:
 			enwiki_description = enwiki_description[0].lower() + enwiki_description[1:]
 
 	# Catch some common things we want to remove
-	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000000-QINU`"\'?','')
-	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000001-QINU`"\'?','')
-	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000002-QINU`"\'?','')
-	enwiki_description = enwiki_description.replace('?\'"`UNIQ--ref-00000003-QINU`"\'?','')
+	enwiki_description = enwiki_description.strip()
+	enwiki_description = enwiki_description.replace('"`UNIQ--ref-00000000-QINU`"','')
+	enwiki_description = enwiki_description.replace('"`UNIQ--ref-00000001-QINU`"','')
+	enwiki_description = enwiki_description.replace('"`UNIQ--ref-00000002-QINU`"','')
+	enwiki_description = enwiki_description.replace('"`UNIQ--ref-00000003-QINU`"','')
+	enwiki_description = enwiki_description.replace("?''?"," ")
 	enwiki_description = enwiki_description.replace("  "," ")
 	enwiki_description = enwiki_description.replace("  "," ")
 	if enwiki_description[-1] == '.':
@@ -139,8 +137,20 @@ for page in pages:
 		enwiki_description = enwiki_description[3:]
 	if enwiki_description[0:4] == 'the ':
 		enwiki_description = enwiki_description[4:]
+	if enwiki_description[0:9] == 'upcoming ':
+		enwiki_description = enwiki_description[9:]
 	enwiki_description = enwiki_description.replace("'''","")
 	enwiki_description = enwiki_description.replace("''","")
+	enwiki_description = enwiki_description.replace("  "," ")
+	enwiki_description = enwiki_description.replace("  "," ")
+
+	# Check the length of the short description
+	if len(enwiki_description.split()) > maxwords:
+		print('enwiki description is too long, skipping')
+		continue
+	if len(enwiki_description.split()) < minwords:
+		print('enwiki description is too short, skipping')
+		continue
 
 	# Get the description from Wikidata
 	try:
