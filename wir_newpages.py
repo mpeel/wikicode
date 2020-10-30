@@ -412,7 +412,7 @@ def pageIsBiography(page='', lang=''):
 			return False
 		if 'racehorse' in page.text:
 			return False
-		elif not page.title().startswith('List ') and not page.title().startswith('Lists '):
+		elif not page.title().startswith('List ') and not page.title().startswith('Lists ') and 'Disappearance' not in page.title():
 			if len(page.title().split(' ')) <= 5:
 				if re.search(r'(?im)(\'{3} \(born \d|Category\s*:\s*\d+ (births|deaths)|Category\s*:\s*Living people|birth_date\s*=|birth_place\s*=|death_date\s*=|death_place\s*=|Category\s*:\s*People from)', page.text):
 					return True

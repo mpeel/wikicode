@@ -5,7 +5,7 @@ import dateparser
 from wir_newpages import *
 
 lang = 'en'
-article = 'Sumanadasa Abeywickrama'
+article = 'Disappearance of Crystal Rogers'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
@@ -23,9 +23,9 @@ deathdate = calculateDeathDateFull(page=page,lang=lang)
 if deathdate != '0-0-0':
 	print(deathdate)
 itemfound = pywikibot.ItemPage.fromPage(page)
-	# addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)
+# addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)
 
-addBiographyClaims(repo=repo, wikisite=enwiki, item=itemfound, page=page, lang=lang)
+# addBiographyClaims(repo=repo, wikisite=enwiki, item=itemfound, page=page, lang=lang)
 
 # deathdate = '2021-01-01'
 # addDateClaim(repo=repo, item='Q4115189', claim='P569', date=deathdate, lang='en')
