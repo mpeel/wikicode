@@ -57,5 +57,8 @@ while count > 0:
 		if debug:
 			test = input('Save?')
 		if test == 'y':
-			wd_item.editDescriptions(newdescriptions, summary=savemessage + newdescription)
+			try:
+				wd_item.editDescriptions(newdescriptions, summary=savemessage + newdescription)
+			except:
+				print("Something went wrong")
 			
