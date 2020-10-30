@@ -37,20 +37,25 @@ query = 'SELECT '\
 ' }'\
 ' ORDER BY deSC(?check_text)'
 print(query)
-pages = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
+count = 100
+while count > 0:
 
-for wd_item in pages:
-	print(wd_item)
-	# wd_item = pywikibot.ItemPage.fromPage(page)
-	item_dict = wd_item.get()
-	qid = wd_item.title()
-	olddescription = item_dict['descriptions'][lang]
-	newdescription = olddescription.replace(string,replacement)
-	newdescriptions = {lang: newdescription}
-	print(newdescriptions)
-	test = 'y'
-	if debug:
-		test = input('Save?')
-	if test == 'y':
-		wd_item.editDescriptions(newdescriptions, summary=savemessage + newdescription)
-		
+	pages = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
+	count = 0
+
+	for wd_item in pages:
+		count += 1
+		print(wd_item)
+		# wd_item = pywikibot.ItemPage.fromPage(page)
+		item_dict = wd_item.get()
+		qid = wd_item.title()
+		olddescription = item_dict['descriptions'][lang]
+		newdescription = olddescription.replace(string,replacement)
+		newdescriptions = {lang: newdescription}
+		print(newdescriptions)
+		test = 'y'
+		if debug:
+			test = input('Save?')
+		if test == 'y':
+			wd_item.editDescriptions(newdescriptions, summary=savemessage + newdescription)
+			
