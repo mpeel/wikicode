@@ -101,7 +101,7 @@ for regex in regexes:
                     if 'WITHDRAWN' in res2 and re.search(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext2):
                         pm2 = re.findall(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext2)[0]
                         try:
-                            r3 = requests.get('https://www.ncbi.nlm.nih.gov/pubmed/%s' % pm2, timeout=10.0)
+                            r3 = requests.get('https://pubmed.ncbi.nlm.nih.gov/%s' % pm2, timeout=10.0)
                             res3 = r3.text
                             if '<title>WITHDRAWN' in res3:
                                 # This new one has also been withdrawn, giving up.

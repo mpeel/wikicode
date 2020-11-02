@@ -79,30 +79,32 @@ for regex in regexes:
         print(len(pmids))
         for pmid in pmids:
             if str(pmid) not in checkedpages:
-                print('https://www.ncbi.nlm.nih.gov/pubmed/%s' % pmid)
+                print('https://pubmed.ncbi.nlm.nih.gov/%s' % pmid)
                 try:
-                    r = requests.get('https://www.ncbi.nlm.nih.gov/pubmed/%s' % pmid, timeout=10.0)
+                    r = requests.get('https://pubmed.ncbi.nlm.nih.gov/%s' % pmid, timeout=10.0)
                     res = r.text
                 except:
                     continue
                 # if 'WITHDRAWN' in res and re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res):
+                rawtext = re.sub(r'\s+', '', res)
                 if re.search(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext):
                     pm = re.findall(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext)[0]
                     print(pm)
                     checkedpages[str(pmid)] = pm
                     # Check to make sure that the new paper doesn't also have an updated version...
                     try:
-                        r2 = requests.get('https://www.ncbi.nlm.nih.gov/pubmed/%s' % pm, timeout=10.0)
+                        r2 = requests.get('https://pubmed.ncbi.nlm.nih.gov/%s' % pm, timeout=10.0)
                         res2 = r2.text
                     except:
                         continue
                     if '<title>WITHDRAWN' in res2:
                         # The new one's been withdrawn: we don't want to report this as an update.
                         checkedpages[str(pmid)] = 0
+                    rawtext2 = re.sub(r'\s+', '', res2)
                     if 'WITHDRAWN' in res2 and re.search(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext2):
                         pm2 = re.findall(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext2)[0]
                         try:
-                            r3 = requests.get('https://www.ncbi.nlm.nih.gov/pubmed/%s' % pm2, timeout=10.0)
+                            r3 = requests.get('https://pubmed.ncbi.nlm.nih.gov/%s' % pm2, timeout=10.0)
                             res3 = r3.text
                             if '<title>WITHDRAWN' in res3:
                                 # This new one has also been withdrawn, giving up.
@@ -118,7 +120,7 @@ for regex in regexes:
             print(checkedpages[str(pmid)])
             if checkedpages[str(pmid)] != 0:
                 if u'<!-- Aucune mise à jour nécessaire: ' + str(pmid) + ' -->' not in text:
-                    up = u'<!-- Nouvelle revue https://www.ncbi.nlm.nih.gov/pubmed/' + checkedpages[str(pmid)]+u" -->{{Passage à actualiser"
+                    up = u'<!-- Nouvelle revue https://pubmed.ncbi.nlm.nih.gov/' + checkedpages[str(pmid)]+u" -->{{Passage à actualiser"
                     if not up in text:
                         # text = re.sub(ur'(\|\s*?pmid\s*?\=\s*?%s\s*?(?:\||\}\}).*?\}\})' % pmid,ur'\1%s}}' % (up+str(datestr)), text, re.DOTALL)
                         # print(text)
