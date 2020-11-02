@@ -1,7 +1,9 @@
 #!/bin/bash
 source /home/pi/.profile
-cd /home/pi/Documents/wikicode/
+source /home/pi/.bashrc
+export PYTHONPATH=/home/pi/Documents/git/core:$PYTHONPATH
+cd /home/pi/Documents/git/wikicode/
 
-/usr/bin/python cochrane.py
-/usr/bin/python cochrane_fr.py
-/usr/bin/python commonscat_redirects.py
+/usr/bin/python3 cochrane.py
+/usr/bin/python3 cochrane_fr.py
+/usr/bin/python3 commonscat_redirects.py
