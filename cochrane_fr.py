@@ -12,7 +12,7 @@ from pywikibot import pagegenerators
 debug = False
 maxnum = 1000
 reportpage = u'Projet:Médecine/Cochrane/Bot'
-locale.setlocale(locale.LC_TIME, "fr_FR")
+locale.setlocale(locale.LC_ALL, 'fr_FR.UTF-8')
 
 def update_report(page, old_pmid, new_pmid, previousreports):
     report = pywikibot.Page(site, reportpage)
