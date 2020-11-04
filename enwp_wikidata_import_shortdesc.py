@@ -152,6 +152,10 @@ for page in pages:
 		print('enwiki description is too short, skipping')
 		continue
 
+	if enwiki_description.lower() == page.title().lower():
+		print('enwiki description matches the page title')
+		continue
+
 	# Get the description from Wikidata
 	try:
 		wikidata_description = item_dict['descriptions']['en']
