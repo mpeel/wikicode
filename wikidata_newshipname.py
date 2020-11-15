@@ -193,9 +193,10 @@ for target in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 	else:
 		trip = 1
 	returnval = check_ship_cat(target)
-	if returnval != 0:
-		i += returnval
-		i += check_ship_cat(target)
+	# if returnval != 0:
+	# 	i += returnval
+	# 	time.sleep(5)
+	# 	i += check_ship_cat(target)
 
 	if i > maxnum:
 		exit()
