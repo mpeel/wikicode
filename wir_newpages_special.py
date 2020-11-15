@@ -88,6 +88,10 @@ for lang in langs:
 						numcandidates -= 1
 						continue
 					if 'P569' in itemfound.claims:
+						try:
+							print(itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11])
+						except:
+							continue
 						if itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11]:
 							#https://www.wikidata.org/wiki/Help:Dates#Precision
 							itemfoundbirthyear = int(itemfound.claims['P569'][0].getTarget().year)
