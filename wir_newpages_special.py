@@ -87,33 +87,34 @@ for lang in langs:
 						print("Candidate %s problem with P569 value, skiping" % (itemfoundq))
 						numcandidates -= 1
 						continue
-					if 'P569' in itemfound.claims and itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11]:
-						#https://www.wikidata.org/wiki/Help:Dates#Precision
-						itemfoundbirthyear = int(itemfound.claims['P569'][0].getTarget().year)
-						print("candidate birthdate = %s, page birthdate = %s" % (itemfoundbirthyear, pagebirthyear))
-						mindatelen = 4
-						if len(str(itemfoundbirthyear)) != mindatelen or len(str(pagebirthyear)) != mindatelen:
-							print("%s birthdate length != %s" % (itemfoundq, mindatelen))
-							continue
-						#reduce candidates if birthyear are different
-						minyeardiff = 3
-						if itemfoundbirthyear >= pagebirthyear + minyeardiff or itemfoundbirthyear <= pagebirthyear - minyeardiff:
-							print("Candidate %s birthdate out of range, skiping" % (itemfoundq))
-							numcandidates -= 1
-							continue
-						#but only assume it is the same person if birthyears match
-						if itemfoundbirthyear == pagebirthyear:
-							print('%s birthyear found in candidate %s. Category:%s births found in page. OK!' % (itemfoundbirthyear, itemfoundq, itemfoundbirthyear))
-							# test = input('Continue?')
-							print('Adding sitelink %s:%s' % (lang, page.title().encode('utf-8')))
-							try:
-								itemfound.setSitelink(page, summary='BOT - Adding 1 sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
-							except:
-								print("Error adding sitelink. Skiping.")
+					if 'P569' in itemfound.claims:
+						if itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11]:
+							#https://www.wikidata.org/wiki/Help:Dates#Precision
+							itemfoundbirthyear = int(itemfound.claims['P569'][0].getTarget().year)
+							print("candidate birthdate = %s, page birthdate = %s" % (itemfoundbirthyear, pagebirthyear))
+							mindatelen = 4
+							if len(str(itemfoundbirthyear)) != mindatelen or len(str(pagebirthyear)) != mindatelen:
+								print("%s birthdate length != %s" % (itemfoundq, mindatelen))
+								continue
+							#reduce candidates if birthyear are different
+							minyeardiff = 3
+							if itemfoundbirthyear >= pagebirthyear + minyeardiff or itemfoundbirthyear <= pagebirthyear - minyeardiff:
+								print("Candidate %s birthdate out of range, skiping" % (itemfoundq))
+								numcandidates -= 1
+								continue
+							#but only assume it is the same person if birthyears match
+							if itemfoundbirthyear == pagebirthyear:
+								print('%s birthyear found in candidate %s. Category:%s births found in page. OK!' % (itemfoundbirthyear, itemfoundq, itemfoundbirthyear))
+								# test = input('Continue?')
+								print('Adding sitelink %s:%s' % (lang, page.title().encode('utf-8')))
+								try:
+									itemfound.setSitelink(page, summary='BOT - Adding 1 sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
+								except:
+									print("Error adding sitelink. Skiping.")
+									break
+								# test = input('Continue?')
+								addBiographyClaims(repo=repo, wikisite=wikisite, item=itemfound, page=page, lang=lang)
 								break
-							# test = input('Continue?')
-							addBiographyClaims(repo=repo, wikisite=wikisite, item=itemfound, page=page, lang=lang)
-							break
 			
 			#no item found, or no candidates are useful
 			if '<search />' in raw or (numcandidates == 0):
