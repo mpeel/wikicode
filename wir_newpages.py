@@ -547,6 +547,12 @@ def main():
 							print("SKIP [[" + lang + ":" + page.title() + "]] - [[:d:" + itemfound.title() + "]] has wierd birthdate")
 							print('There is something odd with the birth date, skipping')
 							break
+						try:
+							print(itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11])
+						except:
+							print("Candidate %s problem with P569 value, skiping" % (itemfoundq))
+							numcandidates -= 1
+							continue
 						if 'P569' in itemfound.claims and itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11]:
 							#https://www.wikidata.org/wiki/Help:Dates#Precision
 							itemfoundbirthyear = int(itemfound.claims['P569'][0].getTarget().year)

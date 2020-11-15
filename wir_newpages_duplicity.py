@@ -101,6 +101,12 @@ for lang in langs:
 					if not pagebirthyear:
 						print("Page doesnt have birthdate, skiping")
 						break #break, dont continue. Without birthdate we cant decide correctly
+					try:
+						print(itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11])
+					except:
+						print("Candidate %s problem with P569 value, skiping" % (itemfoundq))
+						numcandidates -= 1
+						continue
 					if 'P569' in itemfound.claims and itemfound.claims['P569'][0].getTarget().precision in [9, 10, 11]:
 						#https://www.wikidata.org/wiki/Help:Dates#Precision
 						itemfoundbirthyear = int(itemfound.claims['P569'][0].getTarget().year)
