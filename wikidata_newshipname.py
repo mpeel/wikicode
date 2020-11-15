@@ -180,22 +180,25 @@ repeat = []
 for target in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 	j += 1
 	print(j)
-	repeat.append(target)
-	print(len(repeat))
-	repeat_next = repeat.copy()
-	repeat = []
-	for targetcat in repeat_next:
-		if trip == 0:
-			if '5416565' in targetcat.title():
-				trip = 1
-			else:
-				continue
-		else:
+	# repeat.append(target)
+	# print(len(repeat))
+	# repeat_next = repeat.copy()
+	# repeat = []
+	# for targetcat in repeat_next:
+	if trip == 0:
+		if '5416565' in target.title():
 			trip = 1
-		i += check_ship_cat(targetcat)
+		else:
+			continue
+	else:
+		trip = 1
+	returnval = check_ship_cat(target)
+	if returnval != 0:
+		i += returnval
+		i += check_ship_cat(target)
 
-		if i > maxnum:
-			exit()
+	if i > maxnum:
+		exit()
 
 
 
