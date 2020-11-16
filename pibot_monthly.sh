@@ -6,4 +6,7 @@ cd /home/pi/Documents/git/wikicode/
 
 /usr/bin/python3 cochrane.py
 /usr/bin/python3 cochrane_fr.py
+# Run this twice to catch cases where the IMO category was moved
+/usr/bin/python3 wikidata_newshipname.py
+/usr/bin/python3 wikidata_newshipname.py
 /usr/bin/python3 commonscat_redirects.py
