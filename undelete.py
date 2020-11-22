@@ -35,6 +35,7 @@ def restoreimage(pagetitle, editmessage, texttoremove, texttoreplace):
         print texttoreplace[i][0]
         print texttoreplace[i][1]
         text = text.replace(texttoreplace[i][0], texttoreplace[i][1])
+    text = text.replace("\n\n", "\n")
     page.text = text.strip()
     try:
         page.save(editmessage)
@@ -43,6 +44,14 @@ def restoreimage(pagetitle, editmessage, texttoremove, texttoreplace):
         print "That didn't work!"
         return 0
 
+stop = 0
 for j in range(0,len(to_undelete)):
-    test = restoreimage(to_undelete[j], editsummary, remove, replace)
-    print test
+    try:
+        test = restoreimage(to_undelete[j], editsummary, remove, replace)
+        print test
+        stop = 1
+    except:
+        print j
+        print "That didn't work"
+    # if stop:
+        # exit()
