@@ -1,8 +1,10 @@
 # !/usr/bin/python
 # -*- coding: utf-8  -*-
 # Functions for enwp short descriptions
+# Released under the GNU General Public License v3.
 # Mike Peel     05-Sep-2020     v1 - start function file
 # Mike Peel     12-Sep-2020     v2 - expanding
+# Mike Peel     27-Nov-2020     v3 - split generator into separate function
 
 import pywikibot
 from pywikibot import pagegenerators
@@ -10,6 +12,45 @@ from pywikibot.data import api
 import dateparser
 import re
 import time
+
+def shortdesc_generator(wikipedia, page, debug, trip, startpoint, endpoint, require_infobox, infobox_strings, description, add_birth_date, add_death_date):
+	enwiki_description = ''
+	has_infobox = False
+
+	# Check if there is already a short description on enwp
+	test = get_pageinfo(wikipedia,page)
+	for item in test['query']['pages']:
+		try:
+			enwiki_description = test['query']['pages'][item]['pageprops']['wikibase-shortdesc']
+		except:
+			null = 0
+	if len(enwiki_description) > 0:
+		# The article already has a short description, move on to the next.
+		# print('* [['+page.title()+']] - EXISTS: ' + enwiki_description)
+		print(page.title() + ' - already has short description')
+		return ''
+
+	if require_infobox:
+		for option in infobox_strings:
+			if option in page.text:
+				has_infobox = True
+		if not has_infobox:
+			# The article does not have an infobox and we are only looking for articles that do have one.
+			print(page.title() + ' - does not have infobox')
+			return ''
+
+	enwiki_description = description
+	birthdate = calculateBirthDateFull(page=page).strip()
+	deathdate = calculateDeathDateFull(page=page).strip()
+
+	if birthdate != '' and deathdate != '' and add_birth_date and add_death_date:
+		enwiki_description += ' (' + str(birthdate[0:5]).replace('-','').strip() + "–" + str(deathdate[0:4]) + ')'
+	elif birthdate != '' and add_birth_date:
+		enwiki_description += ' (' + str(birthdate[0:5]).replace('-','').strip() + '–)'
+	elif deathdate != '' and add_death_date:
+		enwiki_description += ' (–' + str(deathdate[0:5]).replace('-','').strip() + ')'
+
+	return enwiki_description
 
 # This is the main funciton to generate and save new short descriptions.
 def shortdesc_stage(targetcat, maxnum, maxnum_new, debug, trip, startpoint, endpoint, require_infobox, infobox_strings, description, add_birth_date, add_death_date,onwiki_page,local_file):
@@ -26,10 +67,6 @@ def shortdesc_stage(targetcat, maxnum, maxnum_new, debug, trip, startpoint, endp
 
 	## Loop over all related pages
 	for page in pagegenerators.CategorizedPageGenerator(cat, recurse=False):
-		# Reset/increment parameters for each loop
-		enwiki_description = ''
-		count += 1
-		has_infobox = False
 
 		# This checks for trip/startpoint/endpoint
 		if not trip:
@@ -40,47 +77,20 @@ def shortdesc_stage(targetcat, maxnum, maxnum_new, debug, trip, startpoint, endp
 		if endpoint != '' and endpoint in page.title():
 			break
 
-		# Check if there is already a short description on enwp
-		test = get_pageinfo(wikipedia,page)
-		for item in test['query']['pages']:
-			try:
-				enwiki_description = test['query']['pages'][item]['pageprops']['wikibase-shortdesc']
-			except:
-				null = 0
-		if len(enwiki_description) > 0:
-			# The article already has a short description, move on to the next.
-			# print('* [['+page.title()+']] - EXISTS: ' + enwiki_description)
-			print(page.title() + ' - already has short description')
-			continue
+		# Reset/increment parameters for each loop
+		count += 1
 
-		if require_infobox:
-			for option in infobox_strings:
-				if option in page.text:
-					has_infobox = True
-			if not has_infobox:
-				# The article does not have an infobox and we are only looking for articles that do have one.
-				print(page.title() + ' - does not have infobox')
-				continue
+		enwiki_description = shortdesc_generator(wikipedia, page, debug, trip, startpoint, endpoint, require_infobox, infobox_strings, description, add_birth_date, add_death_date)
 
-		enwiki_description = description
-		birthdate = calculateBirthDateFull(page=page)
-		deathdate = calculateDeathDateFull(page=page)
-
-		if birthdate and deathdate and add_birth_date and add_death_date:
-			enwiki_description += ' (' + str(birthdate[0:4]) + "–" + str(deathdate[0:4]) + ')'
-		elif birthdate and add_birth_date:
-			enwiki_description += ' (b. ' + str(birthdate[0:4]) + ')'
-		elif deathdate and add_death_date:
-			enwiki_description += ' (d. ' + str(birthdate[0:4]) + ')'
-
-		# We have a new description, save it into the on-wikip page or a text file
-		count_new += 1
-		if onwiki_page != '':
-			output += '|-\n'
-			output += '| [['+page.title()+"]] || " + enwiki_description+"\n"
-		else:
-			output += page.title() + ' || ' + enwiki_description+"\n"
-		print(page.title() + ' - NEW SHORT DESCRIPTION')
+		if enwiki_description != '':
+			# We have a new description, save it into the on-wikip page or a text file
+			count_new += 1
+			if onwiki_page != '':
+				output += '|-\n'
+				output += '| [['+page.title()+"]] || " + enwiki_description+"\n"
+			else:
+				output += page.title() + ' || ' + enwiki_description+"\n"
+			print(page.title() + ' - NEW SHORT DESCRIPTION')
 
 		if count >= maxnum or count_new >= maxnum_new:
 			break
@@ -200,6 +210,9 @@ def calculateBirthDateFull(page=''):
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
+	m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+)s births\s*[\|\]]', page.text)
+	if m:
+		return str(m[0])+'s'
 	m = re.findall(r'(?im)\[\[\s*Category\s*:\s*(\d+) births\s*[\|\]]', page.text)
 	if m:
 		return m[0]

@@ -129,7 +129,7 @@ def addHumanClaim(repo='', item='', lang=''):
 		claim = pywikibot.Claim(repo, 'P31')
 		target = pywikibot.ItemPage(repo, 'Q5')
 		claim.setTarget(target)
-		item.addClaim(claim, summary='Adding 1 claim')
+		item.addClaim(claim)#, summary='Adding 1 claim')
 		addImportedFrom(repo=repo, claim=claim, lang=lang)
 
 def addGenderClaim(repo='', item='', gender='', lang=''):
@@ -139,7 +139,7 @@ def addGenderClaim(repo='', item='', gender='', lang=''):
 		claim = pywikibot.Claim(repo, 'P21')
 		target = pywikibot.ItemPage(repo, gender2q[gender])
 		claim.setTarget(target)
-		item.addClaim(claim, summary='Adding 1 claim')
+		item.addClaim(claim)#, summary='Adding 1 claim')
 		addImportedFrom(repo=repo, claim=claim, lang=lang)
 
 def addBirthDateClaim(repo='', item='', date='', lang=''):
@@ -171,7 +171,7 @@ def addDateClaim(repo='', item='', claim='', date='', lang=''):
 				claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0]), month=int(date.split('-')[1])))
 			elif len(date.split('-')) == 1:
 				claim.setTarget(pywikibot.WbTime(year=int(date.split('-')[0])))
-			item.addClaim(claim, summary='Adding 1 claim')
+			item.addClaim(claim)#, summary='Adding 1 claim')
 			addImportedFrom(repo=repo, claim=claim, lang=lang)
 
 def addOccupationsClaim(repo='', item='', occupations=[], lang=''):
@@ -181,7 +181,7 @@ def addOccupationsClaim(repo='', item='', occupations=[], lang=''):
 			claim = pywikibot.Claim(repo, 'P106')
 			target = pywikibot.ItemPage(repo, occupation.title())
 			claim.setTarget(target)
-			item.addClaim(claim, summary='Adding 1 claim')
+			item.addClaim(claim)#, summary='Adding 1 claim')
 			addImportedFrom(repo=repo, claim=claim, lang=lang)
 
 def authorIsNewbie(page='', lang=''):
@@ -574,7 +574,7 @@ def main():
 									# test = input('Continue?')
 									print('Adding sitelink %s:%s' % (lang, page.title().encode('utf-8')))
 									try:
-										itemfound.setSitelink(page, summary='Adding 1 sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
+										itemfound.setSitelink(page, summary='Adding sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
 									except:
 										print("Error adding sitelink. Skiping.")
 										break
@@ -594,7 +594,7 @@ def main():
 					newitem.editLabels(labels=newitemlabels, summary="Creating item for [[:%s:%s|%s]] (%s): %s %s" % (lang, wtitle, wtitle, lang, 'human', gender))
 					newitem.get()
 					try:
-						newitem.setSitelink(page, summary='Adding 1 sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
+						newitem.setSitelink(page, summary='Adding sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
 					except:
 						print("Error adding sitelink. Skiping.")
 						break

@@ -112,7 +112,7 @@ for lang in langs:
 								# test = input('Continue?')
 								print('Adding sitelink %s:%s' % (lang, page.title().encode('utf-8')))
 								try:
-									itemfound.setSitelink(page, summary='BOT - Adding 1 sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
+									itemfound.setSitelink(page, summary='Adding sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
 								except:
 									print("Error adding sitelink. Skiping.")
 									break
@@ -127,10 +127,10 @@ for lang in langs:
 				#create item
 				newitemlabels = {'en': wtitle_,'de': wtitle_,'fr': wtitle_,'es': wtitle_,'pt': wtitle_}
 				newitem = pywikibot.ItemPage(repo)
-				newitem.editLabels(labels=newitemlabels, summary="BOT - Creating item for [[:%s:%s|%s]] (%s): %s %s" % (lang, wtitle, wtitle, lang, 'human', gender))
+				newitem.editLabels(labels=newitemlabels, summary="Creating item for [[:%s:%s|%s]] (%s): %s %s" % (lang, wtitle, wtitle, lang, 'human', gender))
 				newitem.get()
 				try:
-					newitem.setSitelink(page, summary='BOT - Adding 1 sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
+					newitem.setSitelink(page, summary='Adding sitelink: [[:%s:%s|%s]] (%s)' % (lang, page.title(), page.title(), lang))
 				except:
 					print("Error adding sitelink. Skiping.")
 					break
