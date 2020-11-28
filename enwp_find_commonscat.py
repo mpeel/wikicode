@@ -22,14 +22,15 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 enwp = pywikibot.Site('en', 'wikipedia')
 # enwp = pywikibot.Site('es', 'wikipedia')
-debug = 0
+debug = 1
 trip = 1
 
 
 # New style of category walker
 numchecked = 0
 catschecked = 0
-do_articles = False
+do_articles = True
+do_subcats = True
 
 targetcats = []
 # targetcats = ['Category:Aircraft by manufacturer']
@@ -39,9 +40,13 @@ targetcats = []
 #targetcats = ['Categoría:Canarias']
 # targetcats = ['Category:2019–20 coronavirus pandemic']
 # targetcats = ['Category:Commons category link is on Wikidata using P373']
-# targetcats = ['Category:Commons category link is locally defined']
+targetcats = ['Category:Commons category link is locally defined']
+# targetcats = ['Category:Commons link is the pagename','Category:Commons link is defined as the pagename']
+# targetcats = ['Category:Commons link is locally defined']
+targettemplates = []
+# targettemplates = ['Commons']
 
-subcats = True
+subcats = False
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
@@ -116,6 +121,7 @@ def findmatch(page):
 		print(commonscat_page.title() + ' - no linked Wikidata item found')
 	if test != 0:
 		print('Commons has Wikidata ID already')
+		input('Check?')
 		return 0
 
 	print(' http://en.wikipedia.org/wiki/'+page.title().replace(' ','_'))
@@ -163,7 +169,6 @@ def findmatch(page):
 if len(targetcats) > 0:
 	seen   = set(targetcats)
 	active = set(targetcats)
-	do_subcats = True
 	while active:
 		next_active = set()
 		for item in sorted(active):
@@ -186,19 +191,30 @@ if len(targetcats) > 0:
 		if nummodified >= maxnum:
 			print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
 			break
+elif len(targettemplates) > 0:
+	for tpl in targettemplates:
+		template = pywikibot.Page(enwp, 'Template:'+tpl)
+		# targetcats = template.embeddedin(namespaces='14')
+		targetcats = template.embeddedin(namespaces='0')
+		for target in targetcats:
+			nummodified += findmatch(target)
+			if nummodified >= maxnum:
+				print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
+				break
+
 else:
-    # Pick random categories
-    while nummodified < maxnum:
-        targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='14')
-        # targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='0')
-        for target in targets:
-            print(target.title())
-            nummodified += findmatch(target)
-            # print(nummodified)
-            
-            if nummodified >= maxnum:
-                print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
-                break
+	# Pick random categories
+	while nummodified < maxnum:
+		# targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='14')
+		targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='0')
+		for target in targets:
+			print(target.title())
+			nummodified += findmatch(target)
+			# print(nummodified)
+			
+			if nummodified >= maxnum:
+				print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
+				break
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')

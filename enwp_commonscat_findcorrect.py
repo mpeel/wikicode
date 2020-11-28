@@ -41,7 +41,8 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Category:Commons category link is locally defined‎','Category:Commons category link is on Wikidata using P373']
+# targetcats = ['Category:Commons category link is defined as the pagename','Category:Commons category link is on Wikidata using P373','Category:Commons category link is locally defined‎']
+targetcats = ['Category:Commons category link is locally defined‎']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
@@ -99,6 +100,16 @@ for categories in range(0,2):
 			except:
 				continue
 
+			# Check to see if the commons category has a wikidata item
+			try:
+				wd_item = pywikibot.ItemPage.fromPage(commonscat_page)
+				item_dict = wd_item.get()
+				qid = wd_item.title()
+				print(qid)
+				continue
+			except:
+				null = 0
+				
 			# Get the Wikidata item
 			try:
 				wd_item = pywikibot.ItemPage.fromPage(page)
@@ -111,7 +122,7 @@ for categories in range(0,2):
 				wd_item = 0
 				item_dict = 0
 				qid = 0
-				# continue
+				continue
 			# If we have a P910 value, switch to using that Wikidata item
 			if qid != 0:
 				try:

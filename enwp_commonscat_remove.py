@@ -12,6 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 from pibot_functions import *
+import random
 # import mysql.connector
 # from database_login import *
 
@@ -37,11 +38,14 @@ prefix = 'en'
 # prefix = 'simple'
 debug = 1
 trip = 1
+only_replacements = False
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Category:Commons category link is on Wikidata using P373','Category:Commons category link is locally defined‎','Category:Commons category link is defined as the pagename']
+# targetcats = ['Category:Commons category link is on Wikidata using P373']#'Category:Commons category link is locally defined']#[]#,'Category:Commons category link is locally defined‎',
+# targetcats = ['Category:Commons category link is defined as the pagename']
+targetcats = ['Commons category link is locally defined']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
@@ -50,11 +54,23 @@ for categories in range(0,2):
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
-		for page in pages:
 
+		# todo = []
+		# for page in pages:
+			# todo.append(page.title())
+
+		# random.shuffle(todo)
+		# # for item in sorted(todo,reverse=True):
+		# for item in todo:
+		# 	if categories == 0: # Don't change this as it will always look at commons categories
+		# 		page = pywikibot.Category(enwp,item)
+		# 	else:
+		# 		page = pywikibot.Page(enwp,item)
+
+		for page in pages:
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "AC Nagano Parceiro" in page.title():
+				if "Altstadt" in page.title():
 					trip = 1
 				else:
 					print(page.title())
@@ -88,6 +104,25 @@ for categories in range(0,2):
 				sitelink_check = 0
 				# continue
 
+			try:
+				p373 = item_dict['claims']['P373']
+				for clm in p373:
+					val = clm.getTarget()
+					p373cat = u"Category:" + val
+					print('Remove P373?')
+					print(' http://www.wikidata.org/wiki/'+qid)
+					print(' https://commons.wikimedia.org/wiki/' + str(p373cat).replace(' ','_'))
+					test = 'y'
+					savemessage = 'Remove incorrect P373 value'
+					if debug == 1:
+						print(savemessage)
+						test = input("Continue? ")
+					if test == 'y':
+						wd_item.removeClaims(clm,summary=savemessage)
+			except:
+				null = 0
+
+			p910_followed = False
 			# If we have a P910 value, switch to using that Wikidata item
 			if qid != 0:
 				try:
@@ -98,6 +133,7 @@ for categories in range(0,2):
 						item_dict = wd_item.get()
 						qid = wd_item.title()
 						print(wd_item.title())
+						p910_followed = True
 				except:
 					null = 0
 
@@ -110,27 +146,29 @@ for categories in range(0,2):
 				print("sitelink: " + str(sitelink_check))
 
 			if sitelink_check == 1:
-				continue
+				# continue
+				null = 0
 
 			print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
 
-			try:
-				p373 = item_dict['claims']['P373']
-				for clm in p373:
-					val = clm.getTarget()
-					p373cat = u"Category:" + val
-					print('Remove P373?')
-					print(' http://www.wikidata.org/wiki/'+qid)
-					print(' ' + str(p373cat))
-					test = 'y'
-					savemessage = 'Remove incorrect P373 value'
-					if debug == 1:
-						print(savemessage)
-						test = input("Continue? ")
-					if test == 'y':
-						wd_item.removeClaims(clm,summary=savemessage)
-			except:
-				null = 0
+			if p910_followed:
+				try:
+					p373 = item_dict['claims']['P373']
+					for clm in p373:
+						val = clm.getTarget()
+						p373cat = u"Category:" + val
+						print('Remove P373?')
+						print(' http://www.wikidata.org/wiki/'+qid)
+						print(' https://commons.wikimedia.org/wiki/' + str(p373cat).replace(' ','_'))
+						test = 'y'
+						savemessage = 'Remove incorrect P373 value'
+						# if debug == 1:
+						# 	print(savemessage)
+						# 	test = input("Continue? ")
+						if test == 'y':
+							wd_item.removeClaims(clm,summary=savemessage)
+				except:
+					null = 0
 
 
 			# Get the candidate commonscat link
@@ -170,58 +208,111 @@ for categories in range(0,2):
 						null = 2
 			if id_val == 0:
 				# We didn't find the commons category link, skip this one.
-				# for i in range(0,len(templates)):
-					# if '{{'+templates[i]+'}}' in target_text:
-
-				continue
-
-			# Do some tidying of the link
-			if "|" in id_val:
-				try:
-					if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0]:
-						if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1]:
-							id_val = id_val.split("|")[2]
-						else:
-							id_val = id_val.split("|")[1]
-					else:
-						id_val = id_val.split("|")[0]
-				except:
-					continue
-			try:
-				id_val = id_val.strip()
-			except:
-				null = 1
-
-			# Check for bad characters
-			if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val or 'bullet=' in id_val or 'bullet =' in id_val:
-				continue
-
-			print(id_val)
-			commonscat = u"Category:" + id_val
-
-			print('Current category is:')
-			print(' http://commons.wikimedia.org/wiki/Category:'+id_val.replace(' ','_'))
-			print('Remove from enwp?')
-
-			target_text = target_text.replace(commonscat_string2a + commonscat_string2+'}}\n', '')
-			page.text = target_text
-			test = 'y'
-			if numtemplates != 1:
-				print('Number of commons links: ' + str(numtemplates))
-			savemessage = "Removing Commons category link that doesn't match this "
-			if categories == 0:
-				savemessage = savemessage + "category"
+				for i in range(0,len(templates)):
+					if '{{'+templates[i]+'}}' in target_text:
+						commonscat_string2a = '{{'+templates[i]
+						commonscat_string2 = ''
+						id_val = ''
 			else:
-				savemessage = savemessage + "article"
-			if debug == 1:
-				# print(target_text)
-				# print(id_val)
-				print(savemessage)
-				test = input("Continue? ")
-			if test == 'y':
-				nummodified += 1
-				page.save(savemessage)
-				continue
+				# Do some tidying of the link
+				if "|" in id_val:
+					try:
+						if 'position' in id_val.split("|")[0] or 'bullet' in id_val.split("|")[0]:
+							if 'position' in id_val.split("|")[1] or 'bullet' in id_val.split("|")[1]:
+								id_val = id_val.split("|")[2]
+							else:
+								id_val = id_val.split("|")[1]
+						else:
+							id_val = id_val.split("|")[0]
+					except:
+						continue
+				try:
+					id_val = id_val.strip()
+				except:
+					null = 1
+
+				# Check for bad characters
+				if "{" in id_val or "<" in id_val or ">" in id_val or "]" in id_val or "[" in id_val or 'position=' in id_val or 'position =' in id_val or 'bullet=' in id_val or 'bullet =' in id_val:
+					continue
+
+				print(id_val)
+				commonscat = u"Category:" + id_val
+
+				print('Current category is:')
+				print(' http://commons.wikimedia.org/wiki/Category:'+id_val.replace(' ','_'))
+				print('Remove from enwp?')
+
+				target_text = target_text.replace("* " + commonscat_string2a + commonscat_string2+'}}\n', '')
+				target_text = target_text.replace("* " + commonscat_string2a + commonscat_string2+'}}', '')
+				target_text = target_text.replace("*" + commonscat_string2a + commonscat_string2+'}}\n', '')
+				target_text = target_text.replace("*" + commonscat_string2a + commonscat_string2+'}}', '')
+				target_text = target_text.replace(commonscat_string2a + commonscat_string2+'}}\n', '')
+				target_text = target_text.replace(commonscat_string2a + commonscat_string2+'}}', '')
+				page.text = target_text
+				save = 'n'
+				if numtemplates != 1:
+					print('Number of commons links: ' + str(numtemplates))
+				savemessage = "Removing misplaced Commons category link ([[:commons:Category:"+str(id_val)+']])'
+				commonscat = False
+				test = 'n'
+				if debug == 1:
+					print(savemessage)
+					commonscat = ''
+					try:
+						commonscat_page = pywikibot.Page(commons, 'Category:'+id_val)
+						commonscat_item = pywikibot.ItemPage.fromPage(commonscat_page)
+						commonscat_item_dict = commonscat_item.get()
+						commonscat = commonscat_item_dict['sitelinks']['enwiki']
+					except:
+						commonscat = ''
+					try:
+						existing_id = commonscat_item_dict['claims']['P301']
+						print('P301 exists, following that.')
+						for clm2 in existing_id:
+							wd_item = clm2.getTarget()
+							commonscat_item_dict = wd_item.get()
+							qid = wd_item.title()
+							print(wd_item.title())
+							p401_followed = True
+							commonscat = commonscat_item_dict['sitelinks']['enwiki']
+					except:
+						null = 0
+					if commonscat == page.title():
+						continue
+					# page = pywikibot.ItemPage.fromPage(commonscat)
+					# if page.isRedirectPage():
+						# print('Is a redirect')
+						# continue
+					if commonscat != '':
+						print('https://en.wikipedia.org/wiki/'+commonscat.replace(' ','_'))
+						savemessage = savemessage + ' (Commons category belongs at [[' + commonscat.replace(' ','_') + ']])'
+						# test2 = input('Use this category?')
+						# if test2 != 'n':
+						if commonscat != 'Category:'+str(id_val) and commonscat != page.title():
+							test = commonscat
+						else:
+							test = 'o'
+					else:
+						null = 0
+						test = 'o'
+				
+					# if test == 'n':
+						# continue
+						# test = input("Enter correct category here: ")
+				if test != 'n' and test != 's':
+					# if len(test) > 5:
+					# 	test = 'Commons category belongs at [[' + test + ']]'
+					# 	savemessage += " - " + test
+					if only_replacements:
+						if len(test) < 5:
+							continue
+
+					nummodified += 1
+					print(savemessage)
+					check = input('OK?')
+					if check != 'n':
+						page.save(savemessage,minor=False)
+					continue
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')

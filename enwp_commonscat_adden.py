@@ -69,12 +69,15 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Commons category link is the pagename‎','Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎']
+targetcats = ['Commons category link is the pagename‎']
+# targetcats = ['Commons category link is defined as the pagename‎']
+# targetcats = ['Commons category link is locally defined‎']
+targetcats = ['Commons category link is the pagename‎','Commons category link is defined as the pagename‎','Commons category link is locally defined‎']
 
-for categories in range(0,2):
-	for targetcat in targetcats:
+for targetcat in targetcats:
+	for categories in range(0,2):
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 1:
+		if categories == 0:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -95,7 +98,7 @@ for categories in range(0,2):
 				print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
 				exit()
 
-			print("\n" + page.title())
+			print("\n" + "http://en.wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
 			# See if we have a Wikidata item already
 			try:
@@ -174,7 +177,8 @@ for categories in range(0,2):
 				continue
 
 			print(id_val)
-			commonscat = u"Category:" + id_val
+			if 'Category:' not in id_val:
+				commonscat = u"Category:" + id_val
 
 			# Try to get the Wikidata item from the Commons category
 			commonscat_has_item = False
@@ -193,93 +197,100 @@ for categories in range(0,2):
 				# If that didn't work, go no further
 				print(commonscat + ' - no wikidata item found')
 
-			if commonscat_has_item:
-				if 'Category:' not in page.title():
-					# If we have a P301 value, switch to using that Wikidata item
-					try:
-						existing_id = item_dict['claims']['P301']
-						print('P301 exists, following that.')
-						for clm2 in existing_id:
-							wd_item = clm2.getTarget()
-							item_dict = wd_item.get()
-							qid = wd_item.title()
-							print(wd_item.title())
-					except:
-						null = 0
-
-				# Skip if there is already a sitelink on Wikidata
-				try:
-					sitelink = item_dict['sitelinks'][enwp_site]
-					sitelink_check = 1
-				except:
-					sitelink_check = 0
-				print("sitelink: " + str(sitelink_check))
-				if sitelink_check == 1:
-					print('Sitelink exists, continuing')
-					continue
-
-				# If we're here, then we can add a sitelink
-				data = {'sitelinks': [{'site': enwp_site, 'title': page.title()}]}
-				print('http://www.wikidata.org/wiki/'+qid)
-				try:
-					print(item_dict['labels']['en'])
-				except:
-					print('')
-				print('http://'+prefix+'.wikipedia.org/wiki/' + page.title().replace(' ','_'))
-				print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
-				text = input("Save? ")
-				if text != 'n':
-					wd_item.editEntity(data, summary=u'Add '+enwp_site+' sitelink')
-					nummodified += 1
-			else:
-				print('Searching for a match...')
-				wikidataEntries = search_entities(repo, page.title())
-				print(wikidataEntries)
-				data = {'sitelinks': [{'site': enwp_site, 'title': page.title()}]}
-				print(wikidataEntries['searchinfo'])
-				done = 0
-				if wikidataEntries['search'] != []:
-					results = wikidataEntries['search']
-					# prettyPrint(results)
-					numresults = len(results)
-					for i in range(0,numresults):
-						if done != 0:
-							continue
-						targetpage = pywikibot.ItemPage(wikidata_site, results[i]['id'])
-						item_dict = targetpage.get()
-						print('http://www.wikidata.org/wiki/'+results[i]['id'])
+			try:
+				last_check = check_if_category_has_contents(commonscat,site=commons)
+			except:
+				continue
+			print(last_check)
+			if last_check == True:
+				if commonscat_has_item:
+					if 'Category:' not in page.title():
+						# If we have a P301 value, switch to using that Wikidata item
 						try:
-							print(item_dict['labels']['en'])
+							existing_id = item_dict['claims']['P301']
+							print('P301 exists, following that.')
+							for clm2 in existing_id:
+								wd_item = clm2.getTarget()
+								item_dict = wd_item.get()
+								qid = wd_item.title()
+								print(wd_item.title())
 						except:
-							print('')
-						print('http://'+prefix+'.wikipedia.org/wiki/' + page.title().replace(' ','_'))
-						print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
-						text = input("Save? ")
-						if text != 'n':
-							targetpage.editEntity(data, summary=u'Add enwp sitelink')
-							done = 1
-							try:
-								data2 = {'sitelinks': [{'site': 'commonswiki', 'title': commonscat_item.title()}]}
-								text = input('Also add commons link?')
-								if text != 'n':
-									targetpage.editEntity(data2, summary=u'Add commons sitelink')
-							except:
-								null = 0
+							null = 0
 
-				if done == 0:
+					# Skip if there is already a sitelink on Wikidata
 					try:
-						text = commonscat_item.title()
-						print(text)
-						print('Create a new item?')
-						text = input('Save?')
-						if text != 'n':
-							# Start assembling the Wikdata entry
-							items = []
-							if 'Category' in page.title():
-								items.append(['P31','Q4167836'])
-							test = newitem(commonscat_item, page, items,True)
+						sitelink = item_dict['sitelinks'][enwp_site]
+						sitelink_check = 1
 					except:
+						sitelink_check = 0
+					print("sitelink: " + str(sitelink_check))
+					if sitelink_check == 1:
+						print('Sitelink exists, continuing')
+						# input('Check?')
 						continue
+
+					# If we're here, then we can add a sitelink
+					data = {'sitelinks': [{'site': enwp_site, 'title': page.title()}]}
+					print('http://www.wikidata.org/wiki/'+qid)
+					try:
+						print(item_dict['labels']['en'])
+					except:
+						print('')
+					print('http://'+prefix+'.wikipedia.org/wiki/' + page.title().replace(' ','_'))
+					print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
+					text = input("Save? ")
+					if text != 'n':
+						wd_item.editEntity(data, summary=u'Add '+enwp_site+' sitelink')
+						nummodified += 1
+				else:
+					print('Searching for a match...')
+					wikidataEntries = search_entities(repo, page.title())
+					print(wikidataEntries)
+					data = {'sitelinks': [{'site': enwp_site, 'title': page.title()}]}
+					print(wikidataEntries['searchinfo'])
+					done = 0
+					if wikidataEntries['search'] != []:
+						results = wikidataEntries['search']
+						# prettyPrint(results)
+						numresults = len(results)
+						for i in range(0,numresults):
+							if done != 0:
+								continue
+							targetpage = pywikibot.ItemPage(wikidata_site, results[i]['id'])
+							item_dict = targetpage.get()
+							print('http://www.wikidata.org/wiki/'+results[i]['id'])
+							try:
+								print(item_dict['labels']['en'])
+							except:
+								print('')
+							print('http://'+prefix+'.wikipedia.org/wiki/' + page.title().replace(' ','_'))
+							print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
+							text = input("Save? ")
+							if text != 'n':
+								targetpage.editEntity(data, summary=u'Add enwp sitelink')
+								done = 1
+								try:
+									data2 = {'sitelinks': [{'site': 'commonswiki', 'title': commonscat_item.title()}]}
+									text = input('Also add commons link?')
+									if text != 'n':
+										targetpage.editEntity(data2, summary=u'Add commons sitelink')
+								except:
+									null = 0
+
+					if done == 0:
+						try:
+							text = commonscat_item.title()
+							print('http://commons.wikimedia.org/wiki/'+text.replace(' ','_'))
+							print('Create a new item?')
+							text = input('Save?')
+							if text != 'n':
+								# Start assembling the Wikdata entry
+								items = []
+								if 'Category' in page.title():
+									items.append(['P31','Q4167836'])
+								test = newitem(commonscat_item, page, items,True)
+						except:
+							continue
 
 
 # EOF
