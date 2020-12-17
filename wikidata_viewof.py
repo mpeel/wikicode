@@ -15,8 +15,8 @@ import urllib
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-maxnum = 1000
-i = 0
+maxnum = 5000
+j = 0
 debug = False
 
 def search_entities(site, itemtitle,limit=100,offset=0):
@@ -59,7 +59,7 @@ def newitem(category, items,cat=True):
 
 offset = 0
 step = 100
-for i in range(0,10):
+for i in range(0,100):
 	offset += step
 	# View of, Views of, View from, Views from
 	candidates = search_entities(commons, '":Views_from"',limit=step,offset=offset)
@@ -122,9 +122,9 @@ for i in range(0,10):
 				newclaim = pywikibot.Claim(repo, 'P8933')
 				newclaim.setTarget(new_item)
 				wd_item.addClaim(newclaim, summary=u'Setting P8933 value')
-				i += 1
-				print(i)
+				j += 1
+				print(j)
 
-				if i >= maxnum:
+				if j >= maxnum:
 					exit()
 
