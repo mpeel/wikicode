@@ -19,10 +19,12 @@ maxnum = 50
 i = 0
 debug = False
 
-def search_entities(site, itemtitle):
+def search_entities(site, itemtitle,limit=100,offset=0):
 	 params = { 'action' :'query', 
 	 			'list': 'search',
 				'format' : 'json',
+				'srlimit': limit,
+				'sroffset': offset,
 				'srnamespace': 14,
 				'srsearch': itemtitle}
 	 request = api.Request(site=site, parameters=params)
@@ -55,70 +57,74 @@ def newitem(category, items,cat=True):
 			print("That didn't work")
 	return candidate_item
 
-# View of, Views of, View from, Views from
-
-candidates = search_entities(commons, '":Views_from"')
-for result in candidates['query']['search']:
-	targetcat = pywikibot.Page(commons, str(result['title']))
-	print('https://commons.wikimedia.org/wiki/'+targetcat.title().replace(" ", "_"))
-	if ':Views from' in targetcat.title():
-		try:
-			wd_item = pywikibot.ItemPage.fromPage(targetcat)
-			item_dict = wd_item.get()
-			print(wd_item.title())
-			continue
-		except:
-			null = 0
-		target = ''
-		test = 'n'
-		for parentcat in targetcat.categories():
-			if target == '' and 'view' not in parentcat.title().lower():
-				try:
-					wd_item = pywikibot.ItemPage.fromPage(parentcat)
-					item_dict = wd_item.get()
-					print(wd_item.title())
-				except:
-					continue
-				# If we have a P301 value, switch to using that Wikidata item
-				try:
-					existing_id = item_dict['claims']['P301']
-					print('P301 exists, following that.')
-					for clm2 in existing_id:
-						wd_item = clm2.getTarget()
+offset = 0
+step = 100
+for i in range(0,10):
+	offset += step
+	# View of, Views of, View from, Views from
+	candidates = search_entities(commons, '":Views_from"',limit=step,offset=offset)
+	for result in candidates['query']['search']:
+		targetcat = pywikibot.Page(commons, str(result['title']))
+		print('https://commons.wikimedia.org/wiki/'+targetcat.title().replace(" ", "_"))
+		if ':Views from' in targetcat.title():
+			try:
+				wd_item = pywikibot.ItemPage.fromPage(targetcat)
+				item_dict = wd_item.get()
+				print(wd_item.title())
+				continue
+			except:
+				null = 0
+			target = ''
+			test = 'n'
+			for parentcat in targetcat.categories():
+				if target == '' and 'view' not in parentcat.title().lower():
+					try:
+						wd_item = pywikibot.ItemPage.fromPage(parentcat)
 						item_dict = wd_item.get()
-						qid = wd_item.title()
 						print(wd_item.title())
-				except:
-					null = 0
+					except:
+						continue
+					# If we have a P301 value, switch to using that Wikidata item
+					try:
+						existing_id = item_dict['claims']['P301']
+						print('P301 exists, following that.')
+						for clm2 in existing_id:
+							wd_item = clm2.getTarget()
+							item_dict = wd_item.get()
+							qid = wd_item.title()
+							print(wd_item.title())
+					except:
+						null = 0
 
-				print('https://commons.wikimedia.org/wiki/'+parentcat.title().replace(" ","_"))
-				if debug:
-					test = input('OK?')
-				else:
-					test = 'y'
-				if test == 'y':
-					target = wd_item.title()
+					print('https://commons.wikimedia.org/wiki/'+parentcat.title().replace(" ","_"))
+					if debug:
+						test = input('OK?')
+					else:
+						test = 'y'
+					if test == 'y':
+						target = wd_item.title()
 
-		if target != '':
-			print(target)
-			# Start assembling the Wikdata entry
-			target_text = targetcat.get()
-			items = [['P31','Q4167836']] # Instance of Wikimedia category
-			items.append(['P971','Q2075301']) # combines view
-			items.append(['P971',target]) # combines parentcat
-			print(items)
+			if target != '':
+				print(target)
+				# Start assembling the Wikdata entry
+				target_text = targetcat.get()
+				items = [['P31','Q4167836']] # Instance of Wikimedia category
+				items.append(['P971','Q2075301']) # combines view
+				items.append(['P971',target]) # combines parentcat
+				print(items)
 
-			# if debug:
-			# 	test = input('OK?')
-			# else:
-			# 	test = 'y'
-			# if test == 'y':
-			new_item = newitem(targetcat, items)
-			newclaim = pywikibot.Claim(repo, 'P8933')
-			newclaim.setTarget(new_item)
-			wd_item.addClaim(newclaim, summary=u'Setting P8933 value')
-			i += 1
+				# if debug:
+				# 	test = input('OK?')
+				# else:
+				# 	test = 'y'
+				# if test == 'y':
+				new_item = newitem(targetcat, items)
+				newclaim = pywikibot.Claim(repo, 'P8933')
+				newclaim.setTarget(new_item)
+				wd_item.addClaim(newclaim, summary=u'Setting P8933 value')
+				i += 1
+				print(i)
 
-			if i >= maxnum:
-				exit()
+				if i >= maxnum:
+					exit()
 
