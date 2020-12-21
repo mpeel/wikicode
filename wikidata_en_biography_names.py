@@ -49,6 +49,9 @@ lang_exclude_sparql = lang_exclude_sparql[:-1]
 
 lang_combine_sparql = lang_sparql + "," + lang_exclude_sparql
 
+# Q159 = Russia, Q15180 = Soviet Union
+country_qid_exclude = ['Q159', 'Q15180']
+
 for i in range(0,numsteps):
 	print('Starting at ' + str(i*stepsize))
 
@@ -80,8 +83,33 @@ for i in range(0,numsteps):
 		qid = page.title()
 		print("\nhttps://www.wikidata.org/wiki/" + qid)
 
+		skip = False
 		# Check for excluded P27 values
-		
+		try:
+			p27 = item_dict['claims']['P27']
+			for clm in p27:
+				if clm.getTarget().title() in country_qid_exclude:
+					skip = True
+		except:
+			null = 0
+		if skip == True:
+			input('Hi')
+			continue
+
+		# Check for excluded P27 values within P19 places of birth
+		try:
+			p27 = item_dict['claims']['P19']
+			for clm in p27:
+				val = clm.getTarget()
+				p27 = val['claims']['P27']
+				for clm in p27:
+					if clm.getTarget().title() in country_qid_exclude:
+						skip = True
+		except:
+			null = 0
+		if skip == True:
+			input('Hi')
+			continue
 
 		# Check that it hasn't already got an en label
 		try:
