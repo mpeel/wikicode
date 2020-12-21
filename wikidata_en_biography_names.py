@@ -33,7 +33,7 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 
-langs = 'de,fr,es,pt,nl,it,sv,pl'
+langs = 'de,fr,es,pt,nl,it,sv'
 lang_list = langs.split(',')
 lang_sparql = ''
 for l in lang_list:
