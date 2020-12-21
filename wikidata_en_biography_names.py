@@ -40,6 +40,14 @@ for l in lang_list:
 	lang_sparql = lang_sparql + "'"+l+"',"
 lang_sparql = lang_sparql[:-1]
 
+langs_exclude = 'en,ru'
+lang_list_exclude = langs_exclude.split(',')
+lang_exclude_sparql = ''
+for l in lang_list_exclude:
+	lang_exclude_sparql = lang_exclude_sparql + "'"+l+"',"
+lang_exclude_sparql = lang_exclude_sparql[:-1]
+
+lang_combine_sparql = lang_sparql + "," + lang_exclude_sparql
 
 for i in range(0,numsteps):
 	print('Starting at ' + str(i*stepsize))
@@ -52,10 +60,10 @@ for i in range(0,numsteps):
 	"} AS %items\n"\
 	"WHERE {\n"\
 	"  INCLUDE %items .\n"\
-	"    SERVICE wikibase:label { bd:serviceParam wikibase:language \"nl,fr,en,de,it,es,no,pt\". }\n"\
+	"    SERVICE wikibase:label { bd:serviceParam wikibase:language \""+lang_combine_sparql+"\". }\n"\
 	"    FILTER(NOT EXISTS {\n"\
 	"        ?item rdfs:label ?lang_label.\n"\
-	"        FILTER(LANG(?lang_label) = \"en\")\n"\
+	"        FILTER(LANG(?lang_label) in ("+lang_exclude_sparql+"))\n"\
 	"    })\n"\
 	"    FILTER(EXISTS {\n"\
 	"        ?item rdfs:label ?lang_label.\n"\
@@ -71,6 +79,9 @@ for i in range(0,numsteps):
 		item_dict = page.get()
 		qid = page.title()
 		print("\nhttps://www.wikidata.org/wiki/" + qid)
+
+		# Check for excluded P27 values
+		
 
 		# Check that it hasn't already got an en label
 		try:
