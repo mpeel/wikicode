@@ -219,7 +219,10 @@ for targetcat in targetcats:
 							data = {'sitelinks': [{'site': 'commonswiki', 'title': commonscat}]}
 							print('http://www.wikidata.org/wiki/'+qid)
 							print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
-							text = input("Save? ")
+							if debug:
+								text = input("Save? ")
+							else:
+								text = 'y'
 							if text != 'n':
 								try:
 									wd_item.editEntity(data, summary=u'Add commons sitelink')
