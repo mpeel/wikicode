@@ -19,28 +19,33 @@ maximum = 4000000
 numsteps = int(maximum / stepsize)
 debug = True
 
-# Test function from https://stackoverflow.com/questions/27084617/detect-strings-with-non-english-characters-in-python
-# Should probably tweak this to include é but not ł.
+langs = 'en-ca,en-gb,de,fr,es,pt,nl,it,sv,af,an,ast,bar,bm,br,ca,co,cs,cy,da,de-at,de-ch,eo,et,eu,fi,frc,frp,fur,ga,gd,gl,gsw,hr,ia,id,ie,io,jam,kab,kg,lb,li,lij,lt,mg,mi,nap,nb,nds,nds-nl,nn,nrm,min,ms,oc,pap,pcd,pms,prg,pt-br,rgn,rm,ro,sc,scn,sco,sk,sl,sq,sr-el,sw,tr,vec,vi,vls,vmf,vo,wa,wo,zu'
+langs_exclude = 'en,ru'
+# Q159 = Russia, Q15180 = Soviet Union, Q17=Japan
+country_qid_exclude = ['Q159', 'Q15180','Q17']
+
 def isEnglish(s):
 	try:
-		s.encode(encoding='utf-8').decode('ascii')
-	except UnicodeDecodeError:
+		s.encode(u'latin1')
+	except UnicodeEncodeError:
 		return False
 	else:
-		return True
+		try:
+			s.encode(u'latin2')
+		except UnicodeEncodeError:
+			return False
+		else:
+			return True
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
-commons = pywikibot.Site('commons', 'commons')
 
-langs = 'de,fr,es,pt,nl,it,sv'
 lang_list = langs.split(',')
 lang_sparql = ''
 for l in lang_list:
 	lang_sparql = lang_sparql + "'"+l+"',"
 lang_sparql = lang_sparql[:-1]
 
-langs_exclude = 'en,ru'
 lang_list_exclude = langs_exclude.split(',')
 lang_exclude_sparql = ''
 for l in lang_list_exclude:
@@ -48,9 +53,6 @@ for l in lang_list_exclude:
 lang_exclude_sparql = lang_exclude_sparql[:-1]
 
 lang_combine_sparql = lang_sparql + "," + lang_exclude_sparql
-
-# Q159 = Russia, Q15180 = Soviet Union
-country_qid_exclude = ['Q159', 'Q15180']
 
 for i in range(0,numsteps):
 	print('Starting at ' + str(i*stepsize))
