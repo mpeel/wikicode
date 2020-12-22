@@ -11,7 +11,6 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
-from database_login import *
 from pibot_functions import *
 import time
 
