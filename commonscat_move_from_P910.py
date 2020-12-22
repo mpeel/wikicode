@@ -138,9 +138,9 @@ for i in range(0,numsteps):
                 # text = raw_input("Save? ")
                 # if text == 'y':
                 print('Saving!')
-                page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item (' + str(wd_id) + ')')
+                page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item ([[' + str(wd_id) + ']])')
                 time.sleep(5)
-                val.editEntity(data, summary=u'Moving commons category sitelink from main item (' + str(qid) + ')')
+                val.editEntity(data, summary=u'Moving commons category sitelink from main item ([[' + str(qid) + ']])')
                 nummodified += 1
             except:
                 print('Edit failed!')
