@@ -15,7 +15,7 @@ import urllib
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-maxnum = 5000
+maxnum = 100
 j = 0
 debug = False
 
@@ -77,7 +77,7 @@ for i in range(0,100):
 			target = ''
 			test = 'n'
 			for parentcat in targetcat.categories():
-				if target == '' and 'view' not in parentcat.title().lower():
+				if target == '' and 'view' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower():
 					try:
 						wd_item = pywikibot.ItemPage.fromPage(parentcat)
 						item_dict = wd_item.get()
