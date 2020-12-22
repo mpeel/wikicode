@@ -15,7 +15,7 @@ import urllib
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-maxnum = 100
+maxnum = 5000
 j = 0
 debug = False
 
@@ -65,7 +65,10 @@ for searchstring in searchstrings:
 	for i in range(0,100):
 		offset += step
 		# View of, Views of, View from, Views from
-		candidates = search_entities(commons, searchstring,limit=step,offset=offset)
+		try:
+			candidates = search_entities(commons, searchstring,limit=step,offset=offset)
+		except:
+			continue
 		for result in candidates['query']['search']:
 			targetcat = pywikibot.Page(commons, str(result['title']))
 			print('https://commons.wikimedia.org/wiki/'+targetcat.title().replace(" ", "_"))
@@ -80,7 +83,7 @@ for searchstring in searchstrings:
 				target = ''
 				test = 'n'
 				for parentcat in targetcat.categories():
-					if target == '' and 'view' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower():
+					if target == '' and 'view' not in parentcat.title().lower() and 'wikidata' not in parentcat.title().lower() and 'page' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower():
 						try:
 							wd_item = pywikibot.ItemPage.fromPage(parentcat)
 							item_dict = wd_item.get()
