@@ -209,9 +209,9 @@ for targetcat in targetcats:
 							text = commonscat_page.get()
 						except:
 							print('Commons category does not exist - fix that?')
-							last_check = check_if_category_has_contents(id_val,site=commons)
-							if last_check:
-								continue
+							# last_check = check_if_category_has_contents(id_val,site=commons)
+							# if last_check:
+							continue
 
 						if '{{Disambig' not in text and '{{disambig' not in text and '{{Category redirect' not in text and '{{category redirect' not in text:
 
