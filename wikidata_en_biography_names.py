@@ -35,7 +35,10 @@ def isEnglish(s):
 		except UnicodeEncodeError:
 			return False
 		else:
-			return True
+			if any(char.isdigit() for char in s):
+				return False
+			else:
+				return True
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
