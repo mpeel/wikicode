@@ -60,12 +60,31 @@ for page in pages:
 	coordinate = False
 	try:
 		P625 = item_dict['claims']['P625']
-		for clm in P625:
-			coordinate = clm.getTarget()
-			print(coordinate)
-			print(coordinate.lat)
 	except:
-		null = 0
+		P625 = ''
+	print(P625)
+	if P625 != '':
+		for clm in P625:
+			try:
+				coordinate = clm.getTarget()
+				print(coordinate)
+				print(coordinate.lat)
+			except:
+				P625 = 'Bad'
+	if P625 == 'Bad':
+		print('Problem with coordinates')
+		continue
+
+	count = 0
+	for template in page.templatesWithParams():
+		for tpl in coord_templates:
+			if tpl in template[0].title():
+				count += 1
+	print(count)
+	if count != 1:
+		print('Wrong number of coordinate templates (' + str(count) + '), skipping')
+		continue
+
 	done = False
 	for template in page.templatesWithParams():
 		for tpl in coord_templates:

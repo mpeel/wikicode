@@ -63,6 +63,7 @@ globe_item = pywikibot.ItemPage(repo, 'Q2')
 
 coord_templates = ['Object location']
 debug = True
+remove_from_commons = False
 
 template = pywikibot.Page(commons, 'Template:'+coord_templates[0])
 targetcats = template.embeddedin(namespaces='14')
@@ -90,12 +91,30 @@ for cat in targetcats:
 	coordinate = False
 	try:
 		P625 = item_dict['claims']['P625']
-		for clm in P625:
-			coordinate = clm.getTarget()
-			print(coordinate)
-			print(coordinate.lat)
 	except:
-		null = 0
+		P625 = ''
+	print(P625)
+	if P625 != '':
+		for clm in P625:
+			try:
+				coordinate = clm.getTarget()
+				print(coordinate)
+				print(coordinate.lat)
+			except:
+				P625 = 'Bad'
+	if P625 == 'Bad':
+		print('Problem with coordinates')
+		continue
+
+	count = 0
+	for template in cat.templatesWithParams():
+		for tpl in coord_templates:
+			if tpl in template[0].title():
+				count += 1
+	if count != 1:
+		print('Wrong number of coordinate templates (' + str(count) + '), skipping')
+		continue
+
 	done = False
 	for template in cat.templatesWithParams():
 		for tpl in coord_templates:
@@ -120,7 +139,7 @@ for cat in targetcats:
 						test1 = check_match(lat, lon, precision, coordinate.lat, coordinate.lon, coordinate.precision)
 					else:
 						test1 = True
-					if test1:
+					if test1 and remove_from_commons:
 						try:
 							template_string = '{{'+tpl+cat.text.split('{{'+tpl)[1].split('}}')[0]+"}}"
 							print(template_string)
