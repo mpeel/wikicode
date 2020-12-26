@@ -49,7 +49,7 @@ def check_match(lat1, lon1, prec1, lat2, lon2, prec2):
 	distance = 6373.0 * c
 	print(distance)
 	# print(6373.0*prec)
-	if distance < 100:
+	if distance < 10:
 		return True
 	else:
 		return False
