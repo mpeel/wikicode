@@ -75,6 +75,24 @@ for page in pages:
 		print('Problem with coordinates')
 		continue
 
+	ishuman = False
+	try:
+		P31 = item_dict['claims']['P31']
+	except:
+		null = 0
+	print(P625)
+	if P31 != '':
+		for clm in P31:
+			# print(clm)
+			# print(clm.getTarget().title())
+			if clm.getTarget().title() == 'Q5':
+				ishuman = True
+	if ishuman:
+		print('Not importing coordinate for a human')
+		continue
+
+	# exit()
+
 	count = 0
 	for template in page.templatesWithParams():
 		for tpl in coord_templates:
