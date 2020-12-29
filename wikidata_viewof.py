@@ -16,9 +16,9 @@ import urllib
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-maxnum = 5000
+maxnum = 100
 j = 0
-debug = True
+debug = False
 
 def search_entities(site, itemtitle,limit=100,offset=0):
 	 params = { 'action' :'query', 
@@ -61,7 +61,7 @@ def newitem(category, items,cat=True):
 searchstrings = ['":Exterior_of"', '":Interior_of"', '":View_of"','":Views_of"','":View_from"','":Views_from"']
 properties = ['P8596', 'P7561', 'P8989','P8989','P8933','P8933']
 combines = ['Q1385033','Q2998430','Q2075301','Q2075301','Q2075301','Q2075301']
-for k in range(1,len(searchstrings)):
+for k in range(0,len(searchstrings)):
 	offset = 0
 	step = 100
 	for i in range(0,100):
