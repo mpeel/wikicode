@@ -15,9 +15,9 @@ import urllib
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-maxnum = 5000
+maxnum = 100
 j = 0
-debug = True
+debug = False
 
 def search_entities(site, itemtitle,limit=100,offset=0):
 	 params = { 'action' :'query', 
