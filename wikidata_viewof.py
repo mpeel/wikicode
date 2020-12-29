@@ -61,7 +61,7 @@ def newitem(category, items,cat=True):
 searchstrings = ['":Exterior_of"', '":Interior_of"', '":View_of"','":Views_of"','":View_from"','":Views_from"']
 properties = ['P8596', 'P7561', 'P8989','P8989','P8933','P8933']
 combines = ['Q1385033','Q2998430','Q2075301','Q2075301','Q2075301','Q2075301']
-for i in range(0,len(searchstrings)):
+for i in range(1,len(searchstrings)):
 	offset = 0
 	step = 100
 	for i in range(0,100):
