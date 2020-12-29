@@ -83,6 +83,9 @@ for i in range(0,len(searchstrings)):
 				target = ''
 				test = 'n'
 
+				# Skip '.. by ..' categories
+				if ' by ' in targetcat.title():
+					continue
 				# Skip 'of ... from' categories
 				if i < 2 and 'from' in targetcat.title():
 					continue
