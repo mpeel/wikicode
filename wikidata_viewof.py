@@ -3,6 +3,7 @@
 # Seach for Commons 'views from' categories and create new items for them
 # 12 December 2020 - started
 # 17 December 2020 - bot version
+# 29 December 2020 - adapt to cover more properties
 from __future__ import unicode_literals
 
 import pywikibot
@@ -17,7 +18,7 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 maxnum = 5000
 j = 0
-debug = False
+debug = True
 
 def search_entities(site, itemtitle,limit=100,offset=0):
 	 params = { 'action' :'query', 
@@ -57,8 +58,8 @@ def newitem(category, items,cat=True):
 			print("That didn't work")
 	return candidate_item
 
-searchstrings = ['":View_of"','":Views_of"','":View_from"','":Views_from"']
-properties = ['P8989','P8989','P8933','P8933']
+searchstrings = ['":Exterior_of"', '":Interior_of"', '":View_of"','":Views_of"','":View_from"','":Views_from"']
+properties = ['P8596', 'P7561', 'P8989','P8989','P8933','P8933']
 for i in range(0,len(searchstrings)):
 	offset = 0
 	step = 100
@@ -87,7 +88,7 @@ for i in range(0,len(searchstrings)):
 				if ' by ' in targetcat.title():
 					continue
 				# Skip 'of ... from' categories
-				if i < 2 and 'from' in targetcat.title():
+				if i < 4 and 'from' in targetcat.title():
 					continue
 
 				for parentcat in targetcat.categories():
