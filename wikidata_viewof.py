@@ -15,7 +15,7 @@ import urllib
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-maxnum = 100
+maxnum = 5000
 j = 0
 debug = False
 
