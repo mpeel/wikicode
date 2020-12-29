@@ -17,7 +17,7 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 maxnum = 5000
 j = 0
-debug = False
+debug = True
 
 def search_entities(site, itemtitle,limit=100,offset=0):
 	 params = { 'action' :'query', 
@@ -57,22 +57,22 @@ def newitem(category, items,cat=True):
 			print("That didn't work")
 	return candidate_item
 
-searchstrings = ['":View_from"','":Views_from"']
-
-for searchstring in searchstrings:
+searchstrings = ['":View_of"','":Views_of"','":View_from"','":Views_from"']
+properties = ['P8989','P8989','P8933','P8933']
+for i in range(0,len(searchstrings)):
 	offset = 0
 	step = 100
 	for i in range(0,100):
 		offset += step
 		# View of, Views of, View from, Views from
 		try:
-			candidates = search_entities(commons, searchstring,limit=step,offset=offset)
+			candidates = search_entities(commons, searchstrings[i],limit=step,offset=offset)
 		except:
 			continue
 		for result in candidates['query']['search']:
 			targetcat = pywikibot.Page(commons, str(result['title']))
 			print('https://commons.wikimedia.org/wiki/'+targetcat.title().replace(" ", "_"))
-			if searchstring.replace("_"," ").replace('"','') in targetcat.title():
+			if searchstrings[i].replace("_"," ").replace('"','') in targetcat.title():
 				try:
 					wd_item = pywikibot.ItemPage.fromPage(targetcat)
 					item_dict = wd_item.get()
@@ -125,9 +125,9 @@ for searchstring in searchstrings:
 					# 	test = 'y'
 					# if test == 'y':
 					new_item = newitem(targetcat, items)
-					newclaim = pywikibot.Claim(repo, 'P8933')
+					newclaim = pywikibot.Claim(repo, properties[i])
 					newclaim.setTarget(new_item)
-					wd_item.addClaim(newclaim, summary=u'Setting P8933 value')
+					wd_item.addClaim(newclaim, summary=u'Setting '+properties[i]+' value')
 					j += 1
 					print(j)
 
