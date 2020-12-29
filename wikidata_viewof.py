@@ -82,6 +82,11 @@ for i in range(0,len(searchstrings)):
 					null = 0
 				target = ''
 				test = 'n'
+
+				# Skip 'of ... from' categories
+				if i < 2 and 'from' in targetcat.title():
+					continue
+
 				for parentcat in targetcat.categories():
 					if target == '' and 'view' not in parentcat.title().lower() and 'wikidata' not in parentcat.title().lower() and 'page' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower():
 						try:
