@@ -2,23 +2,19 @@
 # -*- coding: utf-8  -*-
 # Create new Wikidata items for enwp articles and categories
 # Mike Peel     03-Jan-2021      v1 - start
+# Mike Peel		05-Jan-2021		 v2 - expand based on newitem.py
 
 import pywikibot
-import numpy as np
-import time
-import string
 from pywikibot import pagegenerators
 from pywikibot.data import api
-import urllib
-from pibot_functions import *
-from wir_newpages import *
+import datetime
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
-wikipedias = [['en','Category']]
-
-maxnum = 100000
+wikipedias = ['en']
+templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850']
+maxnum = 100
 nummodified = 0
 days_since_last_edit = 1.0
 days_since_last_edit_but_search = 7.0
@@ -35,23 +31,69 @@ def search_entities(site, itemtitle):
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
 
-for settings in wikipedias:
-	prefix = settings[0]
+
+for prefix in wikipedias:
 	wikipedia = pywikibot.Site(prefix, 'wikipedia')
+
+	# Set up the list of templates to skip
+	# Adapted from https://gerrit.wikimedia.org/g/pywikibot/core/+/HEAD/scripts/newitem.py
+	skipping_templates = set()
+	for item in templates_to_skip:
+		template = wikipedia.page_from_repository(item)
+		if template is None:
+			continue
+		skipping_templates.add(template)
+		# also add redirect templates
+		skipping_templates.update(template.getReferences(follow_redirects=False, with_template_inclusion=False, filter_redirects=True, namespaces=wikipedia.namespaces.TEMPLATE))
+		print(template.title())
+
+	# Start running through unconnected pages
 	pages = wikipedia.querypage('UnconnectedPages')
-
 	for page in pages:
-		# Articles and categories only
-		if ':' in page.title() and settings[1]+':' not in page.title():
-			continue
-		if settings[1] not in page.title():
-			continue
+		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
+		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
+		## Part 1 - quick things to check
+
+		# Articles and categories only
+		if page.namespace() != wikipedia.namespaces.MAIN and page.namespace() != wikipedia.namespaces.CATEGORY:
+			# print('bad namespace')
+			continue
 		# Exclude redirects
 		if page.isRedirectPage():
+			# print('is redirect')
+			continue
+		if page.isCategoryRedirect():
+			# print('is redirect')
 			continue
 
+		## Part 2 - parse the page info
 		print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
+
+		# Check to see if it contains templates we want to avoid
+		trip = 0
+		for template, _ in page.templatesWithParams():
+			if template in skipping_templates:
+				trip = template.title()
+		if trip != 0:
+			print('Page contains ' + str(trip) + ', skipping')
+			continue
+
+		# Check for the last edit time
+		lastedited = page.editTime()
+		lastedited_time = (datetime.datetime.now() - lastedited).seconds/(60*60*24)
+		if lastedited_time < days_since_last_edit:
+			print('Recently edited ('+str(lastedited_time)+')')
+			continue
+
+		# Check for the creation time
+		created = page.oldest_revision.timestamp
+		created_time = (datetime.datetime.now() - created).seconds/(60*60*24)
+		if created_time < days_since_last_edit:
+			print('Recently created ('+str(created_time)+')')
+			continue
+
+		## Part 3 - look up more information
 
 		# Check if we have a Wikidata item already
 		try:
@@ -63,20 +105,13 @@ for settings in wikipedias:
 		except:
 			print(page.title() + ' - no page found')
 
-		# Check for the last edit time
-		lastedited = page.editTime()
-		lastedited_time = (datetime.datetime.now() - lastedited).seconds/(60*60*24)
-		if lastedited_time < days_since_last_edit:
-			print('Recently edited ('+str(lastedited_time)+')')
-			continue
-
-		# Check for the creation time
-		edits = page.revisions(reverse=True,total=1)
-		for edit in edits:
-			# print(edit)
-			difftime = datetime.datetime.now() - edit.timestamp
-			if difftime.seconds/(60*60*24) < days_since_creation:
-				print('Recently created ('+str(difftime.seconds/(60*60*24))+')')
+		# If we have a category, make sure it isn't empty
+		if page.namespace() == wikipedia.namespaces.CATEGORY:
+			if page.isEmptyCategory():
+				# print('Is empty')
+				continue
+			if page.isHiddenCategory():
+				# print('Is hidden')
 				continue
 
 		# See if search returns any items
@@ -85,6 +120,8 @@ for settings in wikipedias:
 			if lastedited_time < days_since_last_edit_but_search:
 				print('Recently edited with search results ('+str(lastedited_time)+')')
 				continue
+
+		## Part 4 - editing
 
 		# If we're here, then create a new item
 		data = {'labels': {prefix: page.title()}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
@@ -96,11 +133,27 @@ for settings in wikipedias:
 			new_item = pywikibot.ItemPage(repo)
 			new_item.editEntity(data, summary="Creating item from " + prefix +"wiki")
 			nummodified += 1
-			if settings[1] in page.title():
+			if page.namespace() == wikipedia.namespaces.CATEGORY:
 				# We have a category, also add a P31 value
 				claim = pywikibot.Claim(repo,'P31')
-				claim.setTarget(pywikibot.ItemPage(repo, 'Q4167836'))
+				if page.isDisambig():
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q15407973')) # Wikimedia disambiguation category
+				else:
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q4167836')) # Wikimedia category
 				new_item.addClaim(claim, summary='Category item')
+			else:
+				if page.isDisambig():
+					claim = pywikibot.Claim(repo,'P31')
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q4167410')) # Disambiguation page
+					new_item.addClaim(claim, summary='Disambig page')
+
+		## Part 5 - tidy up
+
+		# Touch the page to force an update
+		try:
+			page.touch()
+		except:
+			null = 0
 
 		# Cut-off at a maximum number of edits	
 		print("")
