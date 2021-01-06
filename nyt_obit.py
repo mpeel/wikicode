@@ -49,7 +49,7 @@ for item in entries:
     nameattempt = nameattempt.strip()
     print(nameattempt)
     # Reformat the date
-    date = datetime.datetime.strptime(item['published'], '%a, %d %b %Y %H:%M:%S %Z').strftime('%d %b %Y')
+    date = datetime.datetime.strptime(item['published'].replace('+0000','').strip(), '%a, %d %b %Y %H:%M:%S').strftime('%d %b %Y')
 
     # Let's see if we can fetch the page from Wikidata
     if nameattempt != '':
