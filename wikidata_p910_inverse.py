@@ -19,7 +19,7 @@ nummodified = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-debug = 0
+debug = 1
 attempts = 0
 count = 0
 
@@ -71,6 +71,15 @@ for option in range(0,2):
 		qid = page.title()
 		print("\nhttp://www.wikidata.org/wiki/" + qid)
 		# print(item_dict)
+		trip = 0
+		try:
+			if 'Property' in item_dict['labels']['enwiki']:
+				trip = 1
+		except:
+			null = 0
+		if trip:
+			continue
+
 		try:
 			p301 = item_dict['claims']['P910']
 		except:
