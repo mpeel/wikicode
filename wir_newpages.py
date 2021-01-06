@@ -580,6 +580,12 @@ def main():
 										break
 									# test = input('Continue?')
 									addBiographyClaims(repo=repo, wikisite=wikisite, item=itemfound, page=page, lang=lang)
+									# Touch the page to force an update
+									try:
+										page.touch()
+									except:
+										null = 0
+
 									break
 						else:
 							print("SKIP [[" + lang + ":" + page.title() + "]] - [[:d:" + itemfound.title() + "]] has no birthdate")
@@ -599,6 +605,11 @@ def main():
 						print("Error adding sitelink. Skiping.")
 						break
 					addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
+					# Touch the page to force an update
+					try:
+						page.touch()
+					except:
+						null = 0
 					# exit()
 
 if __name__ == "__main__":

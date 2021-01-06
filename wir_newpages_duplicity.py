@@ -132,6 +132,11 @@ for lang in langs:
 									break
 								# test = input('Continue?')
 								addBiographyClaims(repo=repo, wikisite=wikisite, item=itemfound, page=page, lang=lang)
+								# Touch the page to force an update
+								try:
+									page.touch()
+								except:
+									null = 0
 								break
 			
 			#no item found, or no candidates are useful
@@ -149,4 +154,9 @@ for lang in langs:
 					print("Error adding sitelink. Skiping.")
 					break
 				addBiographyClaims(repo=repo, wikisite=wikisite, item=newitem, page=page, lang=lang)
+				# Touch the page to force an update
+				try:
+					page.touch()
+				except:
+					null = 0
 				# exit()
