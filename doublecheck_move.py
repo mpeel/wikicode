@@ -35,7 +35,7 @@ for targetcat in targetcats:
 			print(targetcat[0].title())
 			seen.append(targetcat[0].title())
 		elif "Moving commons category sitelink to category item" in targetcat[3]:
-			qid = targetcat[3].split('(')[1].split(')')[0]
+			qid = targetcat[3].split('(')[1].split(')')[0].replace('[','').replace(']','')
 			print(qid)
 			if qid not in seen:
 				print('There is a problem')
