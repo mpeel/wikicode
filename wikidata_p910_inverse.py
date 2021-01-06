@@ -19,7 +19,7 @@ nummodified = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-debug = 1
+debug = 0
 attempts = 0
 count = 0
 
