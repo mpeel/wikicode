@@ -72,7 +72,7 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 targetcats = ['Commons category link is the pagename‎']
 # targetcats = ['Commons category link is defined as the pagename‎']
 # targetcats = ['Commons category link is locally defined‎']
-targetcats = ['Commons category link is the pagename‎','Commons category link is defined as the pagename‎','Commons category link is locally defined‎']
+targetcats = ['Commons category link is the pagename‎','Commons category link is defined as the pagename‎','Commons category link is locally defined‎','Category:Commons category link is on Wikidata using P373']
 
 for targetcat in targetcats:
 	for categories in range(0,2):
@@ -219,7 +219,7 @@ for targetcat in targetcats:
 
 					# Skip if there is already a sitelink on Wikidata
 					try:
-						sitelink = item_dict['sitelinks'][enwp_site]
+						sitelink = get_sitelink_title(item_dict['sitelinks'][enwp_site])
 						sitelink_check = 1
 					except:
 						sitelink_check = 0

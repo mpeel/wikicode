@@ -65,8 +65,8 @@ maxnum = 100000
 nummodified = 0
 
 debug = 1
-trip = 0
-newitems = 1
+trip = 1
+newitems = 0
 
 targetcats = ['Category:Articles_without_Wikidata_item']
 # Also see https://www.wikidata.org/wiki/Wikidata:Metrics
@@ -76,8 +76,8 @@ lang = 'en'
 # for categories in range(0,2):
 for targetcat in targetcats:
 	cat = pywikibot.Category(enwp, targetcat)
-	pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
-	# pages = enwp.querypage('UnconnectedPages')
+	# pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
+	pages = enwp.querypage('UnconnectedPages')
 	for page in pages:
 
 		# Optional skip-ahead to resume broken runs
@@ -161,7 +161,7 @@ for targetcat in targetcats:
 				# print(item_dict)
 				sitelink = ''
 				try:
-					sitelink = item_dict['sitelinks'][enwp_site]
+					sitelink = get_sitelink_title(item_dict['sitelinks'][enwp_site])
 				except:
 					null = 0
 				if sitelink == '':

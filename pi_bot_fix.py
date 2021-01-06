@@ -14,6 +14,7 @@ from pywikibot import pagegenerators
 import urllib
 import pprint
 import csv
+from pibot_functions import *
 
 editsummary = 'Add commons sitelink based on QID on Commons'
 seen = []
@@ -58,7 +59,7 @@ for targetcat in targetcats:
 
 			sitelink = ''
 			try:
-				sitelink = target_dict['sitelinks']['commonswiki']
+				sitelink = get_sitelink_title(target_dict['sitelinks']['commonswiki'])
 			except:
 				print 'No sitelink'
 
@@ -79,7 +80,7 @@ for targetcat in targetcats:
 						# print revision_page
 						# revision_dict = revision_page.get()
 						# pprint(revision_dict)
-						#sitelink2 = revision_page['sitelinks']['commonswiki']
+						#sitelink2 = get_sitelink_title(revision_page['sitelinks']['commonswiki'])
 						# print revision_page
 						try:
 							sitelink2 = revision_page.split('"site":"commonswiki","title":"')[1]

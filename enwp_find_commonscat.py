@@ -13,6 +13,7 @@ from pywikibot import pagegenerators
 import urllib
 from database_login import *
 import time
+from pibot_functions import *
 
 maxnum = 10000000
 nummodified = 0
@@ -29,7 +30,7 @@ trip = 1
 # New style of category walker
 numchecked = 0
 catschecked = 0
-do_articles = True
+do_articles = False
 do_subcats = True
 
 targetcats = []
@@ -40,7 +41,7 @@ targetcats = []
 #targetcats = ['Categoría:Canarias']
 # targetcats = ['Category:2019–20 coronavirus pandemic']
 # targetcats = ['Category:Commons category link is on Wikidata using P373']
-targetcats = ['Category:Commons category link is locally defined']
+# targetcats = ['Category:Commons category link is locally defined']
 # targetcats = ['Category:Commons link is the pagename','Category:Commons link is defined as the pagename']
 # targetcats = ['Category:Commons link is locally defined']
 targettemplates = []
@@ -78,7 +79,7 @@ def findmatch(page):
 
 	# Double-check that there is no a sitelink on Wikidata
 	try:
-		sitelink = item_dict['sitelinks']['commonswiki']
+		sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 		sitelink_check = 1
 	except:
 		sitelink_check = 0
@@ -205,8 +206,8 @@ elif len(targettemplates) > 0:
 else:
 	# Pick random categories
 	while nummodified < maxnum:
-		# targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='14')
-		targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='0')
+		targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='14')
+		# targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='0')
 		for target in targets:
 			print(target.title())
 			nummodified += findmatch(target)

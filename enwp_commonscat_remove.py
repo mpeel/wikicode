@@ -43,7 +43,7 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-# targetcats = ['Category:Commons category link is on Wikidata using P373']#'Category:Commons category link is locally defined']#[]#,'Category:Commons category link is locally defined‎',
+targetcats = ['Category:Commons category link is on Wikidata using P373']#'Category:Commons category link is locally defined']#[]#,'Category:Commons category link is locally defined‎',
 # targetcats = ['Category:Commons category link is defined as the pagename']
 targetcats = ['Commons category link is locally defined']
 
@@ -57,20 +57,20 @@ for categories in range(0,2):
 
 		# todo = []
 		# for page in pages:
-			# todo.append(page.title())
+		# 	todo.append(page.title())
 
 		# random.shuffle(todo)
-		# # for item in sorted(todo,reverse=True):
-		# for item in todo:
+		# for item in sorted(todo,reverse=True):
 		# 	if categories == 0: # Don't change this as it will always look at commons categories
 		# 		page = pywikibot.Category(enwp,item)
 		# 	else:
 		# 		page = pywikibot.Page(enwp,item)
 
+		# for item in todo:
 		for page in pages:
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Altstadt" in page.title():
+				if "Cabdella Lakes" in page.title():
 					trip = 1
 				else:
 					print(page.title())
@@ -139,7 +139,7 @@ for categories in range(0,2):
 
 				# Double-check that there is a sitelink on Wikidata
 				try:
-					sitelink = item_dict['sitelinks']['commonswiki']
+					sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 					sitelink_check = 1
 				except:
 					sitelink_check = 0
@@ -252,7 +252,7 @@ for categories in range(0,2):
 				save = 'n'
 				if numtemplates != 1:
 					print('Number of commons links: ' + str(numtemplates))
-				savemessage = "Removing misplaced Commons category link ([[:commons:Category:"+str(id_val)+']])'
+				savemessage = "Removing Commons category link that does not match this article ([[:commons:Category:"+str(id_val)+']])'
 				commonscat = False
 				test = 'n'
 				if debug == 1:
@@ -262,7 +262,7 @@ for categories in range(0,2):
 						commonscat_page = pywikibot.Page(commons, 'Category:'+id_val)
 						commonscat_item = pywikibot.ItemPage.fromPage(commonscat_page)
 						commonscat_item_dict = commonscat_item.get()
-						commonscat = commonscat_item_dict['sitelinks']['enwiki']
+						commonscat = get_sitelink_title(commonscat_item_dict['sitelinks'][prefix+'wiki'])
 					except:
 						commonscat = ''
 					try:
@@ -274,7 +274,7 @@ for categories in range(0,2):
 							qid = wd_item.title()
 							print(wd_item.title())
 							p401_followed = True
-							commonscat = commonscat_item_dict['sitelinks']['enwiki']
+							commonscat = get_sitelink_title(commonscat_item_dict['sitelinks'][prefix+'wiki'])
 					except:
 						null = 0
 					if commonscat == page.title():
@@ -284,7 +284,7 @@ for categories in range(0,2):
 						# print('Is a redirect')
 						# continue
 					if commonscat != '':
-						print('https://en.wikipedia.org/wiki/'+commonscat.replace(' ','_'))
+						print('https://'+prefix+'.wikipedia.org/wiki/'+commonscat.replace(' ','_'))
 						savemessage = savemessage + ' (Commons category belongs at [[' + commonscat.replace(' ','_') + ']])'
 						# test2 = input('Use this category?')
 						# if test2 != 'n':
@@ -307,10 +307,10 @@ for categories in range(0,2):
 						if len(test) < 5:
 							continue
 
-					nummodified += 1
 					print(savemessage)
 					check = input('OK?')
 					if check != 'n':
+						nummodified += 1
 						page.save(savemessage,minor=False)
 					continue
 

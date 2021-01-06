@@ -6,6 +6,7 @@
 import pywikibot
 import numpy as np
 from pywikibot import pagegenerators
+from pibot_functions import *
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()
@@ -57,11 +58,11 @@ for page in generator:
 
     # Check for sitelinks
     try:
-        sitelink = item_dict['sitelinks']['commonswiki']
+        sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
     except:
         sitelink = ''
     try:
-        sitelink2 = item_dict2['sitelinks']['commonswiki']
+        sitelink2 = get_sitelink_title(item_dict2['sitelinks']['commonswiki'])
     except:
         sitelink2 = ''
 

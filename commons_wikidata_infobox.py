@@ -11,8 +11,10 @@ import time
 import string
 from pywikibot import pagegenerators
 from pywikibot import textlib
+from pywikibot.data import api
 import urllib
 import csv
+from pibot_functions import *
 
 # import sys
 # sys.setdefaultencoding() does not exist, here!
@@ -34,6 +36,7 @@ usequarry2 = 'quarry_test.csv'
 useimport = '' #'import.csv'
 newstyle = False
 database = False
+usesearch = False
 
 existing_uses = {}
 if database:
@@ -51,6 +54,17 @@ templatestoavoid = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", 
 templatestoremove = ["Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Object location", "object location", 'mainw', "Mainw", "en", "En", "individual aircraft", "Individual aircraft", "Wikidata person", "wikidata person"]
 templatestobebelow = ["Object location", "object location", "Authority control", "authority control", "{{ac", "{{Ac", "On Wikidata", "on Wikidata", "{{Wikidata", "{{wikidata", "In Wikidata", "in Wikidata", "New Testament papyri", "new Testament papyri", "Geogroup", "geogroup", "GeoGroup", "geoGroup", "GeoGroupTemplate", "geoGroupTemplate", "FoP-Brazil"]
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
+
+def search_entities(site, itemtitle,limit=100,offset=0):
+     params = { 'action' :'query', 
+                'list': 'search',
+                'format' : 'json',
+                'srlimit': limit,
+                'sroffset': offset,
+                'srnamespace': 14,
+                'srsearch': itemtitle}
+     request = api.Request(site=site, parameters=params)
+     return request.submit()
 
 # This is the main template
 def addtemplate(target):
@@ -371,7 +385,7 @@ elif usequery:
             for clm in p373:
                 val = clm.getTarget()
                 commonscat = u"Category:" + val
-            # sitelink = item_dict['sitelinks']['commonswiki']
+            # sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
         except:
             print('Something went wrong')
         print(commonscat)
@@ -382,6 +396,21 @@ elif usequery:
         if nummodified >= maxnum:
             print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
+elif usesearch:
+    searchstrings = ['":Exterior_of"', '":Interior_of"', '":View_of"','":Views_of"','":View_from"','":Views_from"']
+    for k in range(0,len(searchstrings)):
+        offset = 0
+        step = 100
+        for i in range(0,100):
+            offset += step
+            # View of, Views of, View from, Views from
+            try:
+                candidates = search_entities(commons, searchstrings[k],limit=step,offset=offset)
+            except:
+                continue
+            for result in candidates['query']['search']:
+                targetcat = pywikibot.Page(commons, str(result['title']))
+                nummodified += addtemplate(targetcat)
 
 
 elif newstyle:

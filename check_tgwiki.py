@@ -12,6 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 import csv
+from pibot_functions import *
 
 import sys
 reload(sys)
@@ -66,7 +67,7 @@ for i in range(0,numsteps):
             continue
         print "\n" + qid
         try:
-            tgwp = item_dict['sitelinks']['tgwiki']
+            tgwp = get_sitelink_title(item_dict['sitelinks']['tgwiki'])
             print tgwp
         except:
             print 'tgwiki sitelink not found!'

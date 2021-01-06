@@ -127,7 +127,7 @@ for run in range(0,2):
 				print('hi3')
 				# See if we have a sitelink we can copy from
 				try:
-					sitelink = item_dict['sitelinks']['commonswiki']
+					sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 				except:
 					sitelink = ''
 				if sitelink != '' and 'Category:' in sitelink:

@@ -11,6 +11,7 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
+from pibot_functions import *
 
 maxnum = 100000
 nummodified = 0
@@ -98,7 +99,7 @@ for i in range(0,numsteps):
 
         # Double-check that we don't already have a sitelink
         try:
-            sitelink = item_dict['sitelinks']['commonswiki']
+            sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
             sitelink_check = 1
         except:
             sitelink_check = 0

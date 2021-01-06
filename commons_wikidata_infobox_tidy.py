@@ -10,6 +10,7 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
+from pibot_functions import *
 
 maxnum = 10000
 nummodified = 0
@@ -76,7 +77,7 @@ def migratecat(targetcat):
         target_text = target_text.replace("{{" + others[i] + " | }}", "")
 
     try:
-        enwp_link = item_dict['sitelinks']['enwiki']
+        enwp_link = get_sitelink_title(item_dict['sitelinks']['enwiki'])
         enwp_link2 = enwp_link[0].lower() + enwp_link[1:]
         for i in range(0,len(enwp)):
             target_text = target_text.replace("{{"+enwp[i]+"|"+enwp_link+"}}", "")

@@ -11,6 +11,7 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
+from pibot_functions import *
 
 maxnum = 10000
 nummodified = 0
@@ -51,7 +52,7 @@ while True:
         item_dict = page.get()
         qid = page.title()
         print("\n" + qid)
-        sitelink = item_dict['sitelinks']['commonswiki']
+        sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
         sitelink_redirect = ""
         commonscat_redirect = ""
         p373 = item_dict['claims']['P373']

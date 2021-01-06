@@ -5,14 +5,27 @@ import dateparser
 from wir_newpages import *
 
 lang = 'en'
-article = 'Disappearance of Crystal Rogers'
+article = 'Lawrence Jackson (photographer)'
+enwp_site = 'enwiki'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
 repo = enwiki.data_repository()  # this is a DataSite object
-
-
 page = pywikibot.Page(enwiki, article)
+
+# Create a new item
+# new_item = pywikibot.ItemPage(repo)
+# new_item.editLabels(labels={"en":page.title()}, summary="Creating item")
+# itemfound = pywikibot.ItemPage(repo, new_item.getID())
+# data = {'sitelinks': [{'site': enwp_site, 'title': page.title()}]}
+# itemfound.editEntity(data, summary=u'Add '+enwp_site+' sitelink')
+
+# itemfound = pywikibot.ItemPage.fromPage(page)
+# addBiographyClaims(repo=repo, wikisite=enwiki, item=itemfound, page=page, lang=lang)
+
+# exit()
+
+# Test code
 print(page.text)
 print(authorIsNewbie(page=page,lang=lang))
 print(pageIsRubbish(page,lang=lang))

@@ -15,6 +15,7 @@ import urllib
 import pprint
 import csv
 import json
+from pibot_functions import *
 
 seen = []
 
@@ -47,7 +48,7 @@ for targetcat in targetcats:
 				target_item2 = pywikibot.ItemPage(repo, qid)
 				target_dict2 = target_item2.get()
 				try:
-					sitelink = target_dict2['sitelinks']['commonswiki']
+					sitelink = get_sitelink_title(target_dict2['sitelinks']['commonswiki'])
 				except:
 					print('No sitelink')
 				if sitelink != '':

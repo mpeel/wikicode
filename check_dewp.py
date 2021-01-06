@@ -12,6 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 import csv
+from pibot_functions import *
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
@@ -36,7 +37,7 @@ for target in targets:
 		continue
 	print("\nhttps://www.wikidata.org/wiki/" + qid)
 	try:
-		sitelink = item_dict['sitelinks'][lang+'wiki']
+		sitelink = get_sitelink_title(item_dict['sitelinks'][lang+'wiki'])
 		print(sitelink)
 	except:
 		print(lang + ' sitelink not found!')

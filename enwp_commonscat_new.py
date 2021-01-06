@@ -30,7 +30,9 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 langcode = 'en'#'pl'
-enwp = pywikibot.Site('en', 'wikipedia')
+# langcode = 'simple'
+# langcode='fr'
+# enwp = pywikibot.Site('en', 'wikipedia')
 # enwp = pywikibot.Site('meta', 'meta')
 # enwp = pywikibot.Site('fr', 'wikipedia')
 # enwp = pywikibot.Site('pt', 'wikipedia')
@@ -38,11 +40,12 @@ enwp = pywikibot.Site('en', 'wikipedia')
 # enwp = pywikibot.Site('sv', 'wikipedia')
 # enwp = pywikibot.Site('nl', 'wikipedia')
 # enwp = pywikibot.Site('pl', 'wikipedia')
-# enwp = pywikibot.Site('simple', 'wikipedia')
+enwp = pywikibot.Site(langcode, 'wikipedia')
 debug = 1
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'commons_category', 'Commons_category', 'commons_cat', 'Commons_cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline','Autres projets','Ccat','ccat','Cc','cc']
-targetcats = ['Category:Commons category link is the pagename', 'Category:Commons category link is defined as the pagename', 'Category:Commons category link is locally defined']
+targetcats = ['Category:Commons category link is the pagename', 'Category:Commons category link is defined as the pagename', 'Category:Commons category link is locally defined','Category:Commons category link is on Wikidata using P373']
+# targetcats = ['Catégorie:Catégorie Commons avec lien local différent sur Wikidata']
 include_cat = True
 
 # templates = ['Commons','Common','Wikicommons','Wikicommon']
@@ -207,10 +210,11 @@ for targetcat in targetcats:
 
 			# Double-check that we don't already have a sitelink
 			try:
-				sitelink = item_dict['sitelinks']['commonswiki']
+				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 				sitelink_check = 1
 			except:
 				sitelink_check = 0
+
 			# Only attempt to do this if there is only one value for P373 and no existing sitelink
 			if id_val != 0 and sitelink_check == 0:
 				if include_cat:

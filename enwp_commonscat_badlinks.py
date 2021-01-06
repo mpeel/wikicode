@@ -40,6 +40,7 @@ debug = 1
 trip = 1
 trip_next = 0
 only_replacements = False
+check_sitelink = True
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
@@ -61,12 +62,50 @@ for categories in range(0,2):
 				trip_next = 0
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Mathematical problem" in page.title():
+				if "Wola Klasztorna" in page.title():
 					trip_next = 1
 					continue
 				else:
 					print(page.title())
 					continue
+
+			# Get the Wikidata item
+			has_item = True
+			try:
+				wd_item = pywikibot.ItemPage.fromPage(page)
+				item_dict = wd_item.get()
+				qid = wd_item.title()
+				print(qid)
+			except:
+				# If that didn't work, go no further
+				print(page.title() + ' - no page found')
+				has_item = False
+			if not has_item:
+				continue
+			sitelink = False
+			try:
+				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
+			except:
+				null = 0
+			# Switch to category item?
+			p910_followed = False
+			try:
+				existing_id = item_dict['claims']['P910']
+				print('P910 exists, following that.')
+				for clm2 in existing_id:
+					wd_item = clm2.getTarget()
+					item_dict = wd_item.get()
+					qid = wd_item.title()
+					print(wd_item.title())
+					p910_followed = True
+			except:
+				null = 0
+			if sitelink and p910_followed:
+				input('Has sitelink in main item, check?')
+			try:
+				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
+			except:
+				null = 0
 
 			# Cut-off at a maximum number of edits	
 			print("")
@@ -176,6 +215,27 @@ for categories in range(0,2):
 							nummodified += 1
 							page.save(savemessage,minor=False)
 							continue
+					if not check_sitelink:
+						if commonscat != sitelink.replace('Category:',''):
+							text = page.text
+							text = text.replace("* " + commonscat_string2a + commonscat_string2+'}}\n', '')
+							text = text.replace("* " + commonscat_string2a + commonscat_string2+'}}', '')
+							text = text.replace("*" + commonscat_string2a + commonscat_string2+'}}\n', '')
+							text = text.replace("*" + commonscat_string2a + commonscat_string2+'}}', '')
+							text = text.replace(commonscat_string2a + commonscat_string2+'}}\n', '')
+							text = text.replace(commonscat_string2a + commonscat_string2+'}}', '')
+							page.text = text
+							test = 'y'
+							savemessage = "Removing Commons category ("+commonscat+") as it does not match the sitelink"
+							print(id_val)
+							print(savemessage)
+							test = input("Continue? ")
+							if test == 'y':
+								nummodified += 1
+								page.save(savemessage,minor=False)
+								continue
+							
+
 				if count > 10:
 					print("There was a problem here")
 					found = False

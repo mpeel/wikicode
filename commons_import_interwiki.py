@@ -14,6 +14,7 @@ import urllib
 import time
 import pprint
 import csv
+from pibot_functions import *
 
 def prettyPrint(variable):
 	pp = pprint.PrettyPrinter(indent=4)
@@ -72,7 +73,7 @@ for language in languages:
 		except:
 			print('P910 not found')
 		try:
-			sitelink = item_dict['sitelinks']['commonswiki']
+			sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 			print('Has sitelink')
 		except:
 			# No existing sitelink found, add the new one

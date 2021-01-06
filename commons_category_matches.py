@@ -8,6 +8,7 @@ import pywikibot
 import mysql.connector
 from pywikibot import pagegenerators
 from database_login import *
+from pibot_functions import *
 
 GET={}
 args=os.getenv("QUERY_STRING").split('&')
@@ -112,7 +113,7 @@ elif action == 'tiles':
 			# print 'skipping'
 			continue
 		try:
-			sitelink = candidate_item_dict['sitelinks']['commonswiki']
+			sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
 		except:
 			#{"type": "files","files": files, "q":myresult[1],'deferred_decision':'yes'}
 			tile = {"id": myresult[0], "sections": [ {"type": "item", "q":myresult[1]}, {"type": "wikipage","title": myresult[2],"wiki": "commonswiki"}, {"type": "text","title": "Categories that this category is in:", "text":categorystring}], "controls": [{"type":"buttons", "entries":[{"type": "green","decision": "yes","label": "Match", "api_action": {'action': "wbsetsitelink", "id": myresult[1],"linksite": "commonswiki","linktitle": myresult[2]}}, {"type": "white", "decision": "skip", "label": "Skip"}, {"type": "blue", "decision": "no", "label": "No"}]}]}

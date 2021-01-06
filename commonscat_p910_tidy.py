@@ -11,6 +11,7 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
+from pibot_functions import *
 
 maxnum = 10000
 nummodified = 0
@@ -65,7 +66,7 @@ for i in range(0,num):
         qid = page.title()
         print("\n" + qid)
         try:
-            sitelink = item_dict['sitelinks']['commonswiki']
+            sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
         except:
             continue
 
@@ -88,7 +89,7 @@ for i in range(0,num):
             # print(p910_id)
 
         try:
-            sitelink2 = p910_dict['sitelinks']['commonswiki']
+            sitelink2 = get_sitelink_title(p910_dict['sitelinks']['commonswiki'])
         except:
             continue
 

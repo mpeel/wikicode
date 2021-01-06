@@ -13,6 +13,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 import time
+from pibot_functions import *
 
 maxnum = 1000
 nummodified = 0
@@ -58,7 +59,7 @@ for i in range(0,numsteps):
         qid = page.title()
         print("\n" + qid)
         try:
-            sitelink = item_dict['sitelinks']['commonswiki']
+            sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
             print(sitelink)
         except:
             print('No sitelink found in main item! Skipping!')
@@ -103,7 +104,7 @@ for i in range(0,numsteps):
                 continue
                 
             try:
-                sitelink = target_dict['sitelinks']['commonswiki']
+                sitelink = get_sitelink_title(target_dict['sitelinks']['commonswiki'])
                 print(sitelink)
                 print('We have a sitelink in the target! Skipping...')
                 continue

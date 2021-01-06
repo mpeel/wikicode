@@ -53,7 +53,7 @@ def printwikidata(wd_item):
     except:
         print 'No English label!'
     try:
-        print 'ptwiki article: ' + item_dict['sitelinks']['ptwiki']
+        print 'ptwiki article: ' + item_dict['sitelinks']['ptwiki'].title
     except:
         print 'No Portuguese article!'
     try:

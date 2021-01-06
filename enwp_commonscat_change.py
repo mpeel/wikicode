@@ -41,8 +41,9 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect", "Synonym taxon category redirect", "synonym taxon category redirect"]
 
-targetcats = ['Category:Commons category link is locally defined‎','Category:Commons category link is defined as the pagename']
+targetcats = ['Category:Commons category link is defined as the pagename','Category:Commons category link is locally defined‎']
 # targetcats = ['Category:Commons category link is locally defined‎']
+# targetcats = ['Category:Commons category link is on Wikidata using P373']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
@@ -65,7 +66,7 @@ for categories in range(0,2):
 
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Taggia" in page.title():
+				if "WordPress.com" in page.title():
 					trip = 1
 				else:
 					print(page.title())
@@ -209,7 +210,7 @@ for categories in range(0,2):
 
 				# Double-check that there is a sitelink on Wikidata
 				try:
-					sitelink = item_dict['sitelinks']['commonswiki']
+					sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 					sitelink_check = 1
 				except:
 					sitelink_check = 0
@@ -220,6 +221,7 @@ for categories in range(0,2):
 			if id_val != 0 and sitelink_check == 1:
 				if numtemplates != 1:
 					print('Number of commons links: ' + str(numtemplates))
+					# input('check')
 					continue
 				print(sitelink)
 
@@ -314,7 +316,7 @@ for categories in range(0,2):
 				# print(commonscat_string2)
 				target_text = target_text.replace(commonscat_string2a + commonscat_string2, commonscat_string2a+"|"+sitelink.replace('Category:',''))
 				if page.text == target_text:
-					print("The text didn't change - confirm?")
+					# input("The text didn't change - confirm?")
 					continue
 				page.text = target_text
 				test = 'y'

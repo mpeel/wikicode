@@ -19,12 +19,10 @@ def check_if_category_has_contents(category, site=''):
 	pages = pagegenerators.CategorizedPageGenerator(category, recurse=False);
 	for page in pages:
 		return True
-		exit()
 
 	pages = pagegenerators.SubCategoriesPageGenerator(category, recurse=False);
 	for page in pages:
 		return True
-		exit()
 
 	return False
 
@@ -41,3 +39,9 @@ def create_commons_category(category, site, qid=''):
 
 	return category
 	
+# Because https://phabricator.wikimedia.org/T265800
+def get_sitelink_title(sitelink):
+	# If you use the new version, uncomment this line
+	return sitelink.title
+	# If you use an older version, uncomment this line
+	# return sitelink

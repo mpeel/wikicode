@@ -15,6 +15,7 @@ from pywikibot import pagegenerators
 import urllib
 import pprint
 import csv
+from pibot_functions import *
 
 templates = ["individual aircraft", "Individual aircraft","Wikidata person", "wikidata person", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Authority control", "authority control", "Ac", "ac", "Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", 'Wikidata place', 'wikidata place', 'Object location', 'object location']
 
@@ -215,7 +216,7 @@ for targetcat in targetcats:
         except:
             null = 0
         try:
-            sitelink = candidate_item_dict['sitelinks']['commonswiki']
+            sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
         except:
             # No existing sitelink found, add the new one
             data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}

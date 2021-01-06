@@ -18,6 +18,7 @@ import csv
 import mysql.connector
 import random
 from database_login import *
+from pibot_functions import *
 
 database = True
 manual = True
@@ -113,7 +114,7 @@ def runimport(targetcat):
 
             incat = 0
             try:
-                sitelink = candidate_item_dict['sitelinks']['commonswiki']
+                sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
             except:
                 print 'Hello'
                 try:
@@ -127,7 +128,7 @@ def runimport(targetcat):
                     null = 0
                 # Try the sitelink check again
                 try:
-                    sitelink = candidate_item_dict['sitelinks']['commonswiki']
+                    sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
                 except:
                     try:
                         # # No existing sitelink found, add it to the database as a possibility

@@ -11,6 +11,7 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
+from pibot_functions import *
 
 maxnum = 10000
 nummodified = 0
@@ -73,7 +74,7 @@ for i in range(0,numsteps):
 
         # Make sure that we have a sitelink, and that it's the same as P373
         try:
-            sitelink = item_dict['sitelinks']['commonswiki']
+            sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
             sitelink = sitelink.replace('Category:','')
         except:
             print('No sitelink')

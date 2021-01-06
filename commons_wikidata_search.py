@@ -15,9 +15,10 @@ import urllib
 import pprint
 import csv
 import random
+from pibot_functions import *
 
 database = False
-manual = False
+manual = True
 maxnum = 1000000
 usetemplate = 0
 usecategory = 0
@@ -124,7 +125,7 @@ def runimport(targetcat):
             except:
                 print('No image found')
         try:
-            sitelink = candidate_item_dict['sitelinks']['commonswiki']
+            sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
         except:
             try:
                 existing_id = candidate_item_dict['claims']['P910']
@@ -137,7 +138,7 @@ def runimport(targetcat):
                 null = 0
             # Try the sitelink check again
             try:
-                sitelink = candidate_item_dict['sitelinks']['commonswiki']
+                sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
             except:
                 # No existing sitelink found, add the new one
                 data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}

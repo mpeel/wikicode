@@ -81,7 +81,7 @@ for targetcat in targetcats:
 			wd_item = page
 			item_dict = wd_item.get()
 			qid = wd_item.title()
-			page = pywikibot.Page(enwp, item_dict['sitelinks']['enwiki'])
+			page = pywikibot.Page(enwp, get_sitelink_title(item_dict['sitelinks']['enwiki']))
 		print("\nhttp://en.wikipedia.org/wiki/" + page.title().replace(' ','_'))
 
 

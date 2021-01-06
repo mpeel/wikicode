@@ -140,7 +140,7 @@ for categories in range(0,2):
 
 			# Double-check that there is no a sitelink on Wikidata
 			try:
-				sitelink = item_dict['sitelinks']['commonswiki']
+				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 				sitelink_check = 1
 			except:
 				sitelink_check = 0

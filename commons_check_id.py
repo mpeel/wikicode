@@ -10,6 +10,7 @@ import time
 import string
 from pywikibot import pagegenerators
 import urllib
+from pibot_functions import *
 
 maxnum = 100000
 nummodified = 0
@@ -113,7 +114,7 @@ def checkid(targetcat):
                 except:
                     print('Huh - no page found')
                 try:
-                    sitelink = item_dict['sitelinks']['commonswiki']
+                    sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
                 except:
                     # No existing sitelink found, add the new one
                     data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}

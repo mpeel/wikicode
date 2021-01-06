@@ -18,13 +18,13 @@ commons = pywikibot.Site('commons', 'commons')
 enwp = pywikibot.Site('en', 'wikipedia')
 debug = 1
 trip = 1
-templates = ['Commons category multi', 'Commonscat-N','Commoncats','Commonscat show2','Commonscats','Common cats','Commons cats','Commons cat show2','Commonscat multi','Commons cat multi','Ccatm','Commons category multiple','Commonscat-multi','Commons category-multi','Commons multiple','Commons multi','Commonscatmulti','commonscat-multi', 'commons category multi', 'commons category-multi']
+templates = ['Commons','Common','Wikicommons','Wikicommon']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
 template = pywikibot.Page(enwp, 'Template:'+templates[0])
-# targetcats = template.embeddedin(namespaces='14')
-targetcats = template.embeddedin(namespaces='0')
+targetcats = template.embeddedin(namespaces='14')
+# targetcats = template.embeddedin(namespaces='0')
 
 
 for page in targetcats:
@@ -47,8 +47,12 @@ for page in targetcats:
 	abort = 0
 	commonscat_string = ""
 	for i in range(0,len(templates)):
+		if "{{"+templates[i]+"}}" in target_text:
+			id_val = ''
+			id_template = templates[i]
+			id_string = "{{"+templates[i]+"}}"
 		try:
-			# print(templates[i])
+			print(templates[i])
 			value = (target_text.split("{{"+templates[i]))[1].split("}}")[0]
 			if value and id_val == 0:
 				id_val = value
@@ -69,9 +73,10 @@ for page in targetcats:
 
 	if id_val == 0:
 		# We didn't find the commons category link, skip this one.
-		input('Check?')
+		# input('Check?')
 		continue
-	
+	print(id_string)
+	print(id_template)
 	print(id_val)
 	id_vals = id_val.split('|')
 	print(id_vals)
@@ -79,7 +84,7 @@ for page in targetcats:
 	# Do some tidying of the link
 	bad_id = np.zeros(len(id_vals))
 	for i in range(0,len(id_vals)):
-		if 'position' in id_vals[i] or 'bullet' in id_vals[i] or 'nowrap' in id_vals[i] or 'lcfirst' in id_vals[i] or 'lcf' in id_vals[i] or 'align' in id_vals[i] or 'width' in id_vals[i] or 'delimiter' in id_vals[i] or id_vals[i] == '' or id_vals[i] == ' ':
+		if 'position' in id_vals[i] or 'bullet' in id_vals[i] or 'nowrap' in id_vals[i] or 'lcfirst' in id_vals[i] or 'lcf' in id_vals[i] or 'align' in id_vals[i] or 'width' in id_vals[i] or id_vals[i] == '' or id_vals[i] == ' ':
 			bad_id[i] = 1
 	id_vals = np.asarray(id_vals,dtype="str")
 	# print(id_vals)
@@ -126,48 +131,34 @@ for page in targetcats:
 			sitelink_check = 0
 		print("sitelink: " + str(sitelink))
 
-	# Let's check that the links exist
 	for val in id_vals:
-		val_orig = val.copy()
-		val = val.strip()
-		if val == '':
-			continue
-		commonscat = 'Category:'+str(val)
-		commonscat = commonscat.replace('Category:Category:','')
-		print(commonscat)
-		last_check = True
-		try:
-			commonscat_page = pywikibot.Page(commons, commonscat)
-			text = commonscat_page.get()
-			for i in range(0,len(catredirect_templates)):
-				if catredirect_templates[i] in text:
-					last_check = False
-		except:
-			last_check = check_if_category_has_contents(commonscat,site=commons)
-		print(last_check)
-		if last_check == False:
-			target_text = target_text.replace(id_val,id_val.replace('|'+val_orig,''))
-			print(num_vals)
-			if num_vals == 2:
-				target_text = target_text.replace(id_template, 'Commons category')
+		if 'Category' in val:
+			id_string_new = id_string
+			id_string_new = id_string_new.replace(':Category:','')
+			id_string_new = id_string_new.replace('Category:','')
+			id_string_new = id_string_new.replace(id_template, 'Commons category')
+			print(id_string)
+			print(id_string_new)
+			target_text = target_text.replace(id_string, id_string_new)
 			if target_text != page.text:
-				test = input('Found a bad sitelink - remove it?')
+				test = input('Found a link to a Commons category - change it?')
 				if test == 'y':
 					page.text = target_text
-					page.save('Removing broken Commons category link',minor=False)
+					page.save('Change {{Commons}} to {{Commons category}}',minor=False)
 					nummodified += 1
-					continue
 
-	# If one of the categories is the sitelink, switch to that?
-	# if sitelink != '' and sitelink.replace('Category:','') in id_vals:
+	# If we have a sitelink and a blank commons template, use commonscat
+	# if sitelink != '' and id_vals.size == 0:
 	# 	print(id_string)
 	# 	target_text = target_text.replace(id_string,'{{Commons category}}')
 	# 	if target_text != page.text:
 	# 		test = input('Replace with sitelink?')
 	# 		if test == 'y':
 	# 			page.text = target_text
-	# 			page.save('Changing to use Commons category and the Commons sitelink through Wikidata',minor=False)
+	# 			page.save('Change {{Commons}} to {{Commons category}}',minor=False)
 	# 			nummodified += 1
+
+	# input('Next?')
 
 print('Done! Edited ' + str(nummodified) + ' entries')
 
