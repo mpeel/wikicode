@@ -30,7 +30,7 @@ for targetcat in targetcats:
 	print(targetcat)
 	if "Moving commons category sitelink" in targetcat[3]:
 		if "Moving commons category sitelink from main item" in targetcat[3] or "fix incomplete move due to lag" in targetcat[3]:
-			qid = targetcat[3].split('(')[1].split(')')[0]
+			qid = targetcat[3].split('(')[1].split(')')[0].replace('[','').replace(']','')
 			print(qid)
 			print(targetcat[0].title())
 			seen.append(targetcat[0].title())
