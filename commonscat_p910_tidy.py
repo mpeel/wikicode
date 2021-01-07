@@ -97,6 +97,7 @@ for i in range(0,num):
 		redirect1 = get_commons_redirect_target(sitelink)
 		redirect2 = get_commons_redirect_target(sitelink2)
 		if redirect1 == '' and redirect2 == '':
+			print('Neither are redirects')
 			continue
 
 		text = 'y'
