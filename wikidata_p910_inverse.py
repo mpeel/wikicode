@@ -70,6 +70,9 @@ for option in range(0,2):
 			continue
 		qid = page.title()
 		print("\nhttp://www.wikidata.org/wiki/" + qid)
+		if 'Property' in qid:
+			print('Property, skipping')
+			continue
 		# print(item_dict)
 		trip = 0
 		try:
