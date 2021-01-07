@@ -68,6 +68,7 @@ for i in range(0,num):
 		try:
 			sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 		except:
+			print('No first sitelink')
 			continue
 
 		# Get the value for P910
@@ -91,6 +92,7 @@ for i in range(0,num):
 		try:
 			sitelink2 = get_sitelink_title(p910_dict['sitelinks']['commonswiki'])
 		except:
+			print('No second sitelink')
 			continue
 
 		# see if one is a redirect
