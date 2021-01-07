@@ -24,7 +24,7 @@ numsteps = int(maximum / stepsize)
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
-debug = 1
+debug = 0
 # query = 'SELECT ?item ?categoryitem ?commonscategory WHERE { ?item wdt:P910 ?categoryitem . ?commonscategory schema:about ?item . ?commonscategory schema:isPartOf <https://commons.wikimedia.org/> . FILTER REGEX(STR(?commonscategory), "https://commons.wikimedia.org/wiki/Category:") . }'
 # if debug:
 #     query = query + " LIMIT 1000"
@@ -136,15 +136,16 @@ for i in range(0,numsteps):
 			# Remove it from the current entry and add it to the new entry
 			data = {'sitelinks': [{'site': 'commonswiki', 'title': sitelink}]}
 			print(data)
-			text = input("Save? ")
-			if text == 'y':
+			# text = input("Save? ")
+			# if text == 'y':
+			try:
 				print('Saving!')
 				page.removeSitelink(site='commonswiki', summary=u'Moving commons category sitelink to category item ([[' + str(wd_id) + ']])')
 				time.sleep(5)
 				val.editEntity(data, summary=u'Moving commons category sitelink from main item ([[' + str(qid) + ']])')
 				nummodified += 1
-			# except:
-			#     print('Edit failed!')
+			except:
+				print('Edit failed!')
 
 			# Bonus: if we don't have an English language label, add it.
 			try:
