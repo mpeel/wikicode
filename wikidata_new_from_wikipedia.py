@@ -108,14 +108,15 @@ for prefix in wikipedias:
 
 		# Check for the last edit time
 		lastedited = page.editTime()
-		lastedited_time = (datetime.datetime.now() - lastedited).seconds/(60*60*24)
+		lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
 		if lastedited_time < days_since_last_edit:
 			print('Recently edited ('+str(lastedited_time)+')')
 			continue
+		exit()
 
 		# Check for the creation time
 		created = page.oldest_revision.timestamp
-		created_time = (datetime.datetime.now() - created).seconds/(60*60*24)
+		created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
 		if created_time < days_since_last_edit:
 			print('Recently created ('+str(created_time)+')')
 			continue
