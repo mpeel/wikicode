@@ -39,9 +39,9 @@ def calc_coord(params):
 wiki = pywikibot.Site('en', 'wikipedia')
 repo = wiki.data_repository()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
-debug = True
+debug = False
 numedited = 0
-maxnumedited = 1
+maxnumedited = 10
 
 cat = pywikibot.Category(wiki, 'Category:Coordinates not on Wikidata')
 coord_templates = ['Coord']
@@ -145,6 +145,6 @@ for page in pages:
 							done = True
 							numedited += 1
 	page.touch()
-	if numedited > maxnumedited:
+	if numedited >= maxnumedited:
 		print(numedited)
 		exit()
