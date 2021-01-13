@@ -136,3 +136,4 @@ for page in pages:
 						if test == 'y':
 							wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from enwp')
 							done = True
+	page.touch()
