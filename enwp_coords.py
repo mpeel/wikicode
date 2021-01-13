@@ -46,7 +46,7 @@ coord_templates = ['Coord']
 
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 for page in pages:
-	print('https://commons.wikimedia.org/wiki/'+page.title().replace(" ","_"))
+	print('https://en.wikipedia.org/wiki/'+page.title().replace(" ","_"))
 	try:
 		wd_item = pywikibot.ItemPage.fromPage(page)
 		item_dict = wd_item.get()
@@ -72,6 +72,9 @@ for page in pages:
 				P625 = 'Bad'
 	if P625 == 'Bad':
 		print('Problem with coordinates')
+		continue
+	if P625 != '':
+		page.touch()
 		continue
 
 	ishuman = False
@@ -103,15 +106,25 @@ for page in pages:
 		continue
 
 	done = False
+	trip = False
 	for template in page.templatesWithParams():
+		if trip == True:
+			break
 		for tpl in coord_templates:
+			if trip == True:
+				break
 			# print(tpl)
 			if not done:
 				if tpl in template[0].title():
 					# print(template)
 					print(template[0].title())
 					print(template[1])
-					lat, lon, precision = calc_coord(template[1])
+					try:
+						lat, lon, precision = calc_coord(template[1])
+					except:
+						trip = True
+					if trip == True:
+						break
 					if not coordinate:
 						coordinateclaim  = pywikibot.Claim(repo, u'P625')
 						coordinate = pywikibot.Coordinate(lat=lat, lon=lon, precision=precision, site=wiki,globe_item=globe_item)
