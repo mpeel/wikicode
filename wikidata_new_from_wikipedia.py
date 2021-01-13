@@ -8,6 +8,28 @@ import pywikibot
 from pywikibot import pagegenerators
 from pywikibot.data import api
 import datetime
+import requests
+
+def parseduplicity(url,lang='en'):
+	try:
+		r = requests.get(url)
+		websitetext = r.text
+	except:
+		print('Problem fetching page!')
+		return 0
+	# print websitetext
+	split = websitetext.split("<tr><td nowrap style='text-align:right;font-family:Courier;'>")
+	i = 0
+	returnlist = []
+	for item in split:
+		i+=1
+		# Skip the top part
+		if i > 2:
+			# print(item)
+			returnlist.append(item.split("<a href='https://"+lang+".wikipedia.org/wiki/")[1].split("' target='_blank'")[0])
+			# print 'Title: ' + item.split('</h1>')[0].strip() + '\n'
+			# print 'Museum: ' + item.split("strong>Museu:</strong><span itemprop='publisher'>")[1].split("</span>")[0].strip() + "\n"
+	return returnlist
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
@@ -48,8 +70,13 @@ for prefix in wikipedias:
 		print(template.title())
 
 	# Start running through unconnected pages
-	pages = wikipedia.querypage('UnconnectedPages')
-	for page in pages:
+	# pages = wikipedia.querypage('UnconnectedPages')
+	# for page in pages:
+	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+	print(pages)
+	for pagename in pages:
+		page = pywikibot.Page(wikisite, pagename)
+
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
