@@ -6,7 +6,6 @@
 import pywikibot
 from pywikibot import pagegenerators
 import numpy as np
-import astropy as ap
 
 def get_precision(val):
 	print(val)
