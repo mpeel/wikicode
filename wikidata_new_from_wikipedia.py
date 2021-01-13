@@ -112,7 +112,6 @@ for prefix in wikipedias:
 		if lastedited_time < days_since_last_edit:
 			print('Recently edited ('+str(lastedited_time)+')')
 			continue
-		exit()
 
 		# Check for the creation time
 		created = page.oldest_revision.timestamp
