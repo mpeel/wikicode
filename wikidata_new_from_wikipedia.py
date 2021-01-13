@@ -70,12 +70,12 @@ for prefix in wikipedias:
 		print(template.title())
 
 	# Start running through unconnected pages
-	# pages = wikipedia.querypage('UnconnectedPages')
-	# for page in pages:
-	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
-	print(pages)
-	for pagename in pages:
-		page = pywikibot.Page(wikipedia, pagename)
+	pages = wikipedia.querypage('UnconnectedPages')
+	for page in pages:
+		# pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+		# print(pages)
+		# for pagename in pages:
+		# 	page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
@@ -130,6 +130,7 @@ for prefix in wikipedias:
 			item_dict = wd_item.get()
 			qid = wd_item.title()
 			print("Has a sitelink already - " + qid)
+			page.touch()
 			continue
 		except:
 			print(page.title() + ' - no page found')
