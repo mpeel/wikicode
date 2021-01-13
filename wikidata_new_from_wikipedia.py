@@ -109,6 +109,7 @@ for prefix in wikipedias:
 		# Check for the last edit time
 		lastedited = page.editTime()
 		lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
+		print('Last edited: ' + str(lastedited_time))
 		if lastedited_time < days_since_last_edit:
 			print('Recently edited ('+str(lastedited_time)+')')
 			continue
@@ -116,6 +117,7 @@ for prefix in wikipedias:
 		# Check for the creation time
 		created = page.oldest_revision.timestamp
 		created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
+		print('Created: ' + str(created_time))
 		if created_time < days_since_last_edit:
 			print('Recently created ('+str(created_time)+')')
 			continue
@@ -144,6 +146,7 @@ for prefix in wikipedias:
 		# See if search returns any items
 		wikidataEntries = search_entities(repo, page.title())
 		if wikidataEntries['search'] != []:
+			print('Search results but old')
 			if lastedited_time < days_since_last_edit_but_search:
 				print('Recently edited with search results ('+str(lastedited_time)+')')
 				continue
