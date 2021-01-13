@@ -82,7 +82,6 @@ for page in pages:
 		P31 = item_dict['claims']['P31']
 	except:
 		null = 0
-	print(P625)
 	if P31 != '':
 		for clm in P31:
 			# print(clm)
@@ -92,8 +91,13 @@ for page in pages:
 	if ishuman:
 		print('Not importing coordinate for a human, business, company, or railway')
 		continue
-
-	# exit()
+	try:
+		P159 = item_dict['claims']['P159']
+	except:
+		null = 0
+	if P159 != '':
+		print('Has a HQ, skipping')
+		continue
 
 	count = 0
 	for template in page.templatesWithParams():
