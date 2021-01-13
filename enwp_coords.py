@@ -91,6 +91,7 @@ for page in pages:
 	if ishuman:
 		print('Not importing coordinate for a human, business, company, or railway')
 		continue
+	P159 = ''
 	try:
 		P159 = item_dict['claims']['P159']
 	except:
