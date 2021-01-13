@@ -118,7 +118,7 @@ for prefix in wikipedias:
 		created = page.oldest_revision.timestamp
 		created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
 		print('Created: ' + str(created_time))
-		if created_time < days_since_last_edit:
+		if created_time < days_since_creation:
 			print('Recently created ('+str(created_time)+')')
 			continue
 
