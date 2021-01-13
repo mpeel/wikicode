@@ -75,7 +75,7 @@ for prefix in wikipedias:
 	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 	print(pages)
 	for pagename in pages:
-		page = pywikibot.Page(wikisite, pagename)
+		page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
