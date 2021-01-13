@@ -40,6 +40,8 @@ wiki = pywikibot.Site('en', 'wikipedia')
 repo = wiki.data_repository()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
 debug = True
+numedited = 0
+maxnumedited = 1
 
 cat = pywikibot.Category(wiki, 'Category:Coordinates not on Wikidata')
 coord_templates = ['Coord']
@@ -141,4 +143,8 @@ for page in pages:
 						if test == 'y':
 							wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from enwp')
 							done = True
+							numedited += 1
 	page.touch()
+	if numedited > maxnumedited:
+		print(numedited)
+		exit()
