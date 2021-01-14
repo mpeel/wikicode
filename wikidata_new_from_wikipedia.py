@@ -74,7 +74,8 @@ for prefix in wikipedias:
 	# for page in pages:
 	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 	print(pages)
-	for pagename in pages.reverse():
+	pages.reverse()
+	for pagename in pages:
 		page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
