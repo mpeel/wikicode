@@ -14,8 +14,8 @@ def get_precision(val):
 		length = len(val)
 	else:
 		length = 0
-	if val > 6:
-		val = 6
+	if val >= 5:
+		val = 5
 	# print(len(val))
 	return 10**-len(val)
 
