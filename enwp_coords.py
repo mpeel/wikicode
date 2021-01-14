@@ -30,6 +30,8 @@ def calc_coord(params):
 		lat = float(params[0])
 		lon = float(params[1])
 		precision = get_precision(params[0])
+	else:
+		return False
 	# print(lon)
 	# print(lat)
 	# print(precision)
@@ -41,7 +43,7 @@ repo = wiki.data_repository()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
 debug = False
 numedited = 0
-maxnumedited = 1000
+maxnumedited = 100
 
 cat = pywikibot.Category(wiki, 'Category:Coordinates not on Wikidata')
 coord_templates = ['Coord']
