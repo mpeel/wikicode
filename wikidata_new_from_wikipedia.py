@@ -72,13 +72,13 @@ for prefix in wikipedias:
 		print(template.title())
 
 	# Start running through unconnected pages
-	pages = wikipedia.querypage('UnconnectedPages')
-	for page in pages:
-	# pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
-	# print(pages)
-	# pages.reverse()
-	# for pagename in pages:
-	# 	page = pywikibot.Page(wikipedia, pagename)
+	# pages = wikipedia.querypage('UnconnectedPages')
+	# for page in pages:
+	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+	print(pages)
+	pages.reverse()
+	for pagename in pages:
+		page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
