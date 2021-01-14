@@ -101,6 +101,7 @@ for page in pages:
 	except:
 		null = 0
 	if P159 != '':
+		print(P159)
 		print('Has a HQ, skipping')
 		continue
 
