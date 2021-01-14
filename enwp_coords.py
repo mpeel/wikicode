@@ -14,10 +14,10 @@ def get_precision(val):
 		length = len(val)
 	else:
 		length = 0
-	if val >= 5:
-		val = 5
+	if length >= 5:
+		length = 5
 	# print(len(val))
-	return 10**-len(val)
+	return 10**-length
 
 def calc_coord(params):
 	if len(params) >= 8:
@@ -137,7 +137,7 @@ for page in pages:
 						trip = True
 					if trip == True:
 						break
-					if not coordinate:
+					if not coordinate and precision > 0.0:
 						coordinateclaim  = pywikibot.Claim(repo, u'P625')
 						coordinate = pywikibot.Coordinate(lat=lat, lon=lon, precision=precision, site=wiki,globe_item=globe_item)
 						coordinateclaim.setTarget(coordinate)
