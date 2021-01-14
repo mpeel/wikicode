@@ -14,7 +14,6 @@ cd /home/pi/Documents/git/wikicode/
 /usr/bin/python3 commonscat_move_from_P910.py
 /usr/bin/python3 commonscat_move_from_P1754.py
 /usr/bin/python3 doublecheck_move.py
-/usr/bin/python3 commonscat_check.py
 /usr/bin/python3 wikidata_p301_inverse.py
 /usr/bin/python3 wikidata_p910_inverse.py
 /usr/bin/python3 wikidata_p1753_inverse.py

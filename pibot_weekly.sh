@@ -9,3 +9,4 @@ cd /home/pi/Documents/git/wikicode/
 /usr/bin/python3 wikidata_import_infobox_qid.py
 /usr/bin/python3 commons_wikidata_infobox_tidy.py
 /usr/bin/python3 enwp_wikidata_import_shortdesc.py
+/usr/bin/python3 commonscat_check.py

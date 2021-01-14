@@ -42,7 +42,7 @@ days_since_last_edit = 1.0
 days_since_last_edit_but_search = 7.0
 days_since_creation = 14.0
 
-debug = True
+debug = False
 
 def search_entities(site, itemtitle):
 	 params = { 'action' :'wbsearchentities', 
@@ -70,12 +70,12 @@ for prefix in wikipedias:
 		print(template.title())
 
 	# Start running through unconnected pages
-	pages = wikipedia.querypage('UnconnectedPages')
-	for page in pages:
-		# pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
-		# print(pages)
-		# for pagename in pages:
-		# 	page = pywikibot.Page(wikipedia, pagename)
+	# pages = wikipedia.querypage('UnconnectedPages')
+	# for page in pages:
+	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+	print(pages)
+	for pagename in pages.reverse():
+		page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
