@@ -3,12 +3,14 @@
 # Create new Wikidata items for enwp articles and categories
 # Mike Peel     03-Jan-2021      v1 - start
 # Mike Peel		05-Jan-2021		 v2 - expand based on newitem.py
+# Mike Peel     14-Jan-2021      v3 - expand biographies
 
 import pywikibot
 from pywikibot import pagegenerators
 from pywikibot.data import api
 import datetime
 import requests
+from wir_newpages import *
 
 def parseduplicity(url,lang='en'):
 	try:
@@ -126,15 +128,21 @@ for prefix in wikipedias:
 		## Part 3 - look up more information
 
 		# Check if we have a Wikidata item already
+		has_sitelink = False
 		try:
 			wd_item = pywikibot.ItemPage.fromPage(page)
 			item_dict = wd_item.get()
 			qid = wd_item.title()
 			print("Has a sitelink already - " + qid)
-			page.touch()
-			continue
+			has_sitelink = True
 		except:
 			print(page.title() + ' - no page found')
+		if has_sitelink:
+			# If a biography, add biography claims
+			if pageIsBiography(page,lang=prefix):
+				addBiographyClaims(repo=repo, wikisite=wikipedia, item=wd_item, page=page, lang=prefix)
+			page.touch()
+			continue
 
 		# If we have a category, make sure it isn't empty
 		if page.namespace() == wikipedia.namespaces.CATEGORY:
@@ -178,6 +186,9 @@ for prefix in wikipedias:
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q4167410')) # Disambiguation page
 					new_item.addClaim(claim, summary='Disambig page')
+				# If a biography, add biography claims
+				if pageIsBiography(page,lang=prefix):
+					addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
 
 		## Part 5 - tidy up
 
