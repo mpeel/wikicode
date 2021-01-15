@@ -77,7 +77,13 @@ for prefix in wikipedias:
 	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 	print(pages)
 	pages.reverse()
+	nametrip = False
 	for pagename in pages:
+		if not nametrip:
+			if 'Crytzer' not in pagename:
+				continue
+			else:
+				nametrip = True
 		page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
@@ -101,7 +107,11 @@ for prefix in wikipedias:
 		print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
 		# Check for the last edit time
-		lastedited = page.editTime()
+		try:
+			lastedited = page.editTime()
+		except:
+			print('Unable to get last edited time')
+			continue
 		lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
 		print('Last edited: ' + str(lastedited_time))
 		if lastedited_time < days_since_last_edit:
@@ -115,7 +125,7 @@ for prefix in wikipedias:
 		if created_time < days_since_creation:
 			print('Recently created ('+str(created_time)+')')
 			continue
-			
+
 		# Check to see if it contains templates we want to avoid
 		trip = 0
 		for template, _ in page.templatesWithParams():
