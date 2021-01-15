@@ -72,13 +72,13 @@ for prefix in wikipedias:
 		print(template.title())
 
 	# Start running through unconnected pages
-	# pages = wikipedia.querypage('UnconnectedPages')
-	# for page in pages:
-	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
-	print(pages)
-	pages.reverse()
-	for pagename in pages:
-		page = pywikibot.Page(wikipedia, pagename)
+	pages = wikipedia.querypage('UnconnectedPages')
+	for page in pages:
+	# pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+	# print(pages)
+	# pages.reverse()
+	# for pagename in pages:
+	# 	page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
@@ -100,15 +100,6 @@ for prefix in wikipedias:
 		## Part 2 - parse the page info
 		print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
-		# Check to see if it contains templates we want to avoid
-		trip = 0
-		for template, _ in page.templatesWithParams():
-			if template in skipping_templates:
-				trip = template.title()
-		if trip != 0:
-			print('Page contains ' + str(trip) + ', skipping')
-			continue
-
 		# Check for the last edit time
 		lastedited = page.editTime()
 		lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
@@ -124,6 +115,16 @@ for prefix in wikipedias:
 		if created_time < days_since_creation:
 			print('Recently created ('+str(created_time)+')')
 			continue
+			
+		# Check to see if it contains templates we want to avoid
+		trip = 0
+		for template, _ in page.templatesWithParams():
+			if template in skipping_templates:
+				trip = template.title()
+		if trip != 0:
+			print('Page contains ' + str(trip) + ', skipping')
+			continue
+
 
 		## Part 3 - look up more information
 
