@@ -200,7 +200,7 @@ for prefix in wikipedias:
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q4167410')) # Disambiguation page
 					new_item.addClaim(claim, summary='Disambig page')
 				elif 'list of' in page.title()[0:10].lower():
-					input('Is list - OK?')
+					# input('Is list - OK?')
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q13406463')) # List item
 					new_item.addClaim(claim, summary='List item')
@@ -208,17 +208,17 @@ for prefix in wikipedias:
 					# If a biography, add biography claims
 					addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
 				elif 'film)' in page.title().lower():
-					input('Is film - OK?')
+					# input('Is film - OK?')
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q11424')) # Film
 					new_item.addClaim(claim, summary='Film')
 				elif 'tv series)' in page.title().lower():
-					input('Is TV series - OK?')
+					# input('Is TV series - OK?')
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q5398426')) # Film
 					new_item.addClaim(claim, summary='TV series')
 				elif 'surname)' in page.title().lower():
-					input('Is surname - OK?')
+					# input('Is surname - OK?')
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q101352')) # Surname
 					new_item.addClaim(claim, summary='Surname')
