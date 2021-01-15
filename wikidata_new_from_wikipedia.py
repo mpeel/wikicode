@@ -72,19 +72,21 @@ for prefix in wikipedias:
 		print(template.title())
 
 	# Start running through unconnected pages
+	nametrip = True
+	cat = pywikibot.Category(wikipedia, 'Category:Articles without Wikidata item')
+	pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 	# pages = wikipedia.querypage('UnconnectedPages')
-	# for page in pages:
-	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
-	print(pages)
-	pages.reverse()
-	nametrip = False
-	for pagename in pages:
+	for page in pages:
+	# pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+	# print(pages)
+	# pages.reverse()
+	# for pagename in pages:
 		if not nametrip:
 			if 'Crytzer' not in pagename:
 				continue
 			else:
 				nametrip = True
-		page = pywikibot.Page(wikipedia, pagename)
+		# page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
@@ -182,7 +184,7 @@ for prefix in wikipedias:
 			test = input('Continue?')
 		if test == 'y':
 			new_item = pywikibot.ItemPage(repo)
-			new_item.editEntity(data, summary="Creating item from " + prefix +"wiki")
+			new_item.editEntity(data, summary="Creating item from [[" + prefix +":"+page.title()+"]]")
 			nummodified += 1
 			if page.namespace() == wikipedia.namespaces.CATEGORY:
 				# We have a category, also add a P31 value
@@ -197,9 +199,32 @@ for prefix in wikipedias:
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q4167410')) # Disambiguation page
 					new_item.addClaim(claim, summary='Disambig page')
-				# If a biography, add biography claims
-				if pageIsBiography(page,lang=prefix):
+				elif 'list of' in page.title()[0:10].lower():
+					input('Is list - OK?')
+					claim = pywikibot.Claim(repo,'P31')
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q13406463')) # List item
+					new_item.addClaim(claim, summary='List item')
+				elif pageIsBiography(page,lang=prefix):
+					# If a biography, add biography claims
 					addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
+				elif 'film)' in page.title().lower():
+					input('Is film - OK?')
+					claim = pywikibot.Claim(repo,'P31')
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q11424')) # Film
+					new_item.addClaim(claim, summary='Film')
+				elif 'tv series)' in page.title().lower():
+					input('Is TV series - OK?')
+					claim = pywikibot.Claim(repo,'P31')
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q5398426')) # Film
+					new_item.addClaim(claim, summary='TV series')
+				elif 'surname)' in page.title().lower():
+					input('Is surname - OK?')
+					claim = pywikibot.Claim(repo,'P31')
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q101352')) # Surname
+					new_item.addClaim(claim, summary='Surname')
+
+
+
 
 		## Part 5 - tidy up
 
