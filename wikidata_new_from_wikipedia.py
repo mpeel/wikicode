@@ -73,20 +73,20 @@ for prefix in wikipedias:
 
 	# Start running through unconnected pages
 	nametrip = True
-	cat = pywikibot.Category(wikipedia, 'Category:Articles without Wikidata item')
-	pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
+	# cat = pywikibot.Category(wikipedia, 'Category:Articles without Wikidata item')
+	# pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 	# pages = wikipedia.querypage('UnconnectedPages')
-	for page in pages:
-	# pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
-	# print(pages)
-	# pages.reverse()
-	# for pagename in pages:
+	# for page in pages:
+	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+	print(pages)
+	pages.reverse()
+	for pagename in pages:
 		if not nametrip:
 			if 'Crytzer' not in pagename:
 				continue
 			else:
 				nametrip = True
-		# page = pywikibot.Page(wikipedia, pagename)
+		page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
