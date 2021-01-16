@@ -73,20 +73,20 @@ for prefix in wikipedias:
 
 	# Start running through unconnected pages
 	nametrip = True
-	# cat = pywikibot.Category(wikipedia, 'Category:Articles without Wikidata item')
-	# pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
+	cat = pywikibot.Category(wikipedia, 'Category:Articles without Wikidata item')
+	pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 	# pages = wikipedia.querypage('UnconnectedPages')
-	# for page in pages:
-	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
-	print(pages)
-	pages.reverse()
-	for pagename in pages:
+	for page in pages:
+	# pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
+	# print(pages)
+	# pages.reverse()
+	# for pagename in pages:
 		if not nametrip:
 			if 'Crytzer' not in pagename:
 				continue
 			else:
 				nametrip = True
-		page = pywikibot.Page(wikipedia, pagename)
+		# page = pywikibot.Page(wikipedia, pagename)
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
@@ -176,8 +176,13 @@ for prefix in wikipedias:
 
 		## Part 4 - editing
 
+		# Remove trailing brackets from the page title
+		page_title = page.title()
+		if page_title[-1] == ')':
+			page_title = page_title[:page_title.rfind('(')]
+		page_title = page_title.strip()
 		# If we're here, then create a new item
-		data = {'labels': {prefix: page.title()}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
+		data = {'labels': {prefix: page_title}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
 		test = 'y'
 		if debug:
 			print(data)
