@@ -79,7 +79,7 @@ for prefix in wikipedias:
 		# pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 		# pages = wikipedia.querypage('UnconnectedPages')
 		if option == 0:
-			pages = wikipedia.unconnected_pages(total=20000)
+			pages = wikipedia.unconnected_pages(total=30000)
 		else:
 			pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 		# print(pages)
@@ -87,7 +87,7 @@ for prefix in wikipedias:
 		count = 0
 		for pagename in pages:
 			count += 1
-			if count < 5000:
+			if count < 10000:
 				continue
 			print(count)
 			if not nametrip:
