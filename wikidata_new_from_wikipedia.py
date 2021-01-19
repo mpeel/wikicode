@@ -44,7 +44,7 @@ days_since_last_edit = 1.0
 days_since_last_edit_but_search = 7.0
 days_since_creation = 14.0
 
-debug = False
+debug = True
 
 def search_entities(site, itemtitle):
 	 params = { 'action' :'wbsearchentities', 
@@ -63,6 +63,7 @@ for prefix in wikipedias:
 	# Adapted from https://gerrit.wikimedia.org/g/pywikibot/core/+/HEAD/scripts/newitem.py
 	skipping_templates = set()
 	for item in templates_to_skip:
+		print(item)
 		template = wikipedia.page_from_repository(item)
 		if template is None:
 			continue
@@ -78,12 +79,17 @@ for prefix in wikipedias:
 		# pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 		# pages = wikipedia.querypage('UnconnectedPages')
 		if option == 0:
-			pages = wikipedia.unconnected_pages(total=10000)
+			pages = wikipedia.unconnected_pages(total=20000)
 		else:
 			pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 		# print(pages)
 		# pages.reverse()
+		count = 0
 		for pagename in pages:
+			count += 1
+			if count < 5000:
+				continue
+			print(count)
 			if not nametrip:
 				if 'Crytzer' not in pagename:
 					continue
