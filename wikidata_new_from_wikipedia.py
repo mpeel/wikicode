@@ -44,7 +44,7 @@ days_since_last_edit = 1.0
 days_since_last_edit_but_search = 7.0
 days_since_creation = 14.0
 
-debug = True
+debug = False
 
 def search_entities(site, itemtitle):
 	 params = { 'action' :'wbsearchentities', 
@@ -72,7 +72,7 @@ for prefix in wikipedias:
 		skipping_templates.update(template.getReferences(follow_redirects=False, with_template_inclusion=False, filter_redirects=True, namespaces=wikipedia.namespaces.TEMPLATE))
 		print(template.title())
 
-	for option in range(0,1):
+	for option in range(1,2):
 		# Start running through unconnected pages
 		nametrip = True
 		# cat = pywikibot.Category(wikipedia, 'Category:Articles without Wikidata item')
@@ -87,8 +87,8 @@ for prefix in wikipedias:
 		count = 0
 		for pagename in pages:
 			count += 1
-			if count < 10000:
-				continue
+			# if count < 10000:
+				# continue
 			print(count)
 			if not nametrip:
 				if 'Crytzer' not in pagename:
