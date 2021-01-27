@@ -146,8 +146,11 @@ for i in range(0,numsteps):
 			else:
 				test = 'y'
 			if test == 'y':
-				page.editLabels(labels={'en': label}, summary=u'Copy ' + labellang + " label to en label")
-				nummodified += 1
+				try:
+					page.editLabels(labels={'en': label}, summary=u'Copy ' + labellang + " label to en label")
+					nummodified += 1
+				except:
+					print('Edit failed')
 
 		if nummodified >= maxnum:
 			print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
