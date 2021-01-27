@@ -33,7 +33,7 @@ def calc_coord(params):
 		lon = float(params[1])
 		precision = get_precision(params[0])
 	else:
-		return False
+		return False, False, False
 	# print(lon)
 	# print(lat)
 	# print(precision)
@@ -136,6 +136,8 @@ for page in pages:
 					except:
 						trip = True
 					if trip == True:
+						break
+					if lat == False:
 						break
 					if not coordinate and precision > 0.0:
 						coordinateclaim  = pywikibot.Claim(repo, u'P625')
