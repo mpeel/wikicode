@@ -8,7 +8,7 @@ from pywikibot import pagegenerators
 import numpy as np
 
 def get_precision(val):
-	print(val)
+	# print(val)
 	if '.' in str(val):
 		val = val.split('.')[1]
 		length = len(val)
@@ -20,20 +20,48 @@ def get_precision(val):
 	return 10**-length
 
 def calc_coord(params):
+	lat = False
+	lon = False
+	precision = False
 	if len(params) >= 8:
-		lat = float(params[0]) + (float(params[1])/60.0)+(float(params[2])/(60.0*60.0))
-		if 'S' in params[3]:
-			lat = -lat
-		lon = float(params[4]) + (float(params[5])/60.0)+(float(params[6])/(60.0*60.0))
-		if 'W' in params[7]:
-			lon = -lon
-		precision = get_precision(params[2])/(60.0*60.0)
-	elif len(params) >= 2:
-		lat = float(params[0])
-		lon = float(params[1])
-		precision = get_precision(params[0])
-	else:
-		return False, False, False
+		if 'S' in params[3] or 'N' in params[3]:
+			lat = float(params[0]) + (float(params[1])/60.0)+(float(params[2])/(60.0*60.0))
+			if 'S' in params[3]:
+				lat = -lat
+			lon = float(params[4]) + (float(params[5])/60.0)+(float(params[6])/(60.0*60.0))
+			if 'W' in params[7]:
+				lon = -lon
+			precision = get_precision(params[2])/(60.0*60.0)
+	if lat == False and len(params) >= 2:
+		if 'S' in params[2] or 'N' in params[2]:
+			lat = float(params[0]) + (float(params[1])/60.0)
+			if 'S' in params[2]:
+				lat = -lat
+			lon = float(params[3]) + (float(params[4])/60.0)
+			if 'W' in params[5]:
+				lon = -lon
+			precision = get_precision(params[1])/(60.0)
+		elif params[1] == 'N' or params[1] == 'S':
+			lat = float(params[0])
+			lon = float(params[2])
+			precision = get_precision(params[0])
+			if params[1] == 'S':
+				lat = -lat
+			if params[3] == 'W':
+				lon = -lon
+		elif '.' in params[0] and '.' in params[1]:
+			lat = float(params[0])
+			lon = float(params[1])
+			precision = get_precision(params[0])
+		else:
+			print(params)
+			print('Something odd in calc_coord (1)')
+			# return False, False, False
+
+	if lat == False:
+		print(params)
+		print('Something odd in calc_coord (2)')
+		# return False, False, False
 	# print(lon)
 	# print(lat)
 	# print(precision)
@@ -52,6 +80,8 @@ coord_templates = ['Coord']
 
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 for page in pages:
+	# if page.title()[0] != 'C':
+	# 	continue
 	print('https://en.wikipedia.org/wiki/'+page.title().replace(" ","_"))
 	try:
 		wd_item = pywikibot.ItemPage.fromPage(page)
@@ -103,7 +133,7 @@ for page in pages:
 	except:
 		null = 0
 	if P159 != '':
-		print(P159)
+		# print(P159)
 		print('Has a HQ, skipping')
 		continue
 
@@ -113,8 +143,9 @@ for page in pages:
 			if tpl in template[0].title():
 				count += 1
 	print(count)
-	if count != 1:
+	if count > 2:
 		print('Wrong number of coordinate templates (' + str(count) + '), skipping')
+		input('Check')
 		continue
 
 	done = False
@@ -127,7 +158,7 @@ for page in pages:
 				break
 			# print(tpl)
 			if not done:
-				if tpl in template[0].title():
+				if tpl in template[0].title() and 'missing' not in template[0].title():
 					# print(template)
 					print(template[0].title())
 					print(template[1])
@@ -136,8 +167,10 @@ for page in pages:
 					except:
 						trip = True
 					if trip == True:
+						# input('Check2')
 						break
 					if lat == False:
+						# input('Cherk3')
 						break
 					if not coordinate and precision > 0.0:
 						coordinateclaim  = pywikibot.Claim(repo, u'P625')
@@ -151,7 +184,8 @@ for page in pages:
 							wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from enwp')
 							done = True
 							numedited += 1
-	page.touch()
+							page.touch()
+
 	if numedited >= maxnumedited:
 		print(numedited)
 		exit()
