@@ -17,7 +17,7 @@ nummodified = 0
 stepsize =  10000
 maximum = 4000000
 numsteps = int(maximum / stepsize)
-debug = True
+debug = False
 
 langs = 'en-ca,en-gb,de,fr,es,pt,nl,it,sv,af,an,ast,bar,bm,br,ca,co,cs,cy,da,de-at,de-ch,eo,et,eu,fi,frc,frp,fur,ga,gd,gl,gsw,hr,ia,id,ie,io,jam,kab,kg,lb,li,lij,lt,mg,mi,nap,nb,nds,nds-nl,nn,nrm,min,ms,oc,pap,pcd,pms,prg,pt-br,rgn,rm,ro,sc,scn,sco,sk,sl,sq,sr-el,sw,tr,vec,vi,vls,vmf,vo,wa,wo,zu'
 langs_exclude = 'en,ru'
