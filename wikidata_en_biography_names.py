@@ -98,7 +98,7 @@ for i in range(0,numsteps):
 		except:
 			null = 0
 		if skip == True:
-			input('Hi')
+			# input('Hi')
 			continue
 
 		# Check for excluded P27 values within P19 places of birth
