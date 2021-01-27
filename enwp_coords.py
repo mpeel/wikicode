@@ -145,7 +145,7 @@ for page in pages:
 	print(count)
 	if count > 2:
 		print('Wrong number of coordinate templates (' + str(count) + '), skipping')
-		input('Check')
+		# input('Check')
 		continue
 
 	done = False
