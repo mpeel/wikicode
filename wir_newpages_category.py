@@ -14,7 +14,7 @@ repo = wdsite.data_repository()
 langs = ['en']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
-	targetcats = ['Category:Articles without Wikidata item', 'Category:Date of birth not in Wikidata', 'Category:Date of death not in Wikidata']
+	targetcats = ['Category:Date of birth not in Wikidata', 'Category:Date of death not in Wikidata','Category:Articles without Wikidata item']
 	for targetcat in targetcats:
 		cat = pywikibot.Category(wikisite, targetcat)
 		pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False)
@@ -30,7 +30,7 @@ for lang in langs:
 			try:
 				item = pywikibot.ItemPage.fromPage(page)
 			except:
-				pass
+				null = 0
 
 			if item:
 				print('Page has item')
