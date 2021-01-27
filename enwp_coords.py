@@ -45,7 +45,7 @@ repo = wiki.data_repository()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
 debug = False
 numedited = 0
-maxnumedited = 100
+maxnumedited = 1000
 
 cat = pywikibot.Category(wiki, 'Category:Coordinates not on Wikidata')
 coord_templates = ['Coord']
