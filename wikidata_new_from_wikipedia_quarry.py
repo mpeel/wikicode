@@ -111,10 +111,10 @@ for prefix in wikipedias:
 					continue
 				else:
 					nametrip = True
-			if option == 0:
-				page = pagename
-			else:
-				page = pywikibot.Page(wikipedia, pagename)
+			# if option == 0:
+			# 	page = pagename
+			# else:
+			page = pywikibot.Page(wikipedia, pagename)
 
 			# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 			# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
