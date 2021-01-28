@@ -53,7 +53,6 @@ days_since_last_edit_but_search = 7.0
 days_since_creation = 14.0
 
 debug = False
-doing_categories = True
 
 def search_entities(site, itemtitle):
 	 params = { 'action' :'wbsearchentities', 
@@ -98,7 +97,7 @@ for prefix in wikipedias:
 		# pages = wikipedia.querypage('UnconnectedPages')
 		if option == 0:
 			# pages = wikipedia.unconnected_pages(total=30000)
-			pages = parsequarry('quarry-51950-enwp-categories-without-wikidata-run526569.csv')
+			pages = parsequarry('quarry-51946-enwp-articles-without-wikidata-run526568.csv')
 		else:
 			pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 		# print(pages)
@@ -108,22 +107,19 @@ for prefix in wikipedias:
 			count += 1
 			# if count < 10000:
 				# continue
-			print(count)
 			if pagename[0] == '"' and pagename[-1] == '"':
 				pagename = pagename[1:-1]
+			print(count)
 			if not nametrip:
 				if 'Crytzer' not in pagename:
 					continue
 				else:
 					nametrip = True
-			if option == 0 and doing_categories:
-				pagename = 'Category:'+pagename
 			# if option == 0:
 			# 	page = pagename
 			# else:
 			page = pywikibot.Page(wikipedia, pagename)
-			if page.namespace() == wikipedia.namespaces.CATEGORY:
-				page = pywikibot.Category(wikipedia, pagename)
+
 			# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 			# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
@@ -212,11 +208,10 @@ for prefix in wikipedias:
 			# See if search returns any items
 			wikidataEntries = search_entities(repo, page.title())
 			if wikidataEntries['search'] != []:
-				continue
-				# print('Search results but old')
-				# if lastedited_time < days_since_last_edit_but_search:
-				# 	print('Recently edited with search results ('+str(lastedited_time)+')')
-				# 	continue
+				print('Search results but old')
+				if lastedited_time < days_since_last_edit_but_search:
+					print('Recently edited with search results ('+str(lastedited_time)+')')
+					continue
 
 			## Part 4 - editing
 
