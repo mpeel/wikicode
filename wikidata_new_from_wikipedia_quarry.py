@@ -10,6 +10,7 @@ from pywikibot import pagegenerators
 from pywikibot.data import api
 import datetime
 import requests
+import csv
 from wir_newpages import *
 
 def parsequarry(quarryfile):
@@ -50,7 +51,7 @@ days_since_last_edit = 1.0
 days_since_last_edit_but_search = 7.0
 days_since_creation = 14.0
 
-debug = False
+debug = True
 
 def search_entities(site, itemtitle):
 	 params = { 'action' :'wbsearchentities', 
