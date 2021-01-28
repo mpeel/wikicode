@@ -102,6 +102,7 @@ for prefix in wikipedias:
 			pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 		# print(pages)
 		# pages.reverse()
+		
 		count = 0
 		for pagename in pages:
 			count += 1
