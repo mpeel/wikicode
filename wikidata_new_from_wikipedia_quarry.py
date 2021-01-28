@@ -15,8 +15,9 @@ from wir_newpages import *
 
 def parsequarry(quarryfile):
 	with open(quarryfile, mode='r') as infile:
-		reader = csv.reader(infile)
-		targets = {rows[1] for rows in reader}
+		targets = infile.read()
+		targets = targets.splitlines()
+		targets = targets[1:]
 	return targets
 
 def parseduplicity(url,lang='en'):
@@ -51,7 +52,7 @@ days_since_last_edit = 1.0
 days_since_last_edit_but_search = 7.0
 days_since_creation = 14.0
 
-debug = True
+debug = False
 
 def search_entities(site, itemtitle):
 	 params = { 'action' :'wbsearchentities', 
