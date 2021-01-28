@@ -37,7 +37,7 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
 wikipedias = ['en']
-templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850']
+templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850','Q15631954','Q5902043', 'Q14456068']
 maxnum = 50000
 nummodified = 0
 days_since_last_edit = 1.0
@@ -55,6 +55,15 @@ def search_entities(site, itemtitle):
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
 
+def get_unconnected(site, offset,number):
+	 params = { 'action' :'query', 
+				'format' : 'json',
+				'list' : 'querypage',
+				'qppage' : 'UnconnectedPages',
+				'qpoffset' : offset,
+				'qplimit': number}
+	 request = api.Request(site=site, parameters=params)
+	 return request.submit()
 
 for prefix in wikipedias:
 	wikipedia = pywikibot.Site(prefix, 'wikipedia')
@@ -166,7 +175,10 @@ for prefix in wikipedias:
 				# If a biography, add biography claims
 				if pageIsBiography(page,lang=prefix):
 					addBiographyClaims(repo=repo, wikisite=wikipedia, item=wd_item, page=page, lang=prefix)
-				page.touch()
+				try:
+					page.touch()
+				except:
+					continue
 				continue
 
 			# If we have a category, make sure it isn't empty

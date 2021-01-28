@@ -13,7 +13,7 @@ site = pywikibot.Site('commons', 'commons')
 repo = site.data_repository()  # this is a DataSite object
 
 cat = pywikibot.Category(site,'Category:Uses of Wikidata Infobox')
-print cat
+# print cat
 outputfile = codecs.open('commons_wikidata_infobox_uses.csv', "w", "utf-8")
 
 uses = cat.members(recurse=False);
