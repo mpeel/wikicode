@@ -12,7 +12,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 
-maxnum = 100000
+maxnum = 1000
 nummodified = 0
 stepsize =  10000
 maximum = 4000000
@@ -84,8 +84,11 @@ for i in range(0,numsteps):
 	generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
 	for page in generator:
 		# Get the page
-		item_dict = page.get()
-		qid = page.title()
+		try:
+			item_dict = page.get()
+			qid = page.title()
+		except:
+			continue
 		print("\nhttps://www.wikidata.org/wiki/" + qid)
 
 		skip = False
