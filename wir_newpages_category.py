@@ -37,6 +37,7 @@ for lang in langs:
 				print('https://www.wikidata.org/wiki/%s' % (item.title()))
 				# test = input('Continue?')
 				addBiographyClaims(repo=repo, wikisite=wikisite, item=item, page=page, lang=lang)
+				page.touch()
 			else:
 				print('Page without item')
 				#search for a valid item, otherwise create
