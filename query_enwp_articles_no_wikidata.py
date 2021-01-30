@@ -17,20 +17,22 @@ conn = pymysql.connect(
 	password=password,
 	port=port
 )
+languages = ['en']
 
-with conn.cursor() as cur:
-	cur.execute('use enwiki_p')
-	cur.execute("SELECT page_title FROM page WHERE page_namespace=0 AND page_is_redirect=0 AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=0 AND pp_propname='wikibase_item')")
-	vals = cur.fetchall()
-	f = open("/data/project/pibot/enwp_articles.csv", "w")
-	if len(vals) > 0:
-		[f.write(x[1]) for x in vals]
-	else:
-		run = False
-	f.close()
-	ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
-	ftp.cwd('wiki')
-	file = open('/data/project/pibot/enwp_articles.csv','rb')
-	ftp.storbinary('STOR enwp_articles.csv', file)
-	file.close()
-	ftp.quit()
+for lang in languages:
+	with conn.cursor() as cur:
+		cur.execute('use '+lang+'wiki_p')
+		cur.execute("SELECT page_title FROM page WHERE page_namespace=0 AND page_is_redirect=0 AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=0 AND pp_propname='wikibase_item')")
+		vals = cur.fetchall()
+		f = open("/data/project/pibot/"+lang+"wp_articles.csv", "w")
+		if len(vals) > 0:
+			[f.write(x[1]) for x in vals]
+		else:
+			run = False
+		f.close()
+		ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
+		ftp.cwd('wiki')
+		file = open('/data/project/pibot/'+lang+'wp_articles.csv','rb')
+		ftp.storbinary('STOR'+lang+'nwp_articles.csv', file)
+		file.close()
+		ftp.quit()
