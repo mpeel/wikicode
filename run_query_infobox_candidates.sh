@@ -1,1 +1,0 @@
-python3 /data/project/pibot/wikicode/query_infobox_candidates.py > /data/project/pibot/quarry_test.csv
