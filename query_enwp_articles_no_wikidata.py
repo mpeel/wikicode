@@ -20,7 +20,7 @@ conn = pymysql.connect(
 
 with conn.cursor() as cur:
 	cur.execute('use enwiki_p')
-	cur.execute("SELECT page_title FROM page WHERE page_namespace=0 AND page_is_redirect=0 AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=0 AND pp_propname='wikibase_item');")
+	cur.execute("SELECT page_title FROM page WHERE page_namespace=0 AND page_is_redirect=0 AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=0 AND pp_propname='wikibase_item')")
 	vals = cur.fetchall()
 	f = open("/data/project/pibot/enwp_articles.csv", "w")
 	if len(vals) > 0:
