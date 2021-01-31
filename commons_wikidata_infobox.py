@@ -56,7 +56,6 @@ if usequarry2 != '':
     ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
     ftp.cwd('wiki')
     ftp.retrbinary("RETR commons_infobox_candidates.txt" ,open('commons_infobox_candidates.txt', 'wb').write)
-    file.close()
     ftp.quit()
 
 
