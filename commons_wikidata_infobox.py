@@ -3,6 +3,8 @@
 # Check for consistency in commons category usage
 # Mike Peel     01-Mar-2018      v1 - start
 # Mike Peel     26-Jun-2018      v2 - restructure with options for running, and database
+# Mike Peel     30-Jan-2021      v3 - fully automate
+
 from __future__ import unicode_literals
 
 import pywikibot
@@ -15,6 +17,10 @@ from pywikibot.data import api
 import urllib
 import csv
 from pibot_functions import *
+from ftplib import FTP
+from ftplogin import *
+import shutil
+import os
 
 # import sys
 # sys.setdefaultencoding() does not exist, here!
@@ -31,8 +37,8 @@ random = False
 usequery = False
 usetemplate = ''#'Creator'#'Individual aircraft'
 usequarry = ''#'quarry.csv'
-quarry_reference = 'quarry_test_old.csv'
-usequarry2 = 'quarry_test.csv'
+quarry_reference = 'commons_infobox_candidates_old.txt'
+usequarry2 = 'commons_infobox_candidates.txt'
 useimport = '' #'import.csv'
 newstyle = False
 database = False
@@ -45,6 +51,14 @@ if database:
         reader = csv.reader(infile)
         existing_uses = {rows[0] for rows in reader}
     print('Database loaded!')
+
+if usequarry2 != '':
+    ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
+    ftp.cwd('wiki')
+    ftp.retrbinary("RETR commons_infobox_candidates.txt" + filename ,open(prefix+'commons_infobox_candidates.txt', 'wb').write)
+    file.close()
+    ftp.quit()
+
 
 targetcats = ['Category:CommonsRoot']
 
@@ -464,6 +478,7 @@ else:
             print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 
+shutil.copyfile('commons_infobox_candidates.txt', 'commons_infobox_candidates_old.txt')
 print('Done! Edited ' + str(nummodified) + ' entries')
 
 # EOF
