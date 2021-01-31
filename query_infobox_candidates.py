@@ -57,17 +57,17 @@ with conn.cursor() as cur:
 	# " WHERE tl.tl_title IS NULL"\
 	# " LIMIT " + str(step) + " OFFSET " + str(start))
 	vals = cur.fetchall()
-	f = open("/data/project/pibot/quarry_test.csv", "w")
+	f = open("/data/project/pibot/commons_infobox_candidates.csv", "w", encoding='utf-8')
 	if len(vals) > 0:
 		start += step
-		[f.write(x[1]) for x in vals]
+		[f.write(x[1]+'\n') for x in vals]
 	else:
 		run = False
 	f.close()
 	ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
 	ftp.cwd('wiki')
-	file = open('/data/project/pibot/quarry_test.csv','rb')
-	ftp.storbinary('STOR quarry_test.txt', file)
+	file = open('/data/project/pibot/commons_infobox_candidates.csv','rb')
+	ftp.storbinary('STOR commons_infobox_candidates.txt', file)
 	file.close()
 	ftp.quit()
 

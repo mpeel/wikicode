@@ -29,9 +29,9 @@ for lang in languages:
 		" AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='noindex')"\
 		" AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='hiddencat')")
 		vals = cur.fetchall()
-		f = open("/data/project/pibot/"+lang+"wp_categories.csv", "w")
+		f = open("/data/project/pibot/"+lang+"wp_categories.csv", "w", encoding='utf-8')
 		if len(vals) > 0:
-			[f.write(x[0]) for x in vals]
+			[f.write(x[0]+'\n') for x in vals]
 		else:
 			run = False
 		f.close()
