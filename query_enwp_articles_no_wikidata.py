@@ -26,7 +26,7 @@ for lang in languages:
 		vals = cur.fetchall()
 		f = open("/data/project/pibot/"+lang+"wp_articles.csv", "w")
 		if len(vals) > 0:
-			[f.write(x) for x in vals]
+			[f.write(str(x)) for x in vals]
 		else:
 			run = False
 		f.close()
