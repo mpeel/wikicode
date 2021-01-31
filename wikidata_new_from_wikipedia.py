@@ -125,6 +125,9 @@ for prefix in wikipedias:
 			if page.isCategoryRedirect():
 				# print('is redirect')
 				continue
+			if 'WikiProject' in page.title():
+				print("WikiProject")
+				continue
 
 			## Part 2 - parse the page info
 			print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
