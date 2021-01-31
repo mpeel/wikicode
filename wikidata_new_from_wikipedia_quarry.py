@@ -108,8 +108,8 @@ for prefix in wikipedias:
 		pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
 		print(pagename)
 		count += 1
-		# if count < 10000:
-			# continue
+		if count < 2700:
+			continue
 		print(count)
 		if pagename[0] == '"' and pagename[-1] == '"':
 			pagename = pagename[1:-1]
@@ -147,6 +147,12 @@ for prefix in wikipedias:
 			continue
 		if 'sockpuppet' in page.title():
 			print('sockpuppet')
+			continue
+		if 'featured picture' in page.title():
+			print('featured picture')
+			continue
+		if 'peer review' in page.title():
+			print('peer review')
 			continue
 
 		## Part 2 - parse the page info
@@ -230,8 +236,8 @@ for prefix in wikipedias:
 
 		# Remove trailing brackets from the page title
 		page_title = page.title()
-		if page_title[-1] == ')':
-			page_title = page_title[:page_title.rfind('(')]
+		# if page_title[-1] == ')':
+		# 	page_title = page_title[:page_title.rfind('(')]
 		page_title = page_title.strip()
 		# If we're here, then create a new item
 		data = {'labels': {prefix: page_title}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
