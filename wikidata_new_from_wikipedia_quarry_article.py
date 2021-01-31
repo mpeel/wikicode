@@ -104,7 +104,7 @@ for prefix in wikipedias:
 	
 	count = 0
 	for pagename in pages:
-		pagename = str(pagename[2:-2]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
+		pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
 		print(pagename)
 		count += 1
 		if pagename[0] == '"' and pagename[-1] == '"':
