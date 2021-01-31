@@ -81,7 +81,7 @@ for prefix in wikipedias:
 
 	ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
 	ftp.cwd('wiki')
-	ftp.retrbinary("RETR "+prefix+"wp_articles.csv" + filename ,open(prefix+'wp_articles.csv', 'wb').write)
+	ftp.retrbinary("RETR "+prefix+"wp_articles.csv" ,open(prefix+'wp_articles.csv', 'wb').write)
 	file.close()
 	ftp.quit()
 
