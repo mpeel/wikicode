@@ -60,7 +60,7 @@ with conn.cursor() as cur:
 	f = open("/data/project/pibot/commons_infobox_candidates.csv", "w", encoding='utf-8')
 	if len(vals) > 0:
 		start += step
-		[f.write(x[1]+'\n') for x in vals]
+		[f.write(str(x[1])+'\n') for x in vals]
 	else:
 		run = False
 	f.close()
