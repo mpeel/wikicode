@@ -99,7 +99,7 @@ for prefix in wikipedias:
 		# pages = wikipedia.querypage('UnconnectedPages')
 		if option == 0:
 			# pages = wikipedia.unconnected_pages(total=30000)
-			pages = parsequarry('quarry-51950-enwp-categories-without-wikidata-run526931.csv')
+			pages = parsequarry('quarry-51950-enwp-categories-without-wikidata-run527090.csv')
 		else:
 			pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+prefix+'wiki',lang=prefix)
 		# print(pages)
