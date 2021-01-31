@@ -23,9 +23,9 @@ for lang in languages:
 	with conn.cursor() as cur:
 		cur.execute('use '+lang+'wiki_p')
 		cur.execute("SELECT page_title FROM page WHERE page_namespace=14 AND page_is_redirect=0"\
-		"AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='wikibase_item')"\
-		"AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='noindex')"\
-		"AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='hiddencat')")
+		" AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='wikibase_item')"\
+		" AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='noindex')"\
+		" AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=14 AND pp_propname='hiddencat')")
 		vals = cur.fetchall()
 		f = open("/data/project/pibot/"+lang+"wp_categories.csv", "w")
 		if len(vals) > 0:
