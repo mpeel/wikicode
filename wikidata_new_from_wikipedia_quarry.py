@@ -110,8 +110,8 @@ for prefix in wikipedias:
 		pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
 		print(pagename)
 		count += 1
-		if count < 2700:
-			continue
+		# if count < 2700:
+		# 	continue
 		print(count)
 		if pagename[0] == '"' and pagename[-1] == '"':
 			pagename = pagename[1:-1]
@@ -144,26 +144,29 @@ for prefix in wikipedias:
 		if page.isCategoryRedirect():
 			# print('is redirect')
 			continue
-		if 'wikiproject' in page.title().lower():
-			print("WikiProject")
-			continue
+		# if 'wikiproject' in page.title().lower():
+		# 	print("WikiProject")
+		# 	continue
 		if 'sockpuppet' in page.title().lower():
 			print('sockpuppet')
 			continue
-		if 'featured picture' in page.title().lower():
-			print('featured picture')
-			continue
+		# if 'featured picture' in page.title().lower():
+		# 	print('featured picture')
+		# 	continue
 		if 'peer review' in page.title().lower():
 			print('peer review')
 			continue
-		if 'wikipedia' in page.title().lower():
-			print('wikipedia')
-			continue
+		# if 'wikipedia' in page.title().lower():
+		# 	print('wikipedia')
+		# 	continue
 		if 'featured' in page.title().lower():
 			print('featured')
 			continue
 		if 'quality' in page.title().lower():
 			print('quality')
+			continue
+		if 'wiki' in page.title().lower():
+			print('wiki')
 			continue
 
 		## Part 2 - parse the page info
