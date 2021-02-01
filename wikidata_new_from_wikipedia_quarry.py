@@ -101,6 +101,7 @@ for prefix in wikipedias:
 	# Start running through unconnected pages
 	nametrip = True
 	pages = parsequarry(prefix+"wp_categories.csv")
+	pages.shuffle()
 	# print(pages)
 	# pages.reverse()
 	count = 0
@@ -142,17 +143,26 @@ for prefix in wikipedias:
 		if page.isCategoryRedirect():
 			# print('is redirect')
 			continue
-		if 'WikiProject' in page.title():
+		if 'wikiproject' in page.title().lower():
 			print("WikiProject")
 			continue
-		if 'sockpuppet' in page.title():
+		if 'sockpuppet' in page.title().lower():
 			print('sockpuppet')
 			continue
-		if 'featured picture' in page.title():
+		if 'featured picture' in page.title().lower():
 			print('featured picture')
 			continue
-		if 'peer review' in page.title():
+		if 'peer review' in page.title().lower():
 			print('peer review')
+			continue
+		if 'wikipedia' in page.title().lower():
+			print('wikipedia')
+			continue
+		if 'featured' in page.title().lower():
+			print('featured')
+			continue
+		if 'quality' in page.title().lower():
+			print('quality')
 			continue
 
 		## Part 2 - parse the page info
