@@ -15,6 +15,7 @@ import csv
 from wir_newpages import *
 from ftplib import FTP
 from ftplogin import *
+import random
 
 def parsequarry(quarryfile):
 	with open(quarryfile, mode='r') as infile:
@@ -101,7 +102,7 @@ for prefix in wikipedias:
 	# Start running through unconnected pages
 	nametrip = True
 	pages = parsequarry(prefix+"wp_categories.csv")
-	pages.shuffle()
+	random.shuffle(pages)
 	# print(pages)
 	# pages.reverse()
 	count = 0
