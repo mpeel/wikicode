@@ -118,7 +118,10 @@ for prefix in wikipedias:
 		# if option == 0:
 		# 	page = pagename
 		# else:
-		page = pywikibot.Page(wikipedia, pagename)
+		try:
+			page = pywikibot.Page(wikipedia, pagename)
+		except:
+			continue
 
 		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
 		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
