@@ -102,7 +102,7 @@ for prefix in wikipedias:
 	# Start running through unconnected pages
 	nametrip = True
 	pages = parsequarry(prefix+"wp_categories.csv")
-	random.shuffle(pages)
+	# random.shuffle(pages)
 	# print(pages)
 	# pages.reverse()
 	count = 0
