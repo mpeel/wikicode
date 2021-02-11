@@ -230,7 +230,10 @@ for targetcat in targetcats:
 									time.sleep(1)
 									wd_item.editEntity(data, summary=u'Add commons sitelink')
 								nummodified += 1
-
+								try:
+									page.touch()
+								except:
+									continue
 							print(nummodified)
 							if nummodified >= maxnum:
 								print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
