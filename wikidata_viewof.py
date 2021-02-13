@@ -93,7 +93,7 @@ for k in range(0,len(searchstrings)):
 					continue
 
 				for parentcat in targetcat.categories():
-					if target == '' and 'view' not in parentcat.title().lower() and 'interior' not in parentcat.title().lower() and 'exterior' not in parentcat.title().lower() and 'wikidata' not in parentcat.title().lower() and 'page' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower() and 'disambig' not in parentcat.text.lower():
+					if target == '' and 'view' not in parentcat.title().lower() and 'interior' not in parentcat.title().lower() and 'exterior' not in parentcat.title().lower() and 'wikidata' not in parentcat.title().lower() and 'page' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower() and 'disambig' not in parentcat.text.lower() and 'base mérimée' not in parentcat.text.lower():
 						try:
 							wd_item = pywikibot.ItemPage.fromPage(parentcat)
 							item_dict = wd_item.get()
