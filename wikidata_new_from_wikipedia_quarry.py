@@ -50,7 +50,7 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 
 wikipedias = ['en']
 templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850','Q15631954','Q5902043', 'Q14456068','Q105097863','Q105102320','Q105132080','Q5618182']
-maxnum = 50000
+maxnum = 100000
 nummodified = 0
 days_since_last_edit = 1.0
 days_since_last_edit_but_search = 7.0
@@ -107,215 +107,218 @@ for prefix in wikipedias:
 	# pages.reverse()
 	count = 0
 	for pagename in pages:
-		pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
-		print(pagename)
-		count += 1
-		# if count < 2700:
-		# 	continue
-		print(count)
-		if pagename[0] == '"' and pagename[-1] == '"':
-			pagename = pagename[1:-1]
-		if not nametrip:
-			if 'Crytzer' not in pagename:
-				continue
-			else:
-				nametrip = True
-		if doing_categories:
-			pagename = 'Category:'+pagename
-		# if option == 0:
-		# 	page = pagename
-		# else:
 		try:
-			page = pywikibot.Page(wikipedia, pagename)
-		except:
-			continue
-		if page.namespace() == wikipedia.namespaces.CATEGORY:
+			pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
+			print(pagename)
+			count += 1
+			# if count < 2700:
+			# 	continue
+			print(count)
+			if pagename[0] == '"' and pagename[-1] == '"':
+				pagename = pagename[1:-1]
+			if not nametrip:
+				if 'Crytzer' not in pagename:
+					continue
+				else:
+					nametrip = True
+			if doing_categories:
+				pagename = 'Category:'+pagename
+			# if option == 0:
+			# 	page = pagename
+			# else:
 			try:
-				page = pywikibot.Category(wikipedia, pagename)
+				page = pywikibot.Page(wikipedia, pagename)
 			except:
 				continue
-		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
-		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
+			if page.namespace() == wikipedia.namespaces.CATEGORY:
+				try:
+					page = pywikibot.Category(wikipedia, pagename)
+				except:
+					continue
+			# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
+			# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
-		## Part 1 - quick things to check
+			## Part 1 - quick things to check
 
-		# Articles and categories only
-		if page.namespace() != wikipedia.namespaces.MAIN and page.namespace() != wikipedia.namespaces.CATEGORY:
-			# print('bad namespace')
-			continue
-		# Exclude redirects
-		if page.isRedirectPage():
-			# print('is redirect')
-			continue
-		if page.isCategoryRedirect():
-			# print('is redirect')
-			continue
-		# if 'wikiproject' in page.title().lower():
-		# 	print("WikiProject")
-		# 	continue
-		if 'sockpuppet' in page.title().lower():
-			print('sockpuppet')
-			continue
-		# if 'featured picture' in page.title().lower():
-		# 	print('featured picture')
-		# 	continue
-		if 'peer review' in page.title().lower():
-			print('peer review')
-			continue
-		# if 'wikipedia' in page.title().lower():
-		# 	print('wikipedia')
-		# 	continue
-		if 'featured' in page.title().lower():
-			print('featured')
-			continue
-		if 'quality' in page.title().lower():
-			print('quality')
-			continue
-		if 'wiki' in page.title().lower():
-			print('wiki')
-			continue
+			# Articles and categories only
+			if page.namespace() != wikipedia.namespaces.MAIN and page.namespace() != wikipedia.namespaces.CATEGORY:
+				# print('bad namespace')
+				continue
+			# Exclude redirects
+			if page.isRedirectPage():
+				# print('is redirect')
+				continue
+			if page.isCategoryRedirect():
+				# print('is redirect')
+				continue
+			# if 'wikiproject' in page.title().lower():
+			# 	print("WikiProject")
+			# 	continue
+			if 'sockpuppet' in page.title().lower():
+				print('sockpuppet')
+				continue
+			# if 'featured picture' in page.title().lower():
+			# 	print('featured picture')
+			# 	continue
+			if 'peer review' in page.title().lower():
+				print('peer review')
+				continue
+			# if 'wikipedia' in page.title().lower():
+			# 	print('wikipedia')
+			# 	continue
+			if 'featured' in page.title().lower():
+				print('featured')
+				continue
+			if 'quality' in page.title().lower():
+				print('quality')
+				continue
+			if 'wiki' in page.title().lower():
+				print('wiki')
+				continue
 
-		## Part 2 - parse the page info
-		print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
+			## Part 2 - parse the page info
+			print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
 
-		# Check for the last edit time
-		try:
-			lastedited = page.editTime()
-		except:
-			print('Unable to get last edited time')
-			continue
-		lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
-		print('Last edited: ' + str(lastedited_time))
-		if lastedited_time < days_since_last_edit:
-			print('Recently edited ('+str(lastedited_time)+')')
-			continue
+			# Check for the last edit time
+			try:
+				lastedited = page.editTime()
+			except:
+				print('Unable to get last edited time')
+				continue
+			lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
+			print('Last edited: ' + str(lastedited_time))
+			if lastedited_time < days_since_last_edit:
+				print('Recently edited ('+str(lastedited_time)+')')
+				continue
 
-		# Check for the creation time
-		created = page.oldest_revision.timestamp
-		created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
-		print('Created: ' + str(created_time))
-		if created_time < days_since_creation:
-			print('Recently created ('+str(created_time)+')')
-			continue
+			# Check for the creation time
+			created = page.oldest_revision.timestamp
+			created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
+			print('Created: ' + str(created_time))
+			if created_time < days_since_creation:
+				print('Recently created ('+str(created_time)+')')
+				continue
 
-		# Check to see if it contains templates we want to avoid
-		trip = 0
-		for template, _ in page.templatesWithParams():
-			if template in skipping_templates:
-				trip = template.title()
-		if trip != 0:
-			print('Page contains ' + str(trip) + ', skipping')
-			continue
+			# Check to see if it contains templates we want to avoid
+			trip = 0
+			for template, _ in page.templatesWithParams():
+				if template in skipping_templates:
+					trip = template.title()
+			if trip != 0:
+				print('Page contains ' + str(trip) + ', skipping')
+				continue
 
-		# Check for #REDIRECT
-		if '#redirect' in page.text.lower():
-			print("Page is a redirect but isn't marked as one")
-			continue
+			# Check for #REDIRECT
+			if '#redirect' in page.text.lower():
+				print("Page is a redirect but isn't marked as one")
+				continue
 
-		## Part 3 - look up more information
+			## Part 3 - look up more information
 
-		# Check if we have a Wikidata item already
-		has_sitelink = False
-		try:
-			wd_item = pywikibot.ItemPage.fromPage(page)
-			item_dict = wd_item.get()
-			qid = wd_item.title()
-			print("Has a sitelink already - " + qid)
-			has_sitelink = True
-		except:
-			print(page.title() + ' - no page found')
-		if has_sitelink:
-			# If a biography, add biography claims
-			if pageIsBiography(page,lang=prefix):
-				addBiographyClaims(repo=repo, wikisite=wikipedia, item=wd_item, page=page, lang=prefix)
+			# Check if we have a Wikidata item already
+			has_sitelink = False
+			try:
+				wd_item = pywikibot.ItemPage.fromPage(page)
+				item_dict = wd_item.get()
+				qid = wd_item.title()
+				print("Has a sitelink already - " + qid)
+				has_sitelink = True
+			except:
+				print(page.title() + ' - no page found')
+			if has_sitelink:
+				# If a biography, add biography claims
+				if pageIsBiography(page,lang=prefix):
+					addBiographyClaims(repo=repo, wikisite=wikipedia, item=wd_item, page=page, lang=prefix)
+				try:
+					page.touch()
+				except:
+					continue
+				continue
+
+			# If we have a category, make sure it isn't empty
+			if page.namespace() == wikipedia.namespaces.CATEGORY:
+				if page.isEmptyCategory():
+					# print('Is empty')
+					continue
+				if page.isHiddenCategory():
+					# print('Is hidden')
+					continue
+
+			# See if search returns any items
+			wikidataEntries = search_entities(repo, page.title())
+			if wikidataEntries['search'] != []:
+				continue
+				# print('Search results but old')
+				# if lastedited_time < days_since_last_edit_but_search:
+				# 	print('Recently edited with search results ('+str(lastedited_time)+')')
+				# 	continue
+
+			## Part 4 - editing
+
+			# Remove trailing brackets from the page title
+			page_title = page.title()
+			# if page_title[-1] == ')':
+			# 	page_title = page_title[:page_title.rfind('(')]
+			page_title = page_title.strip()
+			# If we're here, then create a new item
+			data = {'labels': {prefix: page_title}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
+			test = 'y'
+			if debug:
+				print(data)
+				test = input('Continue?')
+			if test == 'y':
+				new_item = pywikibot.ItemPage(repo)
+				new_item.editEntity(data, summary="Creating item from [[" + prefix +":"+page.title()+"]]")
+				nummodified += 1
+				if page.namespace() == wikipedia.namespaces.CATEGORY:
+					# We have a category, also add a P31 value
+					claim = pywikibot.Claim(repo,'P31')
+					if page.isDisambig():
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q15407973')) # Wikimedia disambiguation category
+					else:
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q4167836')) # Wikimedia category
+					new_item.addClaim(claim, summary='Category item')
+				else:
+					if page.isDisambig():
+						claim = pywikibot.Claim(repo,'P31')
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q4167410')) # Disambiguation page
+						new_item.addClaim(claim, summary='Disambig page')
+					elif 'list of' in page.title()[0:10].lower():
+						# input('Is list - OK?')
+						claim = pywikibot.Claim(repo,'P31')
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q13406463')) # List item
+						new_item.addClaim(claim, summary='List item')
+					elif pageIsBiography(page,lang=prefix):
+						# If a biography, add biography claims
+						addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
+					elif 'film)' in page.title().lower():
+						# input('Is film - OK?')
+						claim = pywikibot.Claim(repo,'P31')
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q11424')) # Film
+						new_item.addClaim(claim, summary='Film')
+					elif 'tv series)' in page.title().lower():
+						# input('Is TV series - OK?')
+						claim = pywikibot.Claim(repo,'P31')
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q5398426')) # Film
+						new_item.addClaim(claim, summary='TV series')
+					elif 'surname)' in page.title().lower():
+						# input('Is surname - OK?')
+						claim = pywikibot.Claim(repo,'P31')
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q101352')) # Surname
+						new_item.addClaim(claim, summary='Surname')
+
+
+
+
+			## Part 5 - tidy up
+
+			# Touch the page to force an update
 			try:
 				page.touch()
 			except:
-				continue
-			continue
-
-		# If we have a category, make sure it isn't empty
-		if page.namespace() == wikipedia.namespaces.CATEGORY:
-			if page.isEmptyCategory():
-				# print('Is empty')
-				continue
-			if page.isHiddenCategory():
-				# print('Is hidden')
-				continue
-
-		# See if search returns any items
-		wikidataEntries = search_entities(repo, page.title())
-		if wikidataEntries['search'] != []:
-			continue
-			# print('Search results but old')
-			# if lastedited_time < days_since_last_edit_but_search:
-			# 	print('Recently edited with search results ('+str(lastedited_time)+')')
-			# 	continue
-
-		## Part 4 - editing
-
-		# Remove trailing brackets from the page title
-		page_title = page.title()
-		# if page_title[-1] == ')':
-		# 	page_title = page_title[:page_title.rfind('(')]
-		page_title = page_title.strip()
-		# If we're here, then create a new item
-		data = {'labels': {prefix: page_title}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
-		test = 'y'
-		if debug:
-			print(data)
-			test = input('Continue?')
-		if test == 'y':
-			new_item = pywikibot.ItemPage(repo)
-			new_item.editEntity(data, summary="Creating item from [[" + prefix +":"+page.title()+"]]")
-			nummodified += 1
-			if page.namespace() == wikipedia.namespaces.CATEGORY:
-				# We have a category, also add a P31 value
-				claim = pywikibot.Claim(repo,'P31')
-				if page.isDisambig():
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q15407973')) # Wikimedia disambiguation category
-				else:
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q4167836')) # Wikimedia category
-				new_item.addClaim(claim, summary='Category item')
-			else:
-				if page.isDisambig():
-					claim = pywikibot.Claim(repo,'P31')
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q4167410')) # Disambiguation page
-					new_item.addClaim(claim, summary='Disambig page')
-				elif 'list of' in page.title()[0:10].lower():
-					# input('Is list - OK?')
-					claim = pywikibot.Claim(repo,'P31')
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q13406463')) # List item
-					new_item.addClaim(claim, summary='List item')
-				elif pageIsBiography(page,lang=prefix):
-					# If a biography, add biography claims
-					addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
-				elif 'film)' in page.title().lower():
-					# input('Is film - OK?')
-					claim = pywikibot.Claim(repo,'P31')
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q11424')) # Film
-					new_item.addClaim(claim, summary='Film')
-				elif 'tv series)' in page.title().lower():
-					# input('Is TV series - OK?')
-					claim = pywikibot.Claim(repo,'P31')
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q5398426')) # Film
-					new_item.addClaim(claim, summary='TV series')
-				elif 'surname)' in page.title().lower():
-					# input('Is surname - OK?')
-					claim = pywikibot.Claim(repo,'P31')
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q101352')) # Surname
-					new_item.addClaim(claim, summary='Surname')
-
-
-
-
-		## Part 5 - tidy up
-
-		# Touch the page to force an update
-		try:
-			page.touch()
+				null = 0
 		except:
-			null = 0
+			continue
 
 		# Cut-off at a maximum number of edits	
 		print("")
