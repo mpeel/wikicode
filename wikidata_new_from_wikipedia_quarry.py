@@ -24,6 +24,12 @@ def parsequarry(quarryfile):
 		targets = targets[1:]
 	return targets
 
+def parseredirects(quarryfile):
+	with open(quarryfile, mode='r') as infile:
+		targets = infile.read()
+		targets = targets.splitlines()
+	return targets
+
 def parseduplicity(url,lang='en'):
 	try:
 		r = requests.get(url)
@@ -101,6 +107,7 @@ for prefix in wikipedias:
 
 	# Start running through unconnected pages
 	nametrip = True
+	redirects = parseredirects(prefix+'wp_category_redirects.csv')
 	pages = parsequarry(prefix+"wp_categories.csv")
 	random.shuffle(pages)
 	# print(pages)
@@ -110,6 +117,10 @@ for prefix in wikipedias:
 		try:
 			pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
 			print(pagename)
+			if pagename in redirects:
+				print('Redirected')
+				continue
+
 			count += 1
 			# if count < 2700:
 			# 	continue
