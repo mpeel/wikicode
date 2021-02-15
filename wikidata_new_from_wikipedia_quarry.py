@@ -109,7 +109,7 @@ for prefix in wikipedias:
 	nametrip = True
 	redirects = parseredirects(prefix+'wp_category_redirects.csv')
 	pages = parsequarry(prefix+"wp_categories.csv")
-	random.shuffle(pages)
+	# random.shuffle(pages)
 	# print(pages)
 	# pages.reverse()
 	count = 0
@@ -117,7 +117,8 @@ for prefix in wikipedias:
 		try:
 			pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
 			print(pagename)
-			if pagename in redirects:
+			if pagename.replace('_',' ').strip() in redirects:
+				print(pagename)
 				print('Redirected')
 				continue
 

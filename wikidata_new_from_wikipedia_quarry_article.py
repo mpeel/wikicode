@@ -57,10 +57,10 @@ days_since_creation = 14.0
 
 debug = False
 
-def search_entities(site, itemtitle):
+def search_entities(site, itemtitle,lang='en'):
 	 params = { 'action' :'wbsearchentities', 
 				'format' : 'json',
-				'language' : 'en',
+				'language' : lang,
 				'type' : 'item',
 				'search': itemtitle}
 	 request = api.Request(site=site, parameters=params)
