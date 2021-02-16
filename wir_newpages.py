@@ -295,14 +295,14 @@ def calculateBirthDateFull(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'pt':
-		m = re.findall(r'\{\{(?:D|d)nibr\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		m = re.findall(r'\{\{(?:D|d)nibr\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('lang=br|',''))
 		if m:
 			try:
 				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
-		m = re.findall(r'\{\{(?:D|d)ni\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		m = re.findall(r'\{\{(?:D|d)ni\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('lang=br|',''))
 		if m:
 			try:
 				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
@@ -385,7 +385,7 @@ def calculateDeathDateFull(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'pt':
-		m = re.findall(r'\{\{(?:M|m)orte\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		m = re.findall(r'\{\{(?:M|m)orte\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('lang=br|',''))
 		if m:
 			try:
 				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
