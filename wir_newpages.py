@@ -491,7 +491,7 @@ def pageIsRubbish(page='', lang=''):
 		return True
 	elif lang == 'fr' and re.search(r'(?im)\{\{\s*(Suppression|À supprimer|Admissibilit[ée]|Avertissement)', page.text):
 		return True
-	elif lang == 'pt' and re.search(r'(?im)\{\{\s*(ER|ESR|apagar)', page.text):
+	elif lang == 'pt' and re.search(r'(?im)\{\{\s*(ER|ESR|apagar|Artigo insuficiente)', page.text):
 		return True
 	return False
 
