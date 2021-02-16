@@ -231,6 +231,10 @@ def calculateBirthDate(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Naissance en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'pt':
+		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Nascidos em (\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
 	return ''
 
 def calculateBirthDateFull(page='', lang=''):
@@ -290,6 +294,17 @@ def calculateBirthDateFull(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Naissance en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'pt':
+		m = re.findall(r'\{\{(?:D|d)nibr\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
+		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Nascidos em (\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
 	return ''
 
 def calculateDeathDate(page='', lang=''):
@@ -305,6 +320,10 @@ def calculateDeathDate(page='', lang=''):
 			return m[0]
 	elif lang == 'fr':
 		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Décès en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	elif lang == 'pt':
+		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Mortos em (\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
 	return ''
@@ -358,6 +377,17 @@ def calculateDeathDateFull(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*:\s*Décès en (?:janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)? ?(\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'pt':
+		m = re.findall(r'\{\{(?:M|m)orte\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
+		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Mortos em (\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
 	return ''
 
 def calculateOccupations(wikisite='', page='', lang=''):
@@ -370,6 +400,8 @@ def calculateOccupations(wikisite='', page='', lang=''):
 			cats = re.findall(r'(?i)\[\[\s*Category\s*\:([^\[\]\|]+?)[\]\|]', page.text)
 		elif lang == 'de':
 			cats = re.findall(r'(?i)\[\[\s*(?:Kategorie|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
+		elif lang == 'pt':
+			cats = re.findall(r'(?i)\[\[\s*(?:Categoria|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
 		elif lang == 'fr':
 			cats = re.findall(r'(?i)\[\[\s*(?:Catégorie|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
 		for cat in cats:
@@ -401,6 +433,8 @@ def pageCategories(page='', lang=''):
 		return len(re.findall(r'(?im)\[\[\s*Category\s*\:', page.text))
 	elif lang == 'de':
 		return len(re.findall(r'(?im)\[\[\s*(?:Kategorie|Category)\s*\:', page.text))
+	elif lang == 'pt':
+		return len(re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*\:', page.text))
 	elif lang == 'fr':
 		return len(re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*\:', page.text))
 	return 0
@@ -436,6 +470,12 @@ def pageIsBiography(page='', lang=''):
 				if re.search(r'(?im)((Catégorie|Category)\s*:\s*(Naissance|Décès) en)', page.text):
 					if not re.search(r'(?im)(:(Catégorie|Category)\s*:\s*(Naissance|Décès) en)', page.text):
 						return True
+	elif lang == 'pt':
+		if not page.title().startswith('Lista '):
+			if len(page.title().split(' ')) <= 5:
+				print('hi')
+				if re.search(r'(?im)((Categoria|Category)\s*:\s*(Naturais|Nascidos|Pessoas vivas|Mortos))', page.text):
+					return True
 	return False
 
 def pageIsRubbish(page='', lang=''):
@@ -444,6 +484,8 @@ def pageIsRubbish(page='', lang=''):
 	elif lang == 'de' and re.search(r'(?im)\{\{\s*(Löschen|db|SLA|Speedy)', page.text):
 		return True
 	elif lang == 'fr' and re.search(r'(?im)\{\{\s*(Suppression|À supprimer|Admissibilit[ée]|Avertissement)', page.text):
+		return True
+	elif lang == 'pt' and re.search(r'(?im)\{\{\s*(ER|ESR)', page.text):
 		return True
 	return False
 
