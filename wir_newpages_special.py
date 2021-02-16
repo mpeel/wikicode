@@ -24,8 +24,8 @@ for lang in langs:
 				need_to_skip = True
 		if need_to_skip:
 			continue
-		if page.namespace() != wikisite.namespaces.MAIN and page.namespace() != wikisite.namespaces.CATEGORY:
-			# print('bad namespace')
+		if page.namespace() != wikisite.namespaces.MAIN:
+			print('bad namespace')
 			continue
 		if page.isRedirectPage():
 			continue
