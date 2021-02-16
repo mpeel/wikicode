@@ -302,6 +302,13 @@ def calculateBirthDateFull(page='', lang=''):
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
+		m = re.findall(r'\{\{(?:D|d)ni\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Nascidos em (\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
@@ -473,7 +480,6 @@ def pageIsBiography(page='', lang=''):
 	elif lang == 'pt':
 		if not page.title().startswith('Lista '):
 			if len(page.title().split(' ')) <= 5:
-				print('hi')
 				if re.search(r'(?im)((Categoria|Category)\s*:\s*(Naturais|Nascidos|Pessoas vivas|Mortos))', page.text):
 					return True
 	return False
@@ -514,7 +520,7 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
 	repo = wdsite.data_repository()
-	langs = ['en', 'fr', 'de']
+	langs = ['en', 'fr', 'de','pt']
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
 		total = 100
@@ -579,7 +585,10 @@ def main():
 							print("Candidate %s has sitelink, skiping" % (itemfoundq))
 							numcandidates -= 1
 							continue
-						pagebirthyear = calculateBirthDate(page=page, lang=lang)
+						if lang == 'pt':
+							pagebirthyear = calculateBirthDateFull(page=page,lang=lang)
+						else:
+							pagebirthyear = calculateBirthDate(page=page, lang=lang)
 						pagebirthyear = pagebirthyear and int(pagebirthyear.split('-')[0]) or ''
 						if not pagebirthyear:
 							print("Page doesnt have birthdate, skiping")

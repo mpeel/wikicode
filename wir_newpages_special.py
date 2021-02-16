@@ -11,7 +11,7 @@ import requests
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
-langs = ['en']
+langs = ['pt','en']
 exclusions = ['Category:','Template:','Wikipedia:','Help:','Portal:','Book:','Module:','Gadget:']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
@@ -23,6 +23,9 @@ for lang in langs:
 			if exclusion in page.title():
 				need_to_skip = True
 		if need_to_skip:
+			continue
+		if page.namespace() != wikisite.namespaces.MAIN and page.namespace() != wikisite.namespaces.CATEGORY:
+			# print('bad namespace')
 			continue
 		if page.isRedirectPage():
 			continue
