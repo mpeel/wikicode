@@ -298,14 +298,14 @@ def calculateBirthDateFull(page='', lang=''):
 		m = re.findall(r'\{\{(?:D|d)nibr\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
 		if m:
 			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
 		m = re.findall(r'\{\{(?:D|d)ni\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
 		if m:
 			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
@@ -388,7 +388,7 @@ def calculateDeathDateFull(page='', lang=''):
 		m = re.findall(r'\{\{(?:M|m)orte\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text)
 		if m:
 			try:
-				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]))
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
