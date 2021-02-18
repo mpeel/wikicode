@@ -15,7 +15,7 @@ import urllib
 maxnum = 100000
 nummodified = 0
 stepsize =  10000
-maximum = 4000000
+maximum = 10000000
 numsteps = int(maximum / stepsize)
 debug = False
 
