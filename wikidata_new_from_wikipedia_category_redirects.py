@@ -10,7 +10,7 @@ from pywikibot import pagegenerators
 import codecs
 
 languages = ['en', 'pt']
-catitems = ['Q4616723']
+catitems = ['Q4616723','Q8379318','Q4048908']
 for lang in languages:
 	site = pywikibot.Site(lang, 'wikipedia')
 	repo = site.data_repository()  # this is a DataSite object

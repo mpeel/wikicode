@@ -121,6 +121,21 @@ for prefix in wikipedias:
 				print(pagename)
 				print('Redirected')
 				continue
+			if 'sockpuppet' in pagename.lower():
+				print('sockpuppet')
+				continue
+			if 'peer review' in pagename.lower():
+				print('peer review')
+				continue
+			if 'featured' in pagename.lower():
+				print('featured')
+				continue
+			if 'quality' in pagename.lower():
+				print('quality')
+				continue
+			if 'wiki' in pagename.lower():
+				print('wiki')
+				continue
 
 			count += 1
 			# if count < 2700:
@@ -163,30 +178,7 @@ for prefix in wikipedias:
 			if page.isCategoryRedirect():
 				# print('is redirect')
 				continue
-			# if 'wikiproject' in page.title().lower():
-			# 	print("WikiProject")
-			# 	continue
-			if 'sockpuppet' in page.title().lower():
-				print('sockpuppet')
-				continue
-			# if 'featured picture' in page.title().lower():
-			# 	print('featured picture')
-			# 	continue
-			if 'peer review' in page.title().lower():
-				print('peer review')
-				continue
-			# if 'wikipedia' in page.title().lower():
-			# 	print('wikipedia')
-			# 	continue
-			if 'featured' in page.title().lower():
-				print('featured')
-				continue
-			if 'quality' in page.title().lower():
-				print('quality')
-				continue
-			if 'wiki' in page.title().lower():
-				print('wiki')
-				continue
+
 
 			## Part 2 - parse the page info
 			print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
