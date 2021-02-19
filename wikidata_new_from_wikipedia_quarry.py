@@ -251,15 +251,15 @@ for prefix in wikipedias:
 			# See if search returns any items
 			wikidataEntries = search_entities(repo, page.title())
 			if wikidataEntries['search'] != []:
-				continue
+				# continue
 				# print('Search results but old')
-				# if lastedited_time < days_since_last_edit_but_search:
-				# 	print('Recently edited with search results ('+str(lastedited_time)+')')
-				# 	continue
+				if lastedited_time < days_since_last_edit_but_search:
+					print('Recently edited with search results ('+str(lastedited_time)+')')
+					continue
 
 			## Part 4 - editing
 
-			# Remove trailing brackets from the page title
+			# Remove trailing brackets from the page title - not for categories
 			page_title = page.title()
 			# if page_title[-1] == ')':
 			# 	page_title = page_title[:page_title.rfind('(')]
@@ -292,9 +292,9 @@ for prefix in wikipedias:
 						claim = pywikibot.Claim(repo,'P31')
 						claim.setTarget(pywikibot.ItemPage(repo, 'Q13406463')) # List item
 						new_item.addClaim(claim, summary='List item')
-					elif pageIsBiography(page,lang=prefix):
+					# elif pageIsBiography(page,lang=prefix):
 						# If a biography, add biography claims
-						addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
+						# addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
 					elif 'film)' in page.title().lower():
 						# input('Is film - OK?')
 						claim = pywikibot.Claim(repo,'P31')
