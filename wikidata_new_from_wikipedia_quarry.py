@@ -116,6 +116,8 @@ for prefix in wikipedias:
 	for pagename in pages:
 		try:
 			pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
+			if doing_categories:
+				pagename = 'Category:'+pagename
 			print(pagename)
 			if pagename.replace('_',' ').strip() in redirects:
 				print(pagename)
@@ -148,8 +150,6 @@ for prefix in wikipedias:
 					continue
 				else:
 					nametrip = True
-			if doing_categories:
-				pagename = 'Category:'+pagename
 			# if option == 0:
 			# 	page = pagename
 			# else:
