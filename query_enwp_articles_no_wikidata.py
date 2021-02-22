@@ -19,7 +19,7 @@ conn = pymysql.connect(
 	password=password,
 	port=port
 )
-languages = ['en', 'pt']
+languages = ['en', 'pt', 'de']
 
 for lang in languages:
 	with conn.cursor() as cur:
