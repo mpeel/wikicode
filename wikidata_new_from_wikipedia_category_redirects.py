@@ -9,7 +9,7 @@ import string
 from pywikibot import pagegenerators
 import codecs
 
-languages = ['en', 'pt']
+languages = ['de','en', 'pt', ]
 catitems = ['Q4616723','Q8379318','Q4048908']
 for lang in languages:
 	site = pywikibot.Site(lang, 'wikipedia')
