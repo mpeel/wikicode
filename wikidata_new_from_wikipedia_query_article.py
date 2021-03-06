@@ -48,7 +48,7 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
 wikipedias = ['de','en']
-templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850','Q15631954','Q5902043', 'Q14456068','Q105097863','Q105102320','Q105132080','Q5618182','Q11032822']
+templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850','Q15631954','Q5902043', 'Q14456068','Q105097863','Q105102320','Q105132080','Q5618182','Q11032822','Q26142338']
 maxnum = 50000
 nummodified = 0
 days_since_last_edit = 1.0
@@ -216,12 +216,19 @@ for prefix in wikipedias:
 					continue
 
 			# See if search returns any items
-			wikidataEntries = search_entities(repo, page.title())
+			wikidataEntries = search_entities(repo, page.title(),lang=prefix)
 			if wikidataEntries['search'] != []:
 				print('Search results but old')
 				if lastedited_time < days_since_last_edit_but_search:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
 					continue
+			if prefix != 'en':
+				wikidataEntries = search_entities(repo, page.title(),lang='en')
+				if wikidataEntries['search'] != []:
+					print('Search results but old')
+					if lastedited_time < days_since_last_edit_but_search:
+						print('Recently edited with search results ('+str(lastedited_time)+')')
+						continue
 
 			## Part 4 - editing
 
