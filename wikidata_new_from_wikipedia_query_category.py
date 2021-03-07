@@ -54,7 +54,7 @@ def parseduplicity(url,lang='en'):
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
-wikipedias = ['de','en']
+wikipedias = ['pt','de','en']
 templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850','Q15631954','Q5902043', 'Q14456068','Q105097863','Q105102320','Q105132080','Q5618182','Q11032822','Q26142338']
 maxnum = 100000
 nummodified = 0
@@ -117,7 +117,12 @@ for prefix in wikipedias:
 		try:
 			pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
 			if doing_categories:
-				pagename = 'Category:'+pagename
+				if prefix == 'pt':
+					pagename = 'Categoria:'+pagename
+				elif prefix == 'de':
+					pagename = 'Kategorie:' + pagename
+				else:
+					pagename = 'Category:'+pagename
 			print(pagename)
 			if pagename.replace('_',' ').strip() in redirects:
 				print(pagename)
@@ -147,7 +152,7 @@ for prefix in wikipedias:
 			if 'hilfe:' in pagename.lower():
 				print('hilfe:')
 				continue
-			if 'kategorie:' in pagename.lower():
+			if 'kategorie:kategorie:' in pagename.lower():
 				print('kategorie:')
 				continue
 			if 'portal:' in pagename.lower():
@@ -278,7 +283,7 @@ for prefix in wikipedias:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
 					continue
 			if prefix != 'en':
-				wikidataEntries = search_entities(repo, page.title(),lang='en')
+				wikidataEntries = search_entities(repo, page.title().replace('Categoria:','Category:').replace('Kategorie:','Category:'),lang='en')
 				if wikidataEntries['search'] != []:
 					if lastedited_time < days_since_last_edit_but_search:
 						print('Recently edited with search results ('+str(lastedited_time)+')')
@@ -293,7 +298,10 @@ for prefix in wikipedias:
 			# 	page_title = page_title[:page_title.rfind('(')]
 			page_title = page_title.strip()
 			# If we're here, then create a new item
-			data = {'labels': {prefix: page_title}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
+			if prefix == 'pt':
+				data = {'labels': {prefix: page_title, 'pt-br': page_title}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
+			else:
+				data = {'labels': {prefix: page_title}, 'sitelinks': [{'site': prefix+'wiki', 'title': page.title()}]}
 			test = 'y'
 			if debug:
 				print(data)
