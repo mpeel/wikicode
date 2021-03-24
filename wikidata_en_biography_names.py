@@ -25,6 +25,8 @@ langs_exclude = 'en,ru'
 country_qid_exclude = ['Q159', 'Q15180','Q17','Q28']
 
 def isEnglish(s):
+	if '(' in label or ')' in label:
+		return False
 	try:
 		s.encode(u'latin1')
 	except UnicodeEncodeError:
