@@ -38,21 +38,23 @@ for option in range(0,2):
 			except:
 				continue
 	else:
-		if option == 2:
-			# This times out, so isn't currently running
-			query = 'SELECT ?item ?itemLabel ?should_link_via_P301_to ?should_link_via_P301_toLabel '\
-			'WHERE {'\
-			'?should_link_via_P301_to wdt:P910 ?item .'\
-			'FILTER NOT EXISTS { ?item wdt:P301 ?should_link_via_P301_to } .'\
-			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-			'}'
-		else:
-			query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
-			'?statement wikibase:hasViolationForConstraint wds:P910-87F11688-D962-490C-B67C-627142687E18 .'\
-			'?item ?p ?statement .'\
-			'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
-			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-			'}'
+		# if option == 2:
+		# This times out, so isn't currently running
+		# ... except we no longer have a choice.
+		query = 'SELECT ?item ?itemLabel ?should_link_via_P301_to ?should_link_via_P301_toLabel '\
+		'WHERE {'\
+		'?should_link_via_P301_to wdt:P910 ?item .'\
+		'FILTER NOT EXISTS { ?item wdt:P301 ?should_link_via_P301_to } .'\
+		'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+		'}'
+		# else:
+		# This query no longer works per T274982
+		# 	query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
+		# 	'?statement wikibase:hasViolationForConstraint wds:P910-87F11688-D962-490C-B67C-627142687E18 .'\
+		# 	'?item ?p ?statement .'\
+		# 	'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
+		# 	'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+		# 	'}'
 		if debug:
 			query = query + " LIMIT 20"
 

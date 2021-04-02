@@ -23,7 +23,7 @@ debug = 0
 attempts = 0
 count = 0
 
-for option in range(0,3):
+for option in range(0,2):
 	candidates = []
 	if option == 1:
 		reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P1753')
@@ -38,20 +38,21 @@ for option in range(0,3):
 			except:
 				continue
 	else:
-		if option == 2:
-			query = 'SELECT ?item ?itemLabel ?should_link_via_P1754_to ?should_link_via_P1754_toLabel '\
-			'WHERE {'\
-			'?should_link_via_P1754_to wdt:P1753 ?item .'\
-			'FILTER NOT EXISTS { ?item wdt:P1754 ?should_link_via_P1754_to } .'\
-			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-			'}'
-		else:
-			query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
-			'?statement wikibase:hasViolationForConstraint wds:P1753-69FC3185-EFCA-4F00-B3D8-8F09DE2AAD76 .'\
-			'?item ?p ?statement .'\
-			'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
-			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-			'}'
+		# if option == 2:
+		query = 'SELECT ?item ?itemLabel ?should_link_via_P1754_to ?should_link_via_P1754_toLabel '\
+		'WHERE {'\
+		'?should_link_via_P1754_to wdt:P1753 ?item .'\
+		'FILTER NOT EXISTS { ?item wdt:P1754 ?should_link_via_P1754_to } .'\
+		'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+		'}'
+		# else:
+		# This query no longer works per T274982
+		# 	query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
+		# 	'?statement wikibase:hasViolationForConstraint wds:P1753-69FC3185-EFCA-4F00-B3D8-8F09DE2AAD76 .'\
+		# 	'?item ?p ?statement .'\
+		# 	'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
+		# 	'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+		# 	'}'
 		if debug:
 			query = query + " LIMIT 20"
 

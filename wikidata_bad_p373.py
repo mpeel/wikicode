@@ -23,7 +23,7 @@ attempts = 0
 count = 0
 removeall = False
 
-for run in range(0,2):
+for run in range(0,1):
 	if run == 0:
 		usereport = False
 	else:
@@ -42,18 +42,20 @@ for run in range(0,2):
 			except:
 				continue
 	else:
-		query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
-		'    ?statement wikibase:hasViolationForConstraint wds:P373-3C23B442-AC15-4E46-B58C-705E563DD015 .'\
-		'    ?item ?p ?statement .'\
-		'    FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
-		'    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-		'}'
-		if debug:
-			query = query + " LIMIT 10"
+		# This type of query is no longer supported per T274982, abort.
+		exit()
+		# query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
+		# '    ?statement wikibase:hasViolationForConstraint wds:P373-3C23B442-AC15-4E46-B58C-705E563DD015 .'\
+		# '    ?item ?p ?statement .'\
+		# '    FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
+		# '    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+		# '}'
+		# if debug:
+		# 	query = query + " LIMIT 10"
 
-		print(query)
+		# print(query)
 
-		candidates = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+		# candidates = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
 
 
 	# for page in generator:

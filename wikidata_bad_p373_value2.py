@@ -11,6 +11,9 @@ from pibot_functions import *
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()
 
+# This query no longer works per T274982
+exit()
+
 query = "SELECT DISTINCT ?item ?itemLabel WHERE {{     ?statement wikibase:hasViolationForConstraint wds:P373-B6CB2058-B6B7-4E4D-98D3-ED2C4F3D7184 .     ?item ?p ?statement .     FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) . }}"
 
 print(query)

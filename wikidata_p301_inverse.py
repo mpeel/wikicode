@@ -38,21 +38,23 @@ for option in range(0,2):
 			except:
 				continue
 	else:
-		if option == 2:
-			# This times out, so isn't currently running
-			query = 'SELECT ?item ?itemLabel ?should_link_via_P910_to ?should_link_via_P910_toLabel '\
-			'WHERE {'\
-			'?should_link_via_P910_to wdt:P301 ?item .'\
-			'FILTER NOT EXISTS { ?item wdt:P910 ?should_link_via_P910_to } .'\
-			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-			'}'
-		else:
-			query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
-			'?statement wikibase:hasViolationForConstraint wds:P301-0EC7969D-436B-4365-B6B5-59454795403E .'\
-			'?item ?p ?statement .'\
-			'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
-			'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
-			'}'
+		# if option == 2:
+		# This times out, so isn't currently running
+		# ... except we no longer have a choice but to try it.
+		query = 'SELECT ?item ?itemLabel ?should_link_via_P910_to ?should_link_via_P910_toLabel '\
+		'WHERE {'\
+		'?should_link_via_P910_to wdt:P301 ?item .'\
+		'FILTER NOT EXISTS { ?item wdt:P910 ?should_link_via_P910_to } .'\
+		'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+		'}'
+		# else:
+		# This query no longer works per T274982
+		# 	query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
+		# 	'?statement wikibase:hasViolationForConstraint wds:P301-0EC7969D-436B-4365-B6B5-59454795403E .'\
+		# 	'?item ?p ?statement .'\
+		# 	'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
+		# 	'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
+		# 	'}'
 		if debug:
 			query = query + " LIMIT 10"
 

@@ -5,8 +5,8 @@ import dateparser
 from wir_newpages import *
 
 lang = 'en'
-article = 'Joel D. Jackson'
-enwp_site = 'enwiki'
+article = 'Carlos Ulberg'
+enwp_site = 'ptwiki'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
@@ -44,7 +44,7 @@ if deathdate != '0-0-0':
 itemfound = pywikibot.ItemPage.fromPage(page)
 # addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)
 # exit()
-addBiographyClaims(repo=repo, wikisite=enwiki, item=itemfound, page=page, lang=lang)
+# addBiographyClaims(repo=repo, wikisite=enwiki, item=itemfound, page=page, lang=lang)
 
 # deathdate = '2021-01-01'
 # addDateClaim(repo=repo, item='Q4115189', claim='P569', date=deathdate, lang='en')
