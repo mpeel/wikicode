@@ -10,18 +10,18 @@ login_file = open("replica.my.cnf","r")
 login = login_file.readlines()
 user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
-host = 'enwiki.analytics.db.svc.eqiad.wmflabs'
 port = 3306
 
-conn = pymysql.connect(
-	host=host,
-	user=user,
-	password=password,
-	port=port
-)
-languages = ['en', 'pt', 'de']
+languages = ['en', 'pt', 'de', 'simple']
 
 for lang in languages:
+	host = lang+'wiki.analytics.db.svc.wikimedia.cloud'
+	conn = pymysql.connect(
+		host=host,
+		user=user,
+		password=password,
+		port=port
+	)
 	with conn.cursor() as cur:
 		cur.execute('use '+lang+'wiki_p')
 		cur.execute("SELECT page_title FROM page WHERE page_namespace=0 AND page_is_redirect=0 AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=0 AND pp_propname='wikibase_item')")
