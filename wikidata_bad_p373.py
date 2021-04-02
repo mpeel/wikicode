@@ -32,7 +32,7 @@ for run in range(0,1):
 	if usereport:
 		reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P373')
 		text = reportpage.get()
-		text = text.split('== "Commons link" violations ==')[1].split('== "Conflicts with {{P|31}}" violations ==')[0]
+		text = text.split('== "Commons link" violations ==')[1]#.split('== "Conflicts with {{P|31}}" violations ==')[0]
 		lines = text.splitlines()
 		for line in lines:
 			try:
