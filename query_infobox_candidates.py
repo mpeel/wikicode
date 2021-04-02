@@ -11,7 +11,7 @@ login = login_file.readlines()
 user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
 # host = '127.0.0.1'
-host = 'commonswiki.analytics.db.svc.eqiad.wmflabs'#os.environ['MYSQL_HOST']
+host = 'commonswiki.analytics.db.svc.wikimedia.cloud'#os.environ['MYSQL_HOST']
 # port = 4711
 port = 3306
 
