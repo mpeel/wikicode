@@ -25,9 +25,9 @@ removeall = False
 
 for run in range(0,1):
 	if run == 0:
-		usereport = False
-	else:
 		usereport = True
+	else:
+		usereport = False
 	candidates = []
 	if usereport:
 		reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P373')
