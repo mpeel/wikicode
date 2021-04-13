@@ -75,7 +75,7 @@ for i in range(0,numsteps):
 			if item_dict['labels'][val][-1] == ')':
 				page_title = item_dict['labels'][val][:item_dict['labels'][val].rfind('(')].strip()
 				print(item_dict['labels'][val])
-				test = 'n'
+				test = 'y'
 				if debug:
 					test = input('Save?')
 				else:
