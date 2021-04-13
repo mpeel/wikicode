@@ -35,8 +35,8 @@ for i in range(0,numsteps):
 	'  }\n'\
 	'  GROUP BY ?value\n'\
 	'  ORDER BY DESC(?ct)\n'\
-	'  OFFSET 0\n'\
-	'  LIMIT 50\n'\
+	'  OFFSET ' + str(i*stepsize)+'\n'\
+	'  LIMIT '+str(stepsize)+'\n'\
 	' }\n'\
 	' AS %value\n'\
 	' WHERE\n'\
