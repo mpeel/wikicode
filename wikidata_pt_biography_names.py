@@ -23,10 +23,10 @@ debug = False
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
-sourcelang = ['pt-br','pt']
-destlang = ['pt','pt-br']
-# sourcelang = ['pt','pt-br']
-# destlang = ['pt-br','pt']
+# sourcelang = ['pt-br','pt']
+# destlang = ['pt','pt-br']
+sourcelang = ['pt','pt-br']
+destlang = ['pt-br','pt']
 for l in range(0,len(sourcelang)):
 	for i in range(0,numsteps):
 		print('Starting at ' + str(i*stepsize))
