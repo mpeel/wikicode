@@ -17,7 +17,7 @@ nummodified = 0
 stepsize =  10000
 maximum = 12000000
 numsteps = int(maximum / stepsize)
-debug = True
+debug = False
 
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
