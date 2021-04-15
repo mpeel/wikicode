@@ -226,10 +226,10 @@ for prefix in wikipedias:
 				# If a biography, add biography claims
 				# if pageIsBiography(page,lang=prefix):
 				# 	addBiographyClaims(repo=repo, wikisite=wikipedia, item=wd_item, page=page, lang=prefix)
-				try:
-					page.touch()
-				except:
-					continue
+				# try:
+				# 	page.touch()
+				# except:
+				# 	continue
 				continue
 			# Check for the last edit time
 			try:
