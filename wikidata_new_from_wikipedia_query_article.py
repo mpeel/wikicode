@@ -265,10 +265,20 @@ for prefix in wikipedias:
 						claim = pywikibot.Claim(repo,'P31')
 						claim.setTarget(pywikibot.ItemPage(repo, 'Q13406463')) # List item
 						new_item.addClaim(claim, summary='List item')
+					elif 'lista de' in page.title()[0:10].lower():
+						# input('Is list - OK?')
+						claim = pywikibot.Claim(repo,'P31')
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q13406463')) # List item
+						new_item.addClaim(claim, summary='List item')
 					elif pageIsBiography(page,lang=prefix):
 						# If a biography, add biography claims
 						addBiographyClaims(repo=repo, wikisite=wikipedia, item=new_item, page=page, lang=prefix)
 					elif 'film)' in page.title().lower():
+						# input('Is film - OK?')
+						claim = pywikibot.Claim(repo,'P31')
+						claim.setTarget(pywikibot.ItemPage(repo, 'Q11424')) # Film
+						new_item.addClaim(claim, summary='Film')
+					elif 'filme)' in page.title().lower():
 						# input('Is film - OK?')
 						claim = pywikibot.Claim(repo,'P31')
 						claim.setTarget(pywikibot.ItemPage(repo, 'Q11424')) # Film
