@@ -86,7 +86,7 @@ for l in range(0,len(sourcelang)):
 					test = 'y'
 				if test == 'y':
 					try:
-						page.editLabels(labels={destlang[l]: label}, summary=u'Copy ' + sourcelang[l] + " label to " + destlang[l] + " label")
+						page.editLabels(labels={destlang[l]: label}, summary=u'Copy ' + sourcelang[l] + " label to " + destlang[l] + ' label "' + label + '"')
 						nummodified += 1
 					except:
 						print('Edit failed')
