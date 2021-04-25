@@ -82,7 +82,7 @@ for i in range(0,numsteps):
 					test = 'y'
 				if test == 'y':
 					try:
-						page.editLabels(labels={val: page_title}, summary=u'Remove text in brackets from ' + val + ' label')
+						page.editLabels(labels={val: page_title}, summary=u'Remove text in brackets from ' + val + ' label "' + item_dict['labels'][val] + '"')
 						nummodified += 1
 					except:
 						print('Edit failed')
