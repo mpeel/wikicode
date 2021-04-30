@@ -86,10 +86,12 @@ for k in range(0,len(searchstrings)):
 				test = 'n'
 
 				# Skip '.. by ..' categories
-				if ' by ' in targetcat.title():
+				if ' by ' in targetcat.title().lower():
 					continue
 				# Skip 'of ... from' categories
-				if i < 4 and 'from' in targetcat.title():
+				if i < 4 and 'from' in targetcat.title().lower():
+					continue
+				if 'of'  in targetcat.title().lower() and 'from'  in targetcat.title().lower():
 					continue
 
 				for parentcat in targetcat.categories():
