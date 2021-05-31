@@ -19,7 +19,7 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = False
-templates = ['Wdbox','Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata', 'WI', 'Wdbox']
+templates = ['Інфабокс','Wdbox','Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata', 'WI', 'Wdbox']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location', 'Object location', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en", 'Individual aircraft', 'individual aircraft', 'Wikidata place','wikidata place', 'Articles via Wikidata', 'Articles via Wikidata |P301=']
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Tidy Wikidata Infobox call"
