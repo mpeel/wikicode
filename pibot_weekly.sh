@@ -11,4 +11,5 @@ cd /home/pi/Documents/git/wikicode/
 /usr/bin/python3 enwp_wikidata_import_shortdesc.py
 /usr/bin/python3 commonscat_check.py
 /usr/bin/python3 wikidata_en_biography_names.py
+/usr/bin/python3 wikidata_pt_biography_names.py
 /usr/bin/python3 wikidata_brackets_in_biography_names.py
