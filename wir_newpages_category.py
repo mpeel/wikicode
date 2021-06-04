@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+	#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # Based on wir_newpages.py
 # Created 13 Jul 2019
@@ -11,10 +11,13 @@ import requests
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
-langs = ['en']
+langs = ['en','de']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
-	targetcats = ['Category:Date of birth not in Wikidata', 'Category:Date of death not in Wikidata','Category:Articles without Wikidata item']
+	if lang == 'en':
+		targetcats = ['Category:Date of birth not in Wikidata', 'Category:Date of death not in Wikidata','Category:Articles without Wikidata item']
+	else:
+		targetcats = ['Kategorie:Wikipedia:Artikel ohne Wikidata-Datenobjekt']
 	for targetcat in targetcats:
 		cat = pywikibot.Category(wikisite, targetcat)
 		pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False)
