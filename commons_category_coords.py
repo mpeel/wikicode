@@ -99,7 +99,7 @@ coord_templates = ['Object location']
 debug = False
 remove_from_commons = True
 numedited = 0
-maxnumedited = 100
+maxnumedited = 1000
 
 template = pywikibot.Page(commons, 'Template:'+coord_templates[0])
 targetcats = template.embeddedin(namespaces='14')
