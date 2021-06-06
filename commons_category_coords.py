@@ -8,28 +8,60 @@ import numpy as np
 import astropy as ap
 
 def get_precision(val):
-	print(val)
-	if '.' in val:
+	# print(val)
+	if '.' in str(val):
 		val = val.split('.')[1]
 		length = len(val)
 	else:
 		length = 0
+	if length >= 5:
+		length = 5
 	# print(len(val))
-	return 10**-len(val)
+	return 10**-length
 
 def calc_coord(params):
+	lat = False
+	lon = False
+	precision = False
 	if len(params) >= 8:
-		lat = float(params[0]) + (float(params[1])/60.0)+(float(params[2])/(60.0*60.0))
-		if 'S' in params[3]:
-			lat = -lat
-		lon = float(params[4]) + (float(params[5])/60.0)+(float(params[6])/(60.0*60.0))
-		if 'W' in params[7]:
-			lon = -lon
-		precision = get_precision(params[2])/(60.0*60.0)
-	elif len(params) >= 2:
-		lat = float(params[0])
-		lon = float(params[1])
-		precision = get_precision(params[0])
+		if 'S' in params[3] or 'N' in params[3]:
+			lat = float(params[0]) + (float(params[1])/60.0)+(float(params[2])/(60.0*60.0))
+			if 'S' in params[3]:
+				lat = -lat
+			lon = float(params[4]) + (float(params[5])/60.0)+(float(params[6])/(60.0*60.0))
+			if 'W' in params[7] or 'O' in params[7]:
+				lon = -lon
+			precision = get_precision(params[2])/(60.0*60.0)
+	if lat == False and len(params) >= 2:
+		if 'S' in params[2] or 'N' in params[2]:
+			lat = float(params[0]) + (float(params[1])/60.0)
+			if 'S' in params[2]:
+				lat = -lat
+			lon = float(params[3]) + (float(params[4])/60.0)
+			if 'W' in params[5] or 'O' in params[5]:
+				lon = -lon
+			precision = get_precision(params[1])/(60.0)
+		elif params[1] == 'N' or params[1] == 'S':
+			lat = float(params[0])
+			lon = float(params[2])
+			precision = get_precision(params[0])
+			if params[1] == 'S':
+				lat = -lat
+			if params[3] == 'W' or params[3] == 'O':
+				lon = -lon
+		elif '.' in params[0] and '.' in params[1]:
+			lat = float(params[0])
+			lon = float(params[1])
+			precision = get_precision(params[0])
+		else:
+			print(params)
+			print('Something odd in calc_coord (1)')
+			# return False, False, False
+
+	if lat == False:
+		print(params)
+		print('Something odd in calc_coord (2)')
+		# return False, False, False
 	# print(lon)
 	# print(lat)
 	# print(precision)
@@ -63,7 +95,7 @@ globe_item = pywikibot.ItemPage(repo, 'Q2')
 
 coord_templates = ['Object location']
 debug = True
-remove_from_commons = False
+remove_from_commons = True
 
 template = pywikibot.Page(commons, 'Template:'+coord_templates[0])
 targetcats = template.embeddedin(namespaces='14')
