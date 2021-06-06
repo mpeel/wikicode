@@ -4,6 +4,7 @@
 # 23 Dec 2020	Mike Peel	Started
 
 import pywikibot
+import numpy as np
 
 def get_precision(val):
 	# print(val)
@@ -18,6 +19,7 @@ def get_precision(val):
 	return 10**-length
 
 def calc_coord(params):
+	print(params)
 	lat = False
 	lon = False
 	precision = False
@@ -30,8 +32,8 @@ def calc_coord(params):
 			if 'W' in params[7] or 'O' in params[7]:
 				lon = -lon
 			precision = get_precision(params[2])/(60.0*60.0)
-	if lat == False and len(params) >= 2:
-		if 'S' in params[2] or 'N' in params[2]:
+	if lat == False and len(params) > 2:
+		if ('S' in params[2] or 'N' in params[2]) and len(params) >= 5:
 			lat = float(params[0]) + (float(params[1])/60.0)
 			if 'S' in params[2]:
 				lat = -lat
@@ -39,7 +41,7 @@ def calc_coord(params):
 			if 'W' in params[5] or 'O' in params[5]:
 				lon = -lon
 			precision = get_precision(params[1])/(60.0)
-		elif params[1] == 'N' or params[1] == 'S':
+		elif (params[1] == 'N' or params[1] == 'S') and len(params) >= 3:
 			lat = float(params[0])
 			lon = float(params[2])
 			precision = get_precision(params[0])
@@ -55,6 +57,10 @@ def calc_coord(params):
 			print(params)
 			print('Something odd in calc_coord (1)')
 			# return False, False, False
+	elif '.' in params[0] and '.' in params[1]:
+		lat = float(params[0])
+		lon = float(params[1])
+		precision = get_precision(params[0])
 
 	if lat == False:
 		print(params)
@@ -87,13 +93,13 @@ def check_match(lat1, lon1, prec1, lat2, lon2, prec2):
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()
-# cat = pywikibot.Page(commons, 'Category:Mirador de las Nieves')
-# cat = pywikibot.Page(commons, 'Category:Lovell Telescope')
 globe_item = pywikibot.ItemPage(repo, 'Q2')
 
 coord_templates = ['Object location']
-debug = True
+debug = False
 remove_from_commons = True
+numedited = 0
+maxnumedited = 100
 
 template = pywikibot.Page(commons, 'Template:'+coord_templates[0])
 targetcats = template.embeddedin(namespaces='14')
@@ -165,6 +171,7 @@ for cat in targetcats:
 								test = input('Save coordinate?')
 							if test == 'y':
 								wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from Commons')
+								numedited += 1
 								done = True
 						test1 = check_match(lat, lon, precision, coordinate.lat, coordinate.lon, coordinate.precision)
 					else:
@@ -181,7 +188,7 @@ for cat in targetcats:
 						target_text = target_text.replace('\n\n\n','\n')
 						if 'Wikidata Infobox' not in target_text:
 							target_text = "{{Wikidata Infobox}}\n" + target_text
-						target_text = target_text.replace('\n\n\n','\n')
+						target_text = target_text.replace('\n\n\n','\n').strip()
 						print("New text:")
 						print(target_text)
 						test = 'y'
@@ -190,3 +197,8 @@ for cat in targetcats:
 						if test == 'y':
 							cat.text = target_text
 							cat.save('Coordinates now through the infobox')
+							numedited += 1
+
+			if numedited >= maxnumedited:
+				print(numedited)
+				exit()

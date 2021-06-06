@@ -19,6 +19,7 @@ def get_precision(val):
 	return 10**-length
 
 def calc_coord(params):
+	print(params)
 	lat = False
 	lon = False
 	precision = False
@@ -31,8 +32,8 @@ def calc_coord(params):
 			if 'W' in params[7] or 'O' in params[7]:
 				lon = -lon
 			precision = get_precision(params[2])/(60.0*60.0)
-	if lat == False and len(params) >= 2:
-		if 'S' in params[2] or 'N' in params[2]:
+	if lat == False and len(params) > 2:
+		if ('S' in params[2] or 'N' in params[2]) and len(params) >= 5:
 			lat = float(params[0]) + (float(params[1])/60.0)
 			if 'S' in params[2]:
 				lat = -lat
@@ -40,7 +41,7 @@ def calc_coord(params):
 			if 'W' in params[5] or 'O' in params[5]:
 				lon = -lon
 			precision = get_precision(params[1])/(60.0)
-		elif params[1] == 'N' or params[1] == 'S':
+		elif (params[1] == 'N' or params[1] == 'S') and len(params) >= 3:
 			lat = float(params[0])
 			lon = float(params[2])
 			precision = get_precision(params[0])
@@ -56,6 +57,10 @@ def calc_coord(params):
 			print(params)
 			print('Something odd in calc_coord (1)')
 			# return False, False, False
+	elif '.' in params[0] and '.' in params[1]:
+		lat = float(params[0])
+		lon = float(params[1])
+		precision = get_precision(params[0])
 
 	if lat == False:
 		print(params)
