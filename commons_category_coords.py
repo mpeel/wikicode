@@ -4,8 +4,6 @@
 # 23 Dec 2020	Mike Peel	Started
 
 import pywikibot
-import numpy as np
-import astropy as ap
 
 def get_precision(val):
 	# print(val)
