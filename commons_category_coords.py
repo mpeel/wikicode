@@ -185,10 +185,11 @@ for cat in targetcats:
 							template_string = '{{'+tpl.lower()+cat.text.split('{{'+tpl.lower())[1].split('}}')[0]+"}}"
 							print(template_string)
 							target_text = cat.text.replace(template_string,'')
-						target_text = target_text.replace('\n\n\n','\n')
+						target_text = target_text.replace('\n\n\n','\n').rstrip('\n').lstrip('\n')
 						if 'Wikidata Infobox' not in target_text:
 							target_text = "{{Wikidata Infobox}}\n" + target_text
-						target_text = target_text.replace('\n\n\n','\n').strip()
+						target_text = target_text.replace('\n\n\n','\n').strip().rstrip('\n').lstrip('\n')
+
 						print("New text:")
 						print(target_text)
 						test = 'y'
