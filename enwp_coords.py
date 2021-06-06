@@ -5,7 +5,6 @@
 
 import pywikibot
 from pywikibot import pagegenerators
-import numpy as np
 
 def get_precision(val):
 	# print(val)
@@ -29,7 +28,7 @@ def calc_coord(params):
 			if 'S' in params[3]:
 				lat = -lat
 			lon = float(params[4]) + (float(params[5])/60.0)+(float(params[6])/(60.0*60.0))
-			if 'W' in params[7]:
+			if 'W' in params[7] or 'O' in params[7]:
 				lon = -lon
 			precision = get_precision(params[2])/(60.0*60.0)
 	if lat == False and len(params) >= 2:
@@ -38,7 +37,7 @@ def calc_coord(params):
 			if 'S' in params[2]:
 				lat = -lat
 			lon = float(params[3]) + (float(params[4])/60.0)
-			if 'W' in params[5]:
+			if 'W' in params[5] or 'O' in params[5]:
 				lon = -lon
 			precision = get_precision(params[1])/(60.0)
 		elif params[1] == 'N' or params[1] == 'S':
@@ -47,7 +46,7 @@ def calc_coord(params):
 			precision = get_precision(params[0])
 			if params[1] == 'S':
 				lat = -lat
-			if params[3] == 'W':
+			if params[3] == 'W' or params[3] == 'O':
 				lon = -lon
 		elif '.' in params[0] and '.' in params[1]:
 			lat = float(params[0])
@@ -68,21 +67,25 @@ def calc_coord(params):
 	return lat, lon, precision
 
 
-wiki = pywikibot.Site('en', 'wikipedia')
+# lang = 'pt'
+lang = 'en'
+wiki = pywikibot.Site(lang, 'wikipedia')
 repo = wiki.data_repository()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
-debug = False
+debug = True
 numedited = 0
-maxnumedited = 1000
+maxnumedited = 100
 
 cat = pywikibot.Category(wiki, 'Category:Coordinates not on Wikidata')
+# cat = pywikibot.Category(wiki, 'Categoria:!Artigos com coordenadas por transcrever a Wikidata')
+# cat = pywikibot.Category(wiki, 'Categoria:!Artigos com coordenadas locais')
 coord_templates = ['Coord']
 
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 for page in pages:
 	# if page.title()[0] != 'C':
 	# 	continue
-	print('https://en.wikipedia.org/wiki/'+page.title().replace(" ","_"))
+	print('https://'+lang+'.wikipedia.org/wiki/'+page.title().replace(" ","_"))
 	try:
 		wd_item = pywikibot.ItemPage.fromPage(page)
 		item_dict = wd_item.get()
@@ -114,6 +117,7 @@ for page in pages:
 		continue
 
 	ishuman = False
+	P31 = ''
 	try:
 		P31 = item_dict['claims']['P31']
 	except:
@@ -181,7 +185,7 @@ for page in pages:
 							print(coordinate)
 							test = input('Save coordinate?')
 						if test == 'y':
-							wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from enwp')
+							wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from '+lang+'wp')
 							done = True
 							numedited += 1
 							page.touch()
