@@ -72,7 +72,7 @@ lang = 'en'
 wiki = pywikibot.Site(lang, 'wikipedia')
 repo = wiki.data_repository()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
-debug = True
+debug = False
 numedited = 0
 maxnumedited = 100
 
