@@ -131,10 +131,10 @@ for page in pages:
 		for clm in P31:
 			# print(clm)
 			# print(clm.getTarget().title())
-			if clm.getTarget().title() == 'Q5' or clm.getTarget().title() == 'Q4830453' or clm.getTarget().title() == 'Q783794' or clm.getTarget().title() == 'Q22667':
+			if clm.getTarget().title() == 'Q5' or clm.getTarget().title() == 'Q4830453' or clm.getTarget().title() == 'Q783794' or clm.getTarget().title() == 'Q22667' or clm.getTarget().title() == 'Q13406463':
 				ishuman = True
 	if ishuman:
-		print('Not importing coordinate for a human, business, company, or railway')
+		print('Not importing coordinate for a human, business, company, railway or list')
 		continue
 	P159 = ''
 	try:
