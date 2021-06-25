@@ -79,7 +79,7 @@ repo = wiki.data_repository()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
 debug = False
 numedited = 0
-maxnumedited = 2000
+maxnumedited = 10000
 
 cat = pywikibot.Category(wiki, 'Category:Coordinates not on Wikidata')
 # cat = pywikibot.Category(wiki, 'Categoria:!Artigos com coordenadas por transcrever a Wikidata')
