@@ -240,8 +240,12 @@ for targetcat in targetcats:
 					print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
 					text = input("Save? ")
 					if text != 'n':
-						wd_item.editEntity(data, summary=u'Add '+enwp_site+' sitelink')
+						wd_item.editEntity(data, summary=u'Added [['+prefix+':'+page.title()+']]')
 						nummodified += 1
+					try:
+						page.touch()
+					except:
+						null = 0
 				else:
 					print('Searching for a match...')
 					wikidataEntries = search_entities(repo, page.title())
@@ -267,13 +271,17 @@ for targetcat in targetcats:
 							print('http://commons.wikimedia.org/wiki/'+commonscat.replace(' ','_'))
 							text = input("Save? ")
 							if text != 'n':
-								targetpage.editEntity(data, summary=u'Add enwp sitelink')
+								targetpage.editEntity(data, summary=u'Added [['+prefix+':'+page.title()+']]')
 								done = 1
 								try:
 									data2 = {'sitelinks': [{'site': 'commonswiki', 'title': commonscat_item.title()}]}
 									text = input('Also add commons link?')
 									if text != 'n':
 										targetpage.editEntity(data2, summary=u'Add commons sitelink')
+								except:
+									null = 0
+								try:
+									page.touch()
 								except:
 									null = 0
 
@@ -289,6 +297,10 @@ for targetcat in targetcats:
 								if 'Category' in page.title():
 									items.append(['P31','Q4167836'])
 								test = newitem(commonscat_item, page, items,True)
+								try:
+									page.touch()
+								except:
+									null = 0
 						except:
 							continue
 

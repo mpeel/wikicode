@@ -43,9 +43,11 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Category:Commons category link is on Wikidata using P373']#'Category:Commons category link is locally defined']#[]#,'Category:Commons category link is locally defined‎',
+# targetcats = ['Category:Commons category link is on Wikidata using P373']#'Category:Commons category link is locally defined']#[]#,'Category:Commons category link is locally defined‎',
 # targetcats = ['Category:Commons category link is defined as the pagename']
 targetcats = ['Commons category link is locally defined']
+# targetcats = ['Category:Commons category link is the pagename']
+# targetcats = ['Category:Inconsistent wikidata for Commons category']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
@@ -55,23 +57,24 @@ for categories in range(0,2):
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 
-		# todo = []
-		# for page in pages:
-		# 	todo.append(page.title())
+		todo = []
+		for page in pages:
+			todo.append(page)
 
-		# random.shuffle(todo)
+		random.shuffle(todo)
 		# for item in sorted(todo,reverse=True):
 		# 	if categories == 0: # Don't change this as it will always look at commons categories
 		# 		page = pywikibot.Category(enwp,item)
 		# 	else:
 		# 		page = pywikibot.Page(enwp,item)
 
-		# for item in todo:
-		for page in pages:
+		for page in todo:
+			original_qid = 0
+		# for page in pages:
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Cabdella Lakes" in page.title():
-					trip = 1
+				if "National Register " in page.title():
+					trip = 0
 				else:
 					print(page.title())
 					continue
@@ -94,6 +97,7 @@ for categories in range(0,2):
 				wd_item = pywikibot.ItemPage.fromPage(page)
 				item_dict = wd_item.get()
 				qid = wd_item.title()
+				original_qid = qid
 				print(qid)
 			except:
 				# If that didn't work, go no further
@@ -110,7 +114,7 @@ for categories in range(0,2):
 					val = clm.getTarget()
 					p373cat = u"Category:" + val
 					print('Remove P373?')
-					print(' http://www.wikidata.org/wiki/'+qid)
+					print(' http://www.wikidata.org/wiki/'+wd_item.title())
 					print(' https://commons.wikimedia.org/wiki/' + str(p373cat).replace(' ','_'))
 					test = 'y'
 					savemessage = 'Remove incorrect P373 value'
@@ -152,24 +156,27 @@ for categories in range(0,2):
 			print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
 
 			if p910_followed:
-				try:
-					p373 = item_dict['claims']['P373']
-					for clm in p373:
-						val = clm.getTarget()
-						p373cat = u"Category:" + val
-						print('Remove P373?')
-						print(' http://www.wikidata.org/wiki/'+qid)
-						print(' https://commons.wikimedia.org/wiki/' + str(p373cat).replace(' ','_'))
-						test = 'y'
-						savemessage = 'Remove incorrect P373 value'
-						# if debug == 1:
-						# 	print(savemessage)
-						# 	test = input("Continue? ")
-						if test == 'y':
-							wd_item.removeClaims(clm,summary=savemessage)
-				except:
-					null = 0
+				if qid != original_qid:
+					try:
+						p373 = item_dict['claims']['P373']
+						for clm in p373:
+							val = clm.getTarget()
+							p373cat = u"Category:" + val
+							print('Remove P373?')
+							print(' http://www.wikidata.org/wiki/'+qid)
+							print(' https://commons.wikimedia.org/wiki/' + str(p373cat).replace(' ','_'))
+							test = 'y'
+							savemessage = 'Remove incorrect P373 value'
+							if debug == 1:
+								print(savemessage)
+								test = input("Continue? ")
+							if test == 'y':
+								wd_item.removeClaims(clm,summary=savemessage)
+					except:
+						null = 0
 
+			# continue
+			
 
 			# Get the candidate commonscat link
 			try:
@@ -252,7 +259,10 @@ for categories in range(0,2):
 				save = 'n'
 				if numtemplates != 1:
 					print('Number of commons links: ' + str(numtemplates))
-				savemessage = "Removing Commons category link that does not match this article ([[:commons:Category:"+str(id_val)+']])'
+				if 'Category' in page.title():
+					savemessage = "Removing Commons category link that does not match this category ([[:commons:Category:"+str(id_val)+']])'
+				else:
+					savemessage = "Removing Commons category link that does not match this article ([[:commons:Category:"+str(id_val)+']])'
 				commonscat = False
 				test = 'n'
 				if debug == 1:
@@ -265,33 +275,39 @@ for categories in range(0,2):
 						commonscat = get_sitelink_title(commonscat_item_dict['sitelinks'][prefix+'wiki'])
 					except:
 						commonscat = ''
-					try:
-						existing_id = commonscat_item_dict['claims']['P301']
-						print('P301 exists, following that.')
-						for clm2 in existing_id:
-							wd_item = clm2.getTarget()
-							commonscat_item_dict = wd_item.get()
-							qid = wd_item.title()
-							print(wd_item.title())
-							p401_followed = True
-							commonscat = get_sitelink_title(commonscat_item_dict['sitelinks'][prefix+'wiki'])
-					except:
-						null = 0
-					if commonscat == page.title():
-						continue
-					# page = pywikibot.ItemPage.fromPage(commonscat)
-					# if page.isRedirectPage():
-						# print('Is a redirect')
-						# continue
+					if 'Category' not in page.title() or commonscat == '':
+						try:
+							existing_id = commonscat_item_dict['claims']['P301']
+							print('P301 exists, following that.')
+							for clm2 in existing_id:
+								wd_item2 = clm2.getTarget()
+								commonscat_item_dict = wd_item2.get()
+								qid = wd_item2.title()
+								print(wd_item2.title())
+								p401_followed = True
+								commonscat = get_sitelink_title(commonscat_item_dict['sitelinks'][prefix+'wiki'])
+						except:
+							null = 0
 					if commonscat != '':
+						# if commonscat == page.title():
+							# continue
+						print(commonscat)
+						testpage = pywikibot.Page(enwp, commonscat)
+						if testpage.isRedirectPage():
+							print('Is a redirect')
+							continue
 						print('https://'+prefix+'.wikipedia.org/wiki/'+commonscat.replace(' ','_'))
 						savemessage = savemessage + ' (Commons category belongs at [[' + commonscat.replace(' ','_') + ']])'
+
 						# test2 = input('Use this category?')
 						# if test2 != 'n':
 						if commonscat != 'Category:'+str(id_val) and commonscat != page.title():
 							test = commonscat
 						else:
 							test = 'o'
+						check_page = pywikibot.Page(enwp, commonscat)
+						if check_page.isRedirectPage():
+							test = 'n'
 					else:
 						null = 0
 						test = 'o'
@@ -309,9 +325,30 @@ for categories in range(0,2):
 
 					print(savemessage)
 					check = input('OK?')
+					# check = 'n'
 					if check != 'n':
 						nummodified += 1
 						page.save(savemessage,minor=False)
+					if qid != original_qid:
+						try:
+							p373 = item_dict['claims']['P373']
+							for clm in p373:
+								val = clm.getTarget()
+								p373cat = u"Category:" + val
+								print('Remove P373?')
+								print(' http://www.wikidata.org/wiki/'+wd_item.title())
+								print(' https://commons.wikimedia.org/wiki/' + str(p373cat).replace(' ','_'))
+								test = 'y'
+								savemessage = 'Remove incorrect P373 value'
+								if debug == 1:
+									print(savemessage)
+									test = input("Continue? ")
+								if test == 'y':
+									wd_item.removeClaims(clm,summary=savemessage)
+						except:
+							null = 0
+
+
 					continue
 
 

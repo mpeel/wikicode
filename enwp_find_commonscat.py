@@ -30,7 +30,7 @@ trip = 1
 # New style of category walker
 numchecked = 0
 catschecked = 0
-do_articles = False
+do_articles = True
 do_subcats = True
 
 targetcats = []
@@ -41,7 +41,7 @@ targetcats = []
 #targetcats = ['Categoría:Canarias']
 # targetcats = ['Category:2019–20 coronavirus pandemic']
 # targetcats = ['Category:Commons category link is on Wikidata using P373']
-# targetcats = ['Category:Commons category link is locally defined']
+targetcats = ['Category:Commons category link is locally defined']
 # targetcats = ['Category:Commons link is the pagename','Category:Commons link is defined as the pagename']
 # targetcats = ['Category:Commons link is locally defined']
 targettemplates = []
@@ -59,7 +59,7 @@ def findmatch(page):
 		item_dict = wd_item.get()
 		qid = wd_item.title()
 		print('\n'+page.title())
-		print(qid)
+		print('http://www.wikidata.org/wiki/'+qid)
 	except:
 		# If that didn't work, go no further
 		print('\n'+page.title() + ' - no page found')
@@ -115,12 +115,13 @@ def findmatch(page):
 		wd_item2 = pywikibot.ItemPage.fromPage(commonscat_page)
 		item_dict2 = wd_item2.get()
 		qid2 = wd_item2.title()
-		print(qid)
+		print('http://www.wikidata.org/wiki/'+qid)
 		test = 1
 	except:
 		# If that didn't work, go no further
 		print(commonscat_page.title() + ' - no linked Wikidata item found')
 	if test != 0:
+		print('http://commons.wikimedia.org/wiki/'+commonscat_page.title())
 		print('Commons has Wikidata ID already')
 		input('Check?')
 		return 0
@@ -206,8 +207,8 @@ elif len(targettemplates) > 0:
 else:
 	# Pick random categories
 	while nummodified < maxnum:
-		targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='14')
-		# targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='0')
+		# targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='14')
+		targets = pagegenerators.RandomPageGenerator(total=100, site=enwp, namespaces='0')
 		for target in targets:
 			print(target.title())
 			nummodified += findmatch(target)

@@ -21,7 +21,7 @@ database = False
 manual = True
 maxnum = 1000000
 usetemplate = 0
-usecategory = 0
+usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -205,6 +205,7 @@ elif usecategory:
     # targetcats = ['Category:Santa Cruz de Tenerife']
     # targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
     # New style of category walker
+    targetcats = ['Category:Cemeteries in New Zealand by region']
     numchecked = 0
     catschecked = 0
     i = 0
@@ -224,11 +225,11 @@ elif usecategory:
             print(str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active)))
 
             # See if there are subcategories that we want to check in the future
-            if i == 1:
-                for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
-                    if result.title() not in seen:
-                        seen.add(result.title())
-                        next_active.add(result.title())
+            # if i == 1:
+            for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
+                if result.title() not in seen:
+                    seen.add(result.title())
+                    next_active.add(result.title())
         temp = list(next_active)
         random.shuffle(temp)
         active = set(temp)

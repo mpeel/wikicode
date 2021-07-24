@@ -48,27 +48,28 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 targetcats = ['Category:Commons category link is defined as the pagename','Commons category link is locally defined','Category:Commons category link is on Wikidata using P373']
 # targetcats = ['Commons category link is locally defined']
 
-for categories in range(0,2):
-	for targetcat in targetcats:
+for targetcat in targetcats:
+	for category in np.arange(0,2):
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 0:
+		if category == 0:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
-
 		for page in pages:
+			print('')
+			print('https://en.wikipedia.org/wiki/'+page.title().replace(' ','_'))
+			skip_rest = False
 			if trip_next:
 				trip = 1
 				trip_next = 0
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "Wola Klasztorna" in page.title():
+				if "List of New Jersey state parks" in page.title():
 					trip_next = 1
 					continue
 				else:
 					print(page.title())
 					continue
-
 			# Get the Wikidata item
 			has_item = True
 			try:
@@ -81,7 +82,10 @@ for categories in range(0,2):
 				print(page.title() + ' - no page found')
 				has_item = False
 			if not has_item:
+				print('No item')
 				continue
+
+			print('b')
 			sitelink = False
 			try:
 				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
@@ -101,25 +105,24 @@ for categories in range(0,2):
 			except:
 				null = 0
 			if sitelink and p910_followed:
-				input('Has sitelink in main item, check?')
+				if 'Category' in sitelink:
+					input('Has sitelink in main item, check?')
 			try:
 				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 			except:
+				sitelink = False
 				null = 0
 
-			# Cut-off at a maximum number of edits	
-			print("")
-			print("")
-			print("")
-			print("")
-			print("")
-			print(nummodified)
-			if nummodified >= maxnum:
-				print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
-				exit()
+			if sitelink and 'Category:' not in sitelink:
+				input('Check, sitelink is not to a category')
+				continue
+			if not sitelink:
+				print('No sitelink')
+			else:
+				print('Has sitelink')
 
+			# continue
 			print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
-
 			# Get the candidate commonscat link
 			try:
 				target_text = page.get()
@@ -127,6 +130,7 @@ for categories in range(0,2):
 				continue
 			found=True
 			count = 0
+
 			while found == True:
 				count += 1
 				id_val = 0
@@ -205,7 +209,6 @@ for categories in range(0,2):
 						text = text.replace("*" + commonscat_string2a + commonscat_string2+'}}', '')
 						text = text.replace(commonscat_string2a + commonscat_string2+'}}\n', '')
 						text = text.replace(commonscat_string2a + commonscat_string2+'}}', '')
-						page.text = text
 						test = 'y'
 						savemessage = "Removing Commons category ("+commonscat+") as it does not exist"
 						print(id_val)
@@ -213,10 +216,12 @@ for categories in range(0,2):
 						test = input("Continue? ")
 						if test == 'y':
 							nummodified += 1
+							page.text = text
 							page.save(savemessage,minor=False)
 							continue
-					if not check_sitelink:
-						if commonscat != sitelink.replace('Category:',''):
+					if sitelink and check_sitelink and not skip_rest:
+						if id_val.strip() != sitelink.replace('Category:','').strip():
+							print('Hi')
 							text = page.text
 							text = text.replace("* " + commonscat_string2a + commonscat_string2+'}}\n', '')
 							text = text.replace("* " + commonscat_string2a + commonscat_string2+'}}', '')
@@ -224,19 +229,22 @@ for categories in range(0,2):
 							text = text.replace("*" + commonscat_string2a + commonscat_string2+'}}', '')
 							text = text.replace(commonscat_string2a + commonscat_string2+'}}\n', '')
 							text = text.replace(commonscat_string2a + commonscat_string2+'}}', '')
-							page.text = text
 							test = 'y'
-							savemessage = "Removing Commons category ("+commonscat+") as it does not match the sitelink"
+							savemessage = "Removing Commons category ("+commonscat+") that does not match this article"
 							print(id_val)
+							print(sitelink)
 							print(savemessage)
 							test = input("Continue? ")
 							if test == 'y':
 								nummodified += 1
+								page.text = text
 								page.save(savemessage,minor=False)
 								continue
+							if test == 'c':
+								skip_rest = True
 							
 
-				if count > 10:
+				if count > 20:
 					print("There was a problem here")
 					found = False
 

@@ -17,8 +17,8 @@ commons = pywikibot.Site('en', 'wikipedia')
 #catname = 'Category:Uses of Wikidata Infobox with no given name'
 # catname = 'Category:Commons category link is on Wikidata using P373'
 # catname = 'Category:Photos by Mike Peel using an iPhone SE'
-catname = 'Category:Commons category link is the pagename'
-# catname = 'Category:Commons category link is defined as the pagename'
+# catname = 'Category:Commons category link is the pagename'
+catname = 'Category:Commons category link is defined as the pagename'
 # catname = 'Category:Commons category link is locally defined'
 # catname = 'Category:Pages with script errors'
 # catname = 'Category:Articles without Wikidata item'
@@ -26,7 +26,8 @@ catname = 'Category:Commons category link is the pagename'
 # catname = 'Category:Uses of MonumentID with no picture on Wikidata'
 # catname = 'Category:Short description with empty Wikidata description'
 # catname = 'Category:Articles with missing Wikidata information'
-
+# catname=  'Category:Inconsistent wikidata for Commons category'
+# catname = 'Category:Photos by Mike Peel'
 cat = pywikibot.Category(commons,catname)
 print(cat)
 i = 0
@@ -41,7 +42,7 @@ for result in pagegenerators.CategorizedPageGenerator(cat, recurse=False):
 	# 	input('Continue?')
 	# 	first = result.title()[0]
 	if trip == 0:
-		if 'World cuisine' in result.title():
+		if 'Cahuilla' in result.title():
 			trip = 1
 		else:
 			continue
