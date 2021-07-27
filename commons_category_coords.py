@@ -90,6 +90,8 @@ def check_match(lat1, lon1, prec1, lat2, lon2, prec2):
 	else:
 		return False
 
+# Temporarily disable
+exit()
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()
