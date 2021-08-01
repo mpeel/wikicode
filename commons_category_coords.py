@@ -123,6 +123,22 @@ for cat in targetcats:
 
 	print('https://www.wikidata.org/wiki/'+wd_item.title())
 
+	ishuman = False
+	P31 = ''
+	try:
+		P31 = item_dict['claims']['P31']
+	except:
+		null = 0
+	if P31 != '':
+		for clm in P31:
+			# print(clm)
+			# print(clm.getTarget().title())
+			if clm.getTarget().title() == 'Q5' or clm.getTarget().title() == 'Q4830453' or clm.getTarget().title() == 'Q783794' or clm.getTarget().title() == 'Q22667' or clm.getTarget().title() == 'Q13406463' or clm.getTarget().title() == 'Q4167836': 
+				ishuman = True
+	if ishuman:
+		print('Not importing coordinate for a human, business, company, railway, list, or category')
+		continue
+
 	coordinate = False
 	try:
 		P625 = item_dict['claims']['P625']
