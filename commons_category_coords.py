@@ -160,19 +160,22 @@ for cat in targetcats:
 					print(template[0].title())
 					print(template[1])
 					if 'wikidata' not in str(template[1]) and 'Wikidata' not in str(template[1]):
-						lat, lon, precision = calc_coord(template[1])
-						if not coordinate:
-							coordinateclaim  = pywikibot.Claim(repo, u'P625')
-							coordinate = pywikibot.Coordinate(lat=lat, lon=lon, precision=precision, site=commons,globe_item=globe_item)
-							coordinateclaim.setTarget(coordinate)
-							test = 'y'
-							if debug:
-								test = input('Save coordinate?')
-							if test == 'y':
-								wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from Commons')
-								numedited += 1
-								done = True
-						test1 = check_match(lat, lon, precision, coordinate.lat, coordinate.lon, coordinate.precision)
+						try:
+							lat, lon, precision = calc_coord(template[1])
+							if not coordinate:
+								coordinateclaim  = pywikibot.Claim(repo, u'P625')
+								coordinate = pywikibot.Coordinate(lat=lat, lon=lon, precision=precision, site=commons,globe_item=globe_item)
+								coordinateclaim.setTarget(coordinate)
+								test = 'y'
+								if debug:
+									test = input('Save coordinate?')
+								if test == 'y':
+									wd_item.addClaim(coordinateclaim, summary=u'Importing coordinate from Commons')
+									numedited += 1
+									done = True
+							test1 = check_match(lat, lon, precision, coordinate.lat, coordinate.lon, coordinate.precision)
+						except:
+							test1 = False
 					else:
 						test1 = True
 					if test1 and remove_from_commons:
