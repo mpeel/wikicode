@@ -174,11 +174,11 @@ for prefix in wikipedias:
 			print(count)
 			if pagename[0] == '"' and pagename[-1] == '"':
 				pagename = pagename[1:-1]
-			if not nametrip:
-				if 'Crytzer' not in pagename:
-					continue
-				else:
-					nametrip = True
+			# if not nametrip:
+			# 	if 'Crytzer' not in pagename:
+			# 		continue
+			# 	else:
+			# 		nametrip = True
 			# if option == 0:
 			# 	page = pagename
 			# else:
@@ -202,10 +202,10 @@ for prefix in wikipedias:
 				continue
 			# Exclude redirects
 			if page.isRedirectPage():
-				# print('is redirect')
+				print('is redirect')
 				continue
 			if page.isCategoryRedirect():
-				# print('is redirect')
+				print('is redirect')
 				continue
 
 
@@ -270,10 +270,10 @@ for prefix in wikipedias:
 			# If we have a category, make sure it isn't empty
 			if page.namespace() == wikipedia.namespaces.CATEGORY and not page.isDisambig():
 				if page.isEmptyCategory():
-					# print('Is empty')
+					print('Is empty')
 					continue
 				if page.isHiddenCategory():
-					# print('Is hidden')
+					print('Is hidden')
 					continue
 
 			# See if search returns any items
