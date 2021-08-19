@@ -268,7 +268,7 @@ for prefix in wikipedias:
 			## Part 3 - look up more information
 
 			# If we have a category, make sure it isn't empty
-			if page.namespace() == wikipedia.namespaces.CATEGORY:
+			if page.namespace() == wikipedia.namespaces.CATEGORY and not page.isDisambig():
 				if page.isEmptyCategory():
 					# print('Is empty')
 					continue
