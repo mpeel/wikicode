@@ -38,6 +38,20 @@ for lang in langs:
 			if item:
 				print('Page has item')
 				print('https://www.wikidata.org/wiki/%s' % (item.title()))
+				item.get()
+				skip = True
+				if item.claims:
+					if 'P31' in item.claims:
+						for p31 in item.claims['P31']:
+							if p31.getTarget().title() != 'Q5':
+								skip = True
+								continue
+					else:
+						continue
+				else:
+					continue
+				if skip:
+					continue
 				# test = input('Continue?')
 				addBiographyClaims(repo=repo, wikisite=wikisite, item=item, page=page, lang=lang)
 				page.touch()
@@ -59,7 +73,7 @@ for lang in langs:
 				searchitemurl = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&search=%s&language=%s&format=xml' % (urllib.parse.quote(wtitle_), lang)
 				raw = getURL(searchitemurl)
 				print(searchitemurl.encode('utf-8'))
-				
+
 				#check birthdate and if it matches, then add data
 				numcandidates = '' #do not set to zero
 				if not '<search />' in raw:
@@ -118,8 +132,8 @@ for lang in langs:
 									except:
 										null = 0
 									break
-				
-				#no item found, or no candidates are useful
+
+				# no item found, or no candidates are useful
 				if '<search />' in raw or (numcandidates == 0):
 					print('No useful item found. Creating a new one...')
 					# test = input('Continue?')
