@@ -8,13 +8,12 @@ import pywikibot
 import mysql.connector
 from pywikibot import pagegenerators
 from database_login import *
-from pibot_functions import *
 
 GET={}
 args=os.getenv("QUERY_STRING").split('&')
 # print args
 
-for arg in args: 
+for arg in args:
 	t=arg.split('=')
 	if len(t)>1: k,v=arg.split('='); GET[k]=v
 
@@ -38,23 +37,42 @@ if not callback:
 num = GET.get('num')
 if not num:
 	num = 1
-if int(num) > 100:
-	num = 100
+# if int(num) > 100:
+# 	num = 100
+if int(num) > 5:
+	num = 5
 lang = GET.get('lang')
 if action == 'desc':
 	# print 'desc'
 	print "Content-type: application/json\n\n"
-	print callback + " ( " + json.dumps({'label': {'en':'Commons category matches'}, 'description': {'en':'Match Commons categories with Wikidata items, and add the commons sitelink to Wikidata.'}, 'instructions': {'en':'These matches look plausible. But are they really? Please help us to reject the bad ones by clicking "No" - and if you are sure that it is right, add the link to Wikidata using "Match". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to commons:User:Mike Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/120px-Commons-logo.svg.png'}) + " )\n"
+	print callback + " ( " + json.dumps({'label': {'en':'Commons category matches'}, 'description': {'en':'Match Commons categories with Wikidata items, and add the commons sitelink to Wikidata.'}, 'instructions': {'en':'These matches look plausible. But are they really? Please help us to reject the bad ones by clicking "No" - and if you are sure that it is right, add the link to Wikidata using "Match". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to commons:User:Mike Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/120px-Commons-logo.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'Q1':'Any', 'Q5':'Person', 'Q16521':'Taxon'}}]}) + " )\n"
 elif action == 'tiles':
 	print "Content-type: application/json\n\n"
 	i = 0
 	finished = 0
 	tiles = []
+
+	itemtype = 'Any'
+	try:
+		itemtype = GET.get('type')
+	except:
+		itemtype = 'Any'
+
 	while finished == 0:
 		mycursor.execute('SELECT * FROM candidates WHERE done = 0 ORDER BY RAND() LIMIT 1')#%d' % (int(num),))
 		myresult = mycursor.fetchone()
 		# Make sure the category doesn't have an ID yet
-		targetcat = pywikibot.Category(commons,myresult[2])
+		badtile = 0
+		try:
+			targetcat = pywikibot.Category(commons,myresult[2])
+		except:
+			badtile = 1
+		if badtile == 1:
+			sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 1 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+			mycursor.execute(sql)
+			mydb.commit()
+			# exit()
+			continue
 		badtile = 0
 		try:
 			wd_item = pywikibot.ItemPage.fromPage(targetcat)
@@ -95,8 +113,19 @@ elif action == 'tiles':
 		# 		break
 		# print "Content-type: text/html\n\n"
 		# print files
-		candidate_item = pywikibot.ItemPage(repo, myresult[1])
-		candidate_item_dict = candidate_item.get()
+		badtile = 0
+		try:
+			candidate_item = pywikibot.ItemPage(repo, myresult[1])
+			candidate_item_dict = candidate_item.get()
+		except:
+			badtile = 1
+		if badtile == 1:
+			sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 1 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+			mycursor.execute(sql)
+			mydb.commit()
+			# exit()
+			continue
+
 		skip = 0
 		try:
 			p31 = candidate_item_dict['claims']['P31']
@@ -104,16 +133,43 @@ elif action == 'tiles':
 				#print clm
 				if 'Q4167410' in clm.getTarget().title():
 					# print 'would skip'
+					sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 4 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+					mycursor.execute(sql)
+					mydb.commit()
 					skip = 1
 				elif 'Q13442814' in clm.getTarget().title():
+					sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 4 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+					mycursor.execute(sql)
+					mydb.commit()
 					skip = 1
+				if itemtype == 'Q5':
+					if itemtype != clm.getTarget().title():
+						skip = 1
 		except:
+			if itemtype == 'Q5':
+				skip = 1
 			null = 0
-		if skip == 1:
-			# print 'skipping'
+		if itemtype == 'Q16521':
+			testtaxon = 0
+			try:
+				taxon = candidate_item_dict['claims']['P225']
+				testtaxon = 1
+			except:
+				null = 1
+			try:
+				taxon = candidate_item_dict['claims']['P105']
+				testtaxon = 1
+			except:
+				null = 1
+			if testtaxon == 0:
+				skip = 1
+		if "(seedlings)" in myresult[2] or "(house number)" in myresult[2] or "(fruit)" in myresult[2] or "Boundary stone" in myresult[2] or "(juvenile)" in myresult[2] or "(herbarium specimen)" in myresult[2] or "(leaves)" in myresult[2] or "(illustrations)" in myresult[2] or "(interior)" in myresult[2]:
+			sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 4 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+			mycursor.execute(sql)
+			mydb.commit()
 			continue
 		try:
-			sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
+			sitelink = candidate_item_dict['sitelinks']['commonswiki']
 		except:
 			#{"type": "files","files": files, "q":myresult[1],'deferred_decision':'yes'}
 			tile = {"id": myresult[0], "sections": [ {"type": "item", "q":myresult[1]}, {"type": "wikipage","title": myresult[2],"wiki": "commonswiki"}, {"type": "text","title": "Categories that this category is in:", "text":categorystring}], "controls": [{"type":"buttons", "entries":[{"type": "green","decision": "yes","label": "Match", "api_action": {'action': "wbsetsitelink", "id": myresult[1],"linksite": "commonswiki","linktitle": myresult[2]}}, {"type": "white", "decision": "skip", "label": "Skip"}, {"type": "blue", "decision": "no", "label": "No"}]}]}
@@ -159,6 +215,6 @@ else:
 	print "Content-type: text/html\n\n"
 	print 'Incorrect action!'
 	print args
-	
+
 # mycursor.close()
 # mydb.close()

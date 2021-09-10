@@ -3,7 +3,7 @@
 # Move commons category sitelinks to category items where needed
 # Mike Peel     10-Jun-2018      v1
 # Mike Peel     04-Nov-2018      v2 - fill in database
-
+# Mike Peel		10-Sep-2021		 v2.1 - update to Python 3
 from __future__ import unicode_literals
 
 import pywikibot
@@ -24,7 +24,7 @@ database = True
 manual = True
 maxnum = 1000000
 usetemplate = 0
-usecategory = 1
+usecategory = 0
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -38,7 +38,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 # From https://gist.github.com/ettorerizza/7eaebbd731781b6007d9bdd9ddd22713
 def search_entities(site, itemtitle):
-     params = { 'action' :'wbsearchentities', 
+     params = { 'action' :'wbsearchentities',
                 'format' : 'json',
                 'language' : 'en',
                 'type' : 'item',
@@ -53,7 +53,7 @@ def get_entities(site, wdItem):
                           ids=wdItem,
                           languages='en|fr',
                           props='sitelinks/urls|descriptions|aliases|labels',
-                          sitefilter='enwiki|frwiki')    
+                          sitefilter='enwiki|frwiki')
     return request.submit()
 
 def prettyPrint(variable):
@@ -61,22 +61,22 @@ def prettyPrint(variable):
     pp.pprint(variable)
 
 def runimport(targetcat):
-    print targetcat.title()
+    print(targetcat.title())
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
         item_dict = wd_item.get()
-        print wd_item.title()
+        print(wd_item.title())
         return 0
     except:
-        print 'No existing link'
+        print('No existing link')
 
     text = targetcat.get()
-    print text
+    print(text)
     templatestoavoid = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
     if any(option in text for option in templatestoavoid):
         for option in templatestoavoid:
             if option in text:
-                print 'Category uses ' + option + ', skipping'
+                print('Category uses ' + option + ', skipping')
         return 0
 
     searchname = targetcat.title().replace('Category:','')
@@ -91,39 +91,39 @@ def runimport(targetcat):
         numresults = len(results)
         for i in range(0,numresults):
             qid = results[i]['id']
-            print qid
+            print(qid)
             try:
                 candidate_item = pywikibot.ItemPage(repo, qid)
                 candidate_item_dict = candidate_item.get()
             except:
-                print 'Huh - no page found'
+                print('Huh - no page found')
             # print candidate_item_dict
             skip = 0
             try:
                 p31 = candidate_item_dict['claims']['P31']
                 for clm in p31:
-                    print clm
+                    print(clm)
                     if 'Q4167410' in clm.getTarget().title():
-                        print 'would skip'
+                        print('would skip')
                         skip = 1
             except:
                 null = 0
             if skip == 1:
-                print 'skipping'
+                print('skipping')
                 continue
 
             incat = 0
             try:
                 sitelink = get_sitelink_title(candidate_item_dict['sitelinks']['commonswiki'])
             except:
-                print 'Hello'
+                print('Hello')
                 try:
                     existing_id = candidate_item_dict['claims']['P910']
-                    print 'P910 exists, following that.'
+                    print('P910 exists, following that.')
                     for clm2 in existing_id:
                         candidate_item = clm2.getTarget()
                         candidate_item_dict = candidate_item.get()
-                        print candidate_item.title()
+                        print(candidate_item.title())
                 except:
                     null = 0
                 # Try the sitelink check again
@@ -134,14 +134,14 @@ def runimport(targetcat):
                         # # No existing sitelink found, add it to the database as a possibility
                         mycursor.execute('SELECT * FROM candidates WHERE qid="'+qid+'" AND category = "' + targetcat.title() + '"')
                         myresult = mycursor.fetchone()
-                        print myresult
+                        print(myresult)
                         if not myresult:
                             sql = "INSERT INTO candidates (qid, category) VALUES (%s, %s)"
                             val = (qid, targetcat.title())
                             mycursor.execute(sql, val)
                             mydb.commit()
                     except:
-                        print 'Something went wrong when adding it to the database!'
+                        print('Something went wrong when adding it to the database!')
 
                     # data = {'sitelinks': [{'site': 'commonswiki', 'title': targetcat.title()}]}
                     # try:
@@ -176,11 +176,11 @@ def runimport(targetcat):
 
 existing_uses = {}
 if database:
-    print 'Loading database...'
+    print('Loading database...')
     with open('commons_wikidata_infobox_uses.csv', mode='r') as infile:
         reader = csv.reader(infile)
         existing_uses = {rows[0] for rows in reader}
-    print 'Database loaded!'
+    print('Database loaded!')
 
 nummodified = 0
 if usetemplate:
@@ -189,16 +189,16 @@ if usetemplate:
     targetcats = template.embeddedin(namespaces='14')
 
     for targetcat in targetcats:
-        print targetcat.title()
+        print(targetcat.title())
 
         if targetcat.title() in existing_uses:
-            print 'In database'
+            print('In database')
             continue
         else:
             try:
                 runimport(targetcat)
             except:
-                print 'Unable to add it'
+                print('Unable to add it')
 elif usecategory:
     # targetcats = ['Category:Uses of Wikidata Infobox with problems']
     targetcats = ['Category:CommonsRoot']#['Category:Women by name']
@@ -223,11 +223,11 @@ elif usecategory:
                 try:
                     nummodified += runimport(cat)
                 except:
-                    print 'Unable to add it'
+                    print('Unable to add it')
             else:
-                print 'Already in database'
+                print('Already in database')
             numchecked += 1
-            print str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active))
+            print(str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active)))
 
             # See if there are subcategories that we want to check in the future
             # if i == 1:
@@ -241,20 +241,20 @@ elif usecategory:
         random.shuffle(temp)
         active = set(temp)
         if nummodified >= maxnum:
-            print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 else:
     # Pick random categories
     while nummodified < maxnum:
         targets = pagegenerators.RandomPageGenerator(total=100, site=commons, namespaces='14')
         for target in targets:
-            print target.title()
+            print(target.title())
             if target.title() not in existing_uses:
                 nummodified += runimport(target)
-                print nummodified
-            
+                print(nummodified)
+
             if nummodified >= maxnum:
-                print 'Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!'
+                print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
                 break
 
 # EOF
