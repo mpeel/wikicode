@@ -16,7 +16,7 @@ from pibot_functions import *
 maxnum = 100000
 nummodified = 0
 stepsize =  1000
-maximum = 4000000
+maximum = 6000000
 numsteps = int(maximum / stepsize)
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
@@ -174,5 +174,5 @@ for i in range(0,numsteps):
                     exit()
 
 print('Done! Edited ' + str(nummodified) + ' entries')
-            
+
 # EOF
