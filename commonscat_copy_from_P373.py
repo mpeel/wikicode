@@ -64,114 +64,114 @@ for i in range(0,numsteps):
 
     try:
         generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
+	    for page in generator:
+	        try:
+	            item_dict = page.get()
+	            qid = page.title()
+	        except:
+	            print('Huh - no page found')
+	            continue
+
+
+	        print("\n" + qid)
+	        print(page.labels)
+	        try:
+	            p373 = item_dict['claims']['P373']
+	        except:
+	            print('Huh - no P373 found')
+	            continue
+	        p373_check = 0
+	        for clm in p373:
+	            p373_check += 1
+
+	        # If we have a P910 value, switch to using that item
+	        try:
+	            existing_id = item_dict['claims']['P910']
+	            print('P910 exists, following that.')
+	            for clm2 in existing_id:
+	                page = clm2.getTarget()
+	                item_dict = page.get()
+	                print(page.title())
+	        except:
+	            null = 0
+
+	        # Double-check that we don't already have a sitelink
+	        try:
+	            sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
+	            sitelink_check = 1
+	        except:
+	            sitelink_check = 0
+
+	        # If we have a sitelink, is the P373 value we found a redirect to it?
+	        if sitelink_check == 1:
+	            for clm in p373:
+	                val = clm.getTarget()
+	                val = clm.getTarget()
+	                commonscat = u"Category:" + val
+	                try:
+	                    targetpage = pywikibot.Page(commons, commonscat)
+	                except:
+	                    print('Found a bad sitelink')
+	                else:
+	                    redirect = ''
+	                    for option in catredirect_templates:
+	                        if "{{" + option in targetpage.text:
+	                            try:
+	                                redirect = (targetpage.text.split("{{" + option + "|"))[1].split("}}")[0]
+	                            except:
+	                                try:
+	                                    redirect = (targetpage.text.split("{{" + option + " |"))[1].split("}}")[0]
+	                                except:
+	                                    print('Wikitext parsing bug!')
+	                            redirect = redirect.replace(u":Category:","")
+	                            redirect = redirect.replace(u"Category:","")
+	                    if redirect != '':
+	                        # print clm
+	                        # print redirect
+	                        print(sitelink)
+	                        if redirect == str(sitelink).replace(u'Category:',''):
+	                            # text = raw_input("Save? ")
+	                            # if text == 'y':
+	                            clm.changeTarget(redirect, summary=u"Update P373 to avoid commons category redirect")
+	                            nummodified+=1
+
+
+	        # Only attempt to do this if there is only one value for P373 and no existing sitelink
+	        if p373_check == 1 and sitelink_check == 0:
+	            for clm in p373:
+	                val = clm.getTarget()
+	                commonscat = u"Category:" + val
+	                # The commons category must already exist
+	                try:
+	                    sitelink_page = pywikibot.Page(commons, commonscat)
+	                except:
+	                    print('Found a bad sitelink')
+	                    # clm.changeTarget("", summary=u"Remove non-functional value of P373")
+	                else:
+	                    # Check the category to see if it already has a Wikidata item
+	                    commonscat_page = pywikibot.Page(commons, commonscat)
+	                    try:
+	                        wd_item = pywikibot.ItemPage.fromPage(commonscat_page)
+	                        wd_item.get()
+	                    except:
+
+	                        # That didn't work, add it to the Wikidata entry
+	                        data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + val}]}
+	                        try:
+	                            # print val
+	                            # text = raw_input("Save? ")
+	                            # if text == 'y':
+	                            page.editEntity(data, summary=u'Copy from P373 to commons sitelink')
+	                            nummodified += 1
+	                            print(nummodified)
+	                        except:
+	                            print('Edit failed')
+
+	                if nummodified >= maxnum:
+	                    print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
+	                    exit()
     except:
         continue
-    for page in generator:
-        try:
-            item_dict = page.get()
-            qid = page.title()
-        except:
-            print('Huh - no page found')
-            continue
-
-
-        print("\n" + qid)
-        print(page.labels)
-        try:
-            p373 = item_dict['claims']['P373']
-        except:
-            print('Huh - no P373 found')
-            continue
-        p373_check = 0
-        for clm in p373:
-            p373_check += 1
-
-        # If we have a P910 value, switch to using that item
-        try:
-            existing_id = item_dict['claims']['P910']
-            print('P910 exists, following that.')
-            for clm2 in existing_id:
-                page = clm2.getTarget()
-                item_dict = page.get()
-                print(page.title())
-        except:
-            null = 0
-
-        # Double-check that we don't already have a sitelink
-        try:
-            sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
-            sitelink_check = 1
-        except:
-            sitelink_check = 0
-
-        # If we have a sitelink, is the P373 value we found a redirect to it?
-        if sitelink_check == 1:
-            for clm in p373:
-                val = clm.getTarget()
-                val = clm.getTarget()
-                commonscat = u"Category:" + val
-                try:
-                    targetpage = pywikibot.Page(commons, commonscat)
-                except:
-                    print('Found a bad sitelink')
-                else:
-                    redirect = ''
-                    for option in catredirect_templates:
-                        if "{{" + option in targetpage.text:
-                            try:
-                                redirect = (targetpage.text.split("{{" + option + "|"))[1].split("}}")[0]
-                            except:
-                                try:
-                                    redirect = (targetpage.text.split("{{" + option + " |"))[1].split("}}")[0]
-                                except:
-                                    print('Wikitext parsing bug!')
-                            redirect = redirect.replace(u":Category:","")
-                            redirect = redirect.replace(u"Category:","")
-                    if redirect != '':
-                        # print clm
-                        # print redirect
-                        print(sitelink)
-                        if redirect == str(sitelink).replace(u'Category:',''):
-                            # text = raw_input("Save? ")
-                            # if text == 'y':
-                            clm.changeTarget(redirect, summary=u"Update P373 to avoid commons category redirect")
-                            nummodified+=1
-
-
-        # Only attempt to do this if there is only one value for P373 and no existing sitelink
-        if p373_check == 1 and sitelink_check == 0:
-            for clm in p373:
-                val = clm.getTarget()
-                commonscat = u"Category:" + val
-                # The commons category must already exist
-                try:
-                    sitelink_page = pywikibot.Page(commons, commonscat)
-                except:
-                    print('Found a bad sitelink')
-                    # clm.changeTarget("", summary=u"Remove non-functional value of P373")
-                else:
-                    # Check the category to see if it already has a Wikidata item
-                    commonscat_page = pywikibot.Page(commons, commonscat)
-                    try:
-                        wd_item = pywikibot.ItemPage.fromPage(commonscat_page)
-                        wd_item.get()
-                    except:
-
-                        # That didn't work, add it to the Wikidata entry
-                        data = {'sitelinks': [{'site': 'commonswiki', 'title': u"Category:" + val}]}
-                        try:
-                            # print val
-                            # text = raw_input("Save? ")
-                            # if text == 'y':
-                            page.editEntity(data, summary=u'Copy from P373 to commons sitelink')
-                            nummodified += 1
-                            print(nummodified)
-                        except:
-                            print('Edit failed')
-
-                if nummodified >= maxnum:
-                    print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
-                    exit()
 
 print('Done! Edited ' + str(nummodified) + ' entries')
 
