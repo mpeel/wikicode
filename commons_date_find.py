@@ -76,6 +76,18 @@ def do_date_find(page):
 			item_dict = targetpage.get()
 			print('http://www.wikidata.org/wiki/'+results[i]['id'])
 
+			# Make sure we don't have a sitelink already
+			sitelink_check = False
+			try:
+				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
+				print('http://commons.wikimedia.org/wiki/'+sitelink.replace(' ','_'))
+				sitelink_check = True
+			except:
+				pass
+			if sitelink_check:
+				print('Has sitelink')
+				continue
+
 			calday = False
 			P31 = ''
 			try:
