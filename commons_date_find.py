@@ -97,7 +97,9 @@ def do_date_find(page):
 			except:
 				print('')
 			print('http://commons.wikimedia.org/wiki/'+page.title().replace(' ','_'))
-			text = input("Save? ")
+			text = 'y'
+			if debug:
+				text = input("Save? ")
 			if text != 'n':
 				data = {'sitelinks': [{'site': 'commonswiki', 'title': page.title()}]}
 				targetpage.editEntity(data, summary=u'Add commons sitelink')
@@ -108,7 +110,6 @@ def do_date_find(page):
 
 # Run through the category contents
 cat = pywikibot.Category(commons, targetcat)
-trip = 1
 for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 	if trip == 0:
 		if 'Category:2000' not in result.title():
