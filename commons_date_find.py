@@ -14,7 +14,7 @@ import random
 
 # Settings
 targetcat = 'Category:Days by day'
-maxnum = 1000
+maxnum = 50000
 nummodified = 0
 debug = 0
 trip = 1
@@ -94,7 +94,7 @@ def do_date_find(page):
 				P31 = item_dict['claims']['P31']
 			except:
 				print('No P31, skipping')
-				return 0
+				continue
 			if P31 != '':
 				for clm in P31:
 					# print(clm)
@@ -103,7 +103,7 @@ def do_date_find(page):
 						calday = True
 			if not calday:
 				print('Not a calendar day, skipping')
-				return 0
+				continue
 			try:
 				print(item_dict['labels']['en'])
 			except:
