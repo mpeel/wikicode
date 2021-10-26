@@ -14,9 +14,9 @@ import random
 
 # Settings
 targetcat = 'Category:Days by day'
-maxnum = 100000
+maxnum = 100
 nummodified = 0
-debug = 1
+debug = 0
 trip = 1
 
 # Sites
