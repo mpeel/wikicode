@@ -58,7 +58,7 @@ days_since_creation = 14.0
 debug = False
 
 def search_entities(site, itemtitle,lang='en'):
-	 params = { 'action' :'wbsearchentities', 
+	 params = { 'action' :'wbsearchentities',
 				'format' : 'json',
 				'language' : lang,
 				'type' : 'item',
@@ -67,7 +67,7 @@ def search_entities(site, itemtitle,lang='en'):
 	 return request.submit()
 
 def get_unconnected(site, offset,number):
-	 params = { 'action' :'query', 
+	 params = { 'action' :'query',
 				'format' : 'json',
 				'list' : 'querypage',
 				'qppage' : 'UnconnectedPages',
@@ -102,7 +102,7 @@ for prefix in wikipedias:
 		nametrip = True
 		# pages = parsequarry('quarry-51946-enwp-articles-without-wikidata-run526568.csv')
 		pages = parsequarry(prefix+"wp_articles.csv")
-		
+
 		count = 0
 		for pagename in pages:
 			pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
@@ -187,12 +187,17 @@ for prefix in wikipedias:
 				continue
 
 			# Check for the creation time
+			old_page = False
 			created = page.oldest_revision.timestamp
 			created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
 			print('Created: ' + str(created_time))
 			if created_time < days_since_creation:
 				print('Recently created ('+str(created_time)+')')
 				continue
+			elif created_time > 90:
+				old_page = True
+
+
 
 			# Check to see if it contains templates we want to avoid
 			trip = 0
@@ -305,14 +310,20 @@ for prefix in wikipedias:
 
 
 			## Part 5 - tidy up
-
+			try:
+				if old_page and test == 'y':
+					tracking_page = pywikibot.Page(repo, 'User:Pi bot/old_new_item')
+					tracking_page.text = tracking_page.text + "\n* {{Q|" + str(new_item.title()) + "}}"
+					page.save("Adding " + str(new_item.title()))
+			except:
+				pass
 			# Touch the page to force an update
 			try:
 				page.touch()
 			except:
 				null = 0
 
-			# Cut-off at a maximum number of edits	
+			# Cut-off at a maximum number of edits
 			print("")
 			print(nummodified)
 			if nummodified >= maxnum:
