@@ -310,13 +310,12 @@ for prefix in wikipedias:
 
 
 			## Part 5 - tidy up
-			try:
-				if old_page and test == 'y':
-					tracking_page = pywikibot.Page(repo, 'User:Pi bot/old_new_item')
-					tracking_page.text = tracking_page.text + "\n* {{Q|" + str(new_item.title()) + "}}"
-					tracking_page.save("Adding " + str(new_item.title()))
-			except:
-				pass
+			# Log creation of items for old articles
+			if old_page and test == 'y':
+				tracking_page = pywikibot.Page(repo, 'User:Pi bot/old_new_item')
+				tracking_page.text = tracking_page.text + "\n* {{Q|" + str(new_item.title()) + "}}"
+				tracking_page.save("Adding " + str(new_item.title()))
+
 			# Touch the page to force an update
 			try:
 				page.touch()
