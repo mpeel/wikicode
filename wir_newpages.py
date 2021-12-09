@@ -94,10 +94,10 @@ def loadSPARQL(sparql=''):
 			return json1
 		except:
 			print('Error downloading SPARQL? Malformatted JSON? Skiping\n')
-			return 
+			return
 	else:
 		print('Server return empty file')
-		return 
+		return
 	return
 
 def getAllCountries():
@@ -455,7 +455,7 @@ def pageIsBiography(page='', lang=''):
 			return False
 		if 'racehorse' in page.text:
 			return False
-		elif not page.title().startswith('List ') and not page.title().startswith('Lists ') and 'disappearance' not in page.title().lower() and 'murder' not in page.title().lower() and 'killing' not in page.title().lower() and 'assassination' not in page.title().lower() and 'death' not in page.title().lower() and 'discography' not in page.title().lower():
+		elif not page.title().startswith('List ') and not page.title().startswith('Lists ') and not page.title().startswith('Mortos em') and 'disappearance' not in page.title().lower() and 'murder' not in page.title().lower() and 'killing' not in page.title().lower() and 'assassination' not in page.title().lower() and 'lynching' not in page.title().lower() and 'case of' not in page.title().lower() and 'death' not in page.title().lower() and 'discography' not in page.title().lower():
 			if len(page.title().split(' ')) <= 5:
 				if re.search(r'(?im)(\'{3} \(born \d|Category\s*:\s*\d+ (births|deaths)|Category\s*:\s*Living people|birth_date\s*=|birth_place\s*=|death_date\s*=|death_place\s*=|Category\s*:\s*People from)', page.text):
 					return True
@@ -560,14 +560,14 @@ def main():
 					   (not len(list(page.getReferences(namespaces=[0])))):
 						print("Page didnt pass minimum quality, skiping")
 						continue
-				
+
 				print(page.title().encode('utf-8'), 'need item', gender)
 				wtitle = page.title()
 				wtitle_ = wtitle.split('(')[0].strip()
 				searchitemurl = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&search=%s&language=%s&format=xml' % (urllib.parse.quote(wtitle_), lang)
 				raw = getURL(searchitemurl)
 				print(searchitemurl.encode('utf-8'))
-				
+
 				#check birthdate and if it matches, then add data
 				numcandidates = '' #do not set to zero
 				if not '<search />' in raw:
