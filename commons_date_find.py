@@ -117,6 +117,58 @@ def do_date_find(page):
 				targetpage.editEntity(data, summary=u'Add commons sitelink')
 				return 1
 
+	# Also try with a different date format (only datestr line is different from the above)
+	datestr = str(day) + ' ' + months[int(date[1])-1] + ' ' + str(date[0])
+	wikidataEntries = search_entities(repo, datestr)
+	if wikidataEntries['search'] != []:
+		results = wikidataEntries['search']
+		numresults = len(results)
+		for i in range(0,numresults):
+			targetpage = pywikibot.ItemPage(wikidata_site, results[i]['id'])
+			item_dict = targetpage.get()
+			print('http://www.wikidata.org/wiki/'+results[i]['id'])
+
+			# Make sure we don't have a sitelink already
+			sitelink_check = False
+			try:
+				sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
+				print('http://commons.wikimedia.org/wiki/'+sitelink.replace(' ','_'))
+				sitelink_check = True
+			except:
+				pass
+			if sitelink_check:
+				print('Has sitelink')
+				continue
+
+			calday = False
+			P31 = ''
+			try:
+				P31 = item_dict['claims']['P31']
+			except:
+				print('No P31, skipping')
+				continue
+			if P31 != '':
+				for clm in P31:
+					# print(clm)
+					# print(clm.getTarget().title())
+					if clm.getTarget().title() == 'Q47150325':
+						calday = True
+			if not calday:
+				print('Not a calendar day, skipping')
+				continue
+			try:
+				print(item_dict['labels']['en'])
+			except:
+				print('')
+			print('http://commons.wikimedia.org/wiki/'+page.title().replace(' ','_'))
+			text = 'y'
+			if debug:
+				text = input("Save? ")
+			if text != 'n':
+				data = {'sitelinks': [{'site': 'commonswiki', 'title': page.title()}]}
+				targetpage.editEntity(data, summary=u'Add commons sitelink')
+				return 1
+
 	# If we're here, it hasn't worked, return 0
 	return 0
 
