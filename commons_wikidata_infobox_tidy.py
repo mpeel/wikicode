@@ -161,6 +161,19 @@ def migratecat(targetcat):
     else:
         return 0
 
+# Check for uses of the Wikidata Infobox redirects
+for i in range(0,len(templates)):
+    template = pywikibot.Page(commons, 'Template:'+templates[i])
+    targetcats = template.embeddedin(namespaces='14')
+    for targetcat in targetcats:
+        print(targetcat)
+        print("\n" + targetcat.title())
+        nummodified += migratecat(targetcat)
+
+        if nummodified >= maxnum:
+            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
+            exit()
+
 # Check through the manual ID category
 category = 'Category:Uses of Wikidata Infobox with manual qid'
 cat = pywikibot.Category(commons,category)
@@ -186,19 +199,6 @@ for targetcat in targetcats:
     if nummodified >= maxnum:
         print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
         exit()
-
-# Check for uses of the Wikidata Infobox redirects
-for i in range(0,len(templates)):
-    template = pywikibot.Page(commons, 'Template:'+templates[i])
-    targetcats = template.embeddedin(namespaces='14')
-    for targetcat in targetcats:
-        print(targetcat)
-        print("\n" + targetcat.title())
-        nummodified += migratecat(targetcat)
-
-        if nummodified >= maxnum:
-            print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
-            exit()
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')
