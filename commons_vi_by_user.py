@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Quality Image categories by user
+# Featured Image categories by user
 # Mike Peel     15-Jan-2022      v1 - start
 # Import modules
 import pywikibot
@@ -8,13 +8,13 @@ from pywikibot import pagegenerators
 
 commons = pywikibot.Site('commons', 'commons')
 
-targetcat = 'Category:Quality images by user'
-destinationpage = 'Commons:Quality images by user'
+targetcat = 'Category:Valued images by user'
+destinationpage = 'Commons:Valued images by user'
 skip = ['by country', 'by subject', 'images from', 'Wiki Loves']
 
 
 page = pywikibot.Page(commons, destinationpage)
-pagetext = 'This is a list of [[Commons:Quality images|quality images]] by user. If you want to be included in this list, create a subcategory of [[:Category:Quality images by user]] with the format \'Quality images by <username>\', and you will be included in this list with the next bot update (daily). This page is automatically updated by [[User:Pi bot]]. If you want to change the format of this page, or want to be excluded from this list, please contact [[User:Mike Peel]]. Manual changes will be ignored by the bot update.\n== {{LangSwitch|cs=Tabulka|de=Tabelle|en=Table|zh=表格}} ==\n\n{|class="wikitable sortable" cellspacing="0"\n!{{LangSwitch|de=Benutzer|en=User|zh=用戶}}\n!{{LangSwitch|de=Kategorie|en=Category|zh=分類}}\n!{{LangSwitch|de=Anzahl QIs|en=Number QIs|zh=優質圖像數量}}\n'
+pagetext = 'This is a list of [[Commons:Valued images|valued images]] by user. If you want to be included in this list, create a subcategory of [[:Category:Featured pictures by creator]] with the format \'Valued images by <username>\', and you will be included in this list with the next bot update (daily). This page is automatically updated by [[User:Pi bot]]. If you want to change the format of this page, or want to be excluded from this list, please contact [[User:Mike Peel]]. Manual changes will be ignored by the bot update.\n== {{LangSwitch|cs=Tabulka|de=Tabelle|en=Table|zh=表格}} ==\n\n{|class="wikitable sortable" cellspacing="0"\n!{{LangSwitch|de=Benutzer|en=User|zh=用戶}}\n!{{LangSwitch|de=Kategorie|en=Category|zh=分類}}\n!{{LangSwitch|de=Anzahl VIs|en=Number VIs {{VI seal|size=15}}|zh=優質圖像數量}}\n'
 cat = pywikibot.Category(commons, targetcat)
 subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 for subcat in subcats:
@@ -35,10 +35,10 @@ for subcat in subcats:
 		username = title.split("-")[0]
 	elif "/" in title:
 		username = title.split("/")[0]
-	elif "from " in title:
-		username = title.split("from ")[1]
 	elif "of " in title:
 		username = title.split("of ")[1]
+	elif "from " in title:
+		username = title.split("from ")[1]
 	else:
 		username = title.split('by ')[1]
 	username = username.replace('User:','')
@@ -52,6 +52,6 @@ for subcat in subcats:
 		username = username.split('/')[0]
 	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' + subcat.title().replace('Category:','') + ']] || align="right" | {{PAGESINCAT:'+subcat.title().replace('Category:','') + '|files}}\n'
 
-pagetext = pagetext + '\n|}[[Category:Quality images by user| ]]'
+pagetext = pagetext + '\n|}[[Category:Valued images by user| ]]'
 page.text = pagetext
 page.save('Updating')
