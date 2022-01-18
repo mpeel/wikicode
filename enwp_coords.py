@@ -136,6 +136,7 @@ for page in pages:
 	if ishuman:
 		print('Not importing coordinate for a human, business, company, railway or list')
 		continue
+
 	P159 = ''
 	try:
 		P159 = item_dict['claims']['P159']
@@ -144,6 +145,16 @@ for page in pages:
 	if P159 != '':
 		# print(P159)
 		print('Has a HQ, skipping')
+		continue
+
+	P247 = ''
+	try:
+		P247 = item_dict['claims']['P247']
+	except:
+		null = 0
+	if P247 != '':
+		# print(P159)
+		print('Has a COSPAR ID, skipping')
 		continue
 
 	count = 0
