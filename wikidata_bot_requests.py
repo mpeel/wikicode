@@ -48,6 +48,14 @@ for line in lines:
 				print("That didn't work")
 				exit()
 			null = 0
+		if '{{not done}}' in botpage.text.lower():
+			try:
+				newarchivepage = newarchivepage.replace('= Unsuccessful requests =','= Unsuccessful requests =\n* ' + line.replace('{','[').replace('}',']'))
+				newbotpage = newbotpage.replace(line+'\n', '')
+			except:
+				print("That didn't work")
+				exit()
+			null = 0
 
 # Do some last tidying up
 newbotpage = newbotpage.replace('Requests_for_permissions','Requests for permissions')
