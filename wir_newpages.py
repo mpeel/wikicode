@@ -116,7 +116,7 @@ def getAllCountries():
 def addImportedFrom(repo='', claim='', lang=''):
 	# Disabled to reduce number of edits
 	return
-	langs = { 'en': 'Q328', 'fr': 'Q8447', 'de': 'Q48183', }
+	langs = { 'en': 'Q328', 'fr': 'Q8447', 'de': 'Q48183', 'es': 'Q8449'}
 	if repo and claim and lang and lang in langs.keys():
 		importedfrom = pywikibot.Claim(repo, 'P143') #imported from
 		importedwp = pywikibot.ItemPage(repo, langs[lang])
@@ -235,6 +235,10 @@ def calculateBirthDate(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Nascidos em (\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'es':
+		m = re.findall(r'(?im)\[\[\s*NF\|(\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
 	return ''
 
 def calculateBirthDateFull(page='', lang=''):
@@ -333,6 +337,10 @@ def calculateDeathDate(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Mortos em (\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'es':
+		m = re.findall(r'(?im)\[\[\s*NF\|\d+\|(\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
 	return ''
 
 def calculateDeathDateFull(page='', lang=''):
@@ -411,6 +419,8 @@ def calculateOccupations(wikisite='', page='', lang=''):
 			cats = re.findall(r'(?i)\[\[\s*(?:Categoria|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
 		elif lang == 'fr':
 			cats = re.findall(r'(?i)\[\[\s*(?:Catégorie|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
+		elif lang == 'es':
+			cats = re.findall(r'(?i)\[\[\s*(?:Categoría|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
 		for cat in cats:
 			cat = cat.strip()
 			catpage = pywikibot.Page(wikisite, 'Category:%s' % (cat)) #Category: works for any lang
@@ -444,6 +454,8 @@ def pageCategories(page='', lang=''):
 		return len(re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*\:', page.text))
 	elif lang == 'fr':
 		return len(re.findall(r'(?im)\[\[\s*(?:Catégorie|Category)\s*\:', page.text))
+	elif lang == 'es':
+		return len(re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*\:', page.text))
 	return 0
 
 def pageReferences(page='', lang=''):
@@ -481,6 +493,13 @@ def pageIsBiography(page='', lang=''):
 		if not page.title().startswith('Lista ') and 'homicídio' not in page.title().lower():
 			if len(page.title().split(' ')) <= 5:
 				if re.search(r'(?im)((Categoria|Category)\s*:\s*(Naturais|Nascidos|Pessoas vivas|Mortos))', page.text):
+					return True
+	elif lang == 'es':
+		if re.search('(?im)(Categoría|Category)\s*:\s*Animales', page.text):
+			return False
+		elif not page.title().startswith('Lista'):
+			if len(page.title().split(' ')) <= 5:
+				if re.search(r'(?im)((Categoría|Category)\s*:\s*(Nacidos en))', page.text):
 					return True
 	return False
 
@@ -520,7 +539,7 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
 	repo = wdsite.data_repository()
-	langs = ['en', 'fr', 'pt'] #, 'de'
+	langs = ['en', 'fr', 'pt', 'es'] #, 'de'
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
 		total = 100
