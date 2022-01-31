@@ -316,6 +316,14 @@ def calculateBirthDateFull(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Nascidos em (\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'es':
+		m = re.findall(r'(?im)[Ff]echa de nacimiento\s*\=\s*\{\{[Ff]echa\|(\d+)\|(\w+)\|(\d+)', page.text)
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 	return ''
 
 def calculateDeathDate(page='', lang=''):
@@ -403,6 +411,10 @@ def calculateDeathDateFull(page='', lang=''):
 		m = re.findall(r'(?im)\[\[\s*(?:Categoria|Category)\s*:\s*Mortos em (\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+	elif lang == 'es':
+		m = re.findall(r'[Ff]echa de fallecimiento\s*\=\s*\{\{[Ff]echa\|(\d+)\|(\w+)\|(\d+)', page.text)
+		if m:
+			return str(m[0][2]) + '-' + str(m[0][1]) + '-' + str(m[0][0])
 	return ''
 
 def calculateOccupations(wikisite='', page='', lang=''):
