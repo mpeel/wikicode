@@ -236,9 +236,15 @@ def calculateBirthDate(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'es':
-		m = re.findall(r'(?im)\[\[\s*NF\|(\d+)\s*[\|\]]', page.text)
+		m = re.findall(r'(?im)\[\[\s*[Nn][Ff]\|(\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+        elif not m:
+            m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Nacidos en (\d+)\s*[\|\]]', page.text)
+            if m:
+    			return m[0]
+
+
 	return ''
 
 def calculateBirthDateFull(page='', lang=''):
@@ -346,9 +352,14 @@ def calculateDeathDate(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'es':
-		m = re.findall(r'(?im)\[\[\s*NF\|\d+\|(\d+)\s*[\|\]]', page.text)
+		m = re.findall(r'(?im)\[\[\[Nn][Ff]\|\d+\|(\d+)\s*[\|\]]', page.text)
 		if m:
 			return m[0]
+        elif not m
+        	m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Fallecidos en (\d+)\s*[\|\]]', page.text)
+            if m:
+    			return m[0]
+
 	return ''
 
 def calculateDeathDateFull(page='', lang=''):
