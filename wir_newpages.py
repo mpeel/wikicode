@@ -219,9 +219,9 @@ def calculateGender(page='', lang=''):
 		femalepoints = 0
 		categories = page.categories()
 		for item in categories:
-			if 'hombre' in item.title() or 'Hombre' in item.title():
+			if 'hombre' in item.title().lower():
 				malepoints+=1
-			elif 'mujer' in item.title() or 'Mujer' in item.title():
+			elif 'mujer' in item.title().lower():
 				femalepoints+=1
 		if malepoints > femalepoints:
 			return 'male'
@@ -253,7 +253,7 @@ def calculateBirthDate(page='', lang=''):
 		if m:
 			return m[0]
 		elif not m:
-			m = re.findall(r'(?im)\{\{\s*(?:Categoría|Category)\s*:\s*Nacidos en (\d+)\s*[\|\]]', page.text)
+			m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Nacidos en (\d+)\s*[\|\]]', page.text)
 			if m:
 				return m[0]
 
