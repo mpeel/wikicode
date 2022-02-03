@@ -214,6 +214,19 @@ def calculateGender(page='', lang=''):
 			return 'male'
 	elif lang == 'fr':
 		return '' #todo: ne nee
+	elif lang == 'es':
+		malepoints = 0
+		femalepoints = 0
+		categories = page.categories()
+		for item in categories:
+			if 'hombre' in item.title() or 'Hombre' in item.title():
+				malepoints+=1
+			elif 'mujer' in item.title() or 'Mujer' in item.title():
+				femalepoints+=1
+		if malepoints > femalepoints:
+			return 'male'
+		elif femalepoints > malepoints:
+			return 'female'
 	return ''
 
 def calculateBirthDate(page='', lang=''):
@@ -236,13 +249,13 @@ def calculateBirthDate(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'es':
-		m = re.findall(r'(?im)\[\[\s*[Nn][Ff]\|(\d+)\s*[\|\]]', page.text)
+		m = re.findall(r'(?im)\{\{\s*[Nn][Ff]\|(\d+)\s*[\|\}]', page.text)
 		if m:
 			return m[0]
-        elif not m:
-            m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Nacidos en (\d+)\s*[\|\]]', page.text)
-            if m:
-    			return m[0]
+		elif not m:
+			m = re.findall(r'(?im)\{\{\s*(?:Categoría|Category)\s*:\s*Nacidos en (\d+)\s*[\|\]]', page.text)
+			if m:
+				return m[0]
 
 
 	return ''
@@ -352,7 +365,7 @@ def calculateDeathDate(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'es':
-		m = re.findall(r'(?im)\[\[\[Nn][Ff]\|\d+\|(\d+)\s*[\|\]]', page.text)
+		m = re.findall(r'(?im)\{\{\[Nn][Ff]\|\d*\|(\d+)\s*[\|\}]', page.text)
 		if m:
 			return m[0]
         elif not m
