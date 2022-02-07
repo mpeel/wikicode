@@ -334,7 +334,7 @@ def calculateBirthDateFull(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'es':
-		m = re.findall(r'(?im)[Ff]echa\s*de\snacimiento\s*\=\s*\{\{[Ff]echa(?:\s*\w*)*\s*\|(\d+)\|(\w+)\|(\d+)', page.text)
+		m = re.findall(r'(?im)[Ff]echa\s*de\s*nacimiento\s*\=\s*\{\{[Ff]echa(?:\s*\w*)*\s*\|(\d+)\|(\w+)\|(\d+)', page.text)
 		if m:
 			try:
 				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
@@ -442,7 +442,7 @@ def calculateDeathDateFull(page='', lang=''):
 		if m:
 			return m[0]
 	elif lang == 'es':
-		m = re.findall(r'(?im)[Ff]echa\s*de\sfallecimiento\s*\=\s*\{\{[Ff]echa(?:\s*\w*)*\s*\|(\d+)\|(\w+)\|(\d+)', page.text)
+		m = re.findall(r'(?im)[Ff]echa\s*de\s*fallecimiento\s*\=\s*\{\{[Ff]echa(?:\s*\w*)*\s*\|(\d+)\|(\w+)\|(\d+)', page.text)
 		if m:
 			return str(m[0][2]) + '-' + str(m[0][1]) + '-' + str(m[0][0])
 		elif not m:
