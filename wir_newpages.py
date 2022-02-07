@@ -374,10 +374,10 @@ def calculateDeathDate(page='', lang=''):
 		m = re.findall(r'(?im)\{\{\[Nn][Ff]\|\d*\|(\d+)\s*[\|\}]', page.text)
 		if m:
 			return m[0]
-        elif not m
-        	m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Fallecidos en (\d+)\s*[\|\]]', page.text)
-            if m:
-    			return m[0]
+		elif not m:
+			m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Fallecidos en (\d+)\s*[\|\]]', page.text)
+			if m:
+				return m[0]
 
 	return ''
 
@@ -589,7 +589,7 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
 	repo = wdsite.data_repository()
-	langs = ['en', 'fr', 'pt', 'es'] #, 'de'
+	langs = ['es', 'en', 'fr', 'pt'] #, 'de'
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
 		total = 100

@@ -32,7 +32,7 @@ def parseduplicity(url,lang='en'):
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
-langs = ['en', 'fr', 'de','pt']
+langs = ['es','en', 'fr', 'de','pt']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
 	total = 1000
@@ -79,7 +79,7 @@ for lang in langs:
 			searchitemurl = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&search=%s&language=%s&format=xml' % (urllib.parse.quote(wtitle_), lang)
 			raw = getURL(searchitemurl)
 			print(searchitemurl.encode('utf-8'))
-			
+
 			#check birthdate and if it matches, then add data
 			numcandidates = '' #do not set to zero
 			if not '<search />' in raw:
@@ -138,7 +138,7 @@ for lang in langs:
 								except:
 									null = 0
 								break
-			
+
 			#no item found, or no candidates are useful
 			if '<search />' in raw or (numcandidates == 0):
 				print('No useful item found. Creating a new one...')

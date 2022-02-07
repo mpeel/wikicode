@@ -2,17 +2,19 @@
 import pywikibot
 import datetime
 import dateparser
-from wir_newpages import *
+from wir_newpages_es import *
 
-lang = 'en'
-article = 'David Bassett'
-enwp_site = 'ptwiki'
+lang = 'es'
+article = 'Vladímir Alexándrov'
+enwp_site = 'eswiki'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
 repo = enwiki.data_repository()  # this is a DataSite object
 page = pywikibot.Page(enwiki, article)
-
+for cat in page.categories():
+	print(cat.title())
+exit()
 # if '#redirect' in page.text.lower():
 # 	print("Page is a redirect but isn't marked as one")
 # for template, _ in page.templatesWithParams():
@@ -32,8 +34,8 @@ page = pywikibot.Page(enwiki, article)
 # exit()
 
 # Test code
-print(page.text)
-print(authorIsNewbie(page=page,lang=lang))
+# print(page.text)
+# print(authorIsNewbie(page=page,lang=lang))
 print(pageIsRubbish(page,lang=lang))
 print(pageIsBiography(page,lang=lang))
 birthdate = calculateBirthDateFull(page=page,lang=lang)
@@ -44,7 +46,7 @@ if deathdate != '0-0-0':
 itemfound = pywikibot.ItemPage.fromPage(page)
 # addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)
 # exit()
-addBiographyClaims(repo=repo, wikisite=enwiki, item=itemfound, page=page, lang=lang)
+# addBiographyClaims(repo=repo, wikisite=enwiki, item=itemfound, page=page, lang=lang)
 
 # deathdate = '2021-01-01'
 # addDateClaim(repo=repo, item='Q4115189', claim='P569', date=deathdate, lang='en')

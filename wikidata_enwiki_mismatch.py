@@ -9,8 +9,11 @@ lang = 'en'
 wiki = pywikibot.Site(lang, 'wikipedia')
 repo = wiki.data_repository()
 debug = False
-maxpercat=5
+maxpercat=5000
 
+f = open("wikidata_enwiki_mismatch.csv", "w", encoding='utf-8')
+f.write('statement_guid,property_id,wikidata_value,external_value,external_url\n')
+print('statement_guid,property_id,wikidata_value,external_value,external_url')
 cat = pywikibot.Category(wiki, 'Category:Wikipedia categories tracking Wikidata differences')
 for subcat in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 	if debug:
@@ -31,7 +34,7 @@ for subcat in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 		print('#' + templatename)
 
 	# If we haven't got a propid or template, then skip this category
-	if propid == '' or template == '':
+	if propid == '' or template == '' or 'infobox' in templatename.lower():
 		continue
 
 	i = 0
@@ -80,6 +83,9 @@ for subcat in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 						compval = clm.getTarget().title()
 					if count == 1 and localid.strip() != compval.strip():
 						# OK, we have a local ID, and a single Wikidata ID, return for mismatch
-						print(snakid + ','+propid+','+compval+','+localid+',http://en.wikipedia.org/wiki/'+page.title().replace(' ','_'))
+						f.write('"'+snakid + '","'+propid+'","'+compval+'","'+localid+'","http://en.wikipedia.org/wiki/'+page.title().replace(' ','_')+'"\n')
+						print('"'+snakid + '","'+propid+'","'+compval+'","'+localid+'","http://en.wikipedia.org/wiki/'+page.title().replace(' ','_')+'"')
 		except:
 			continue
+
+f.close()
