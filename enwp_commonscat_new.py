@@ -31,11 +31,10 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 langcode = 'en'#'pl'
 # langcode = 'simple'
-# langcode='fr'
+# langcode = 'fr'
+# langcode = 'pt'
 # enwp = pywikibot.Site('en', 'wikipedia')
 # enwp = pywikibot.Site('meta', 'meta')
-# enwp = pywikibot.Site('fr', 'wikipedia')
-# enwp = pywikibot.Site('pt', 'wikipedia')
 # enwp = pywikibot.Site('es', 'wikipedia')
 # enwp = pywikibot.Site('sv', 'wikipedia')
 # enwp = pywikibot.Site('nl', 'wikipedia')
@@ -44,8 +43,7 @@ enwp = pywikibot.Site(langcode, 'wikipedia')
 debug = 1
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'commons_category', 'Commons_category', 'commons_cat', 'Commons_cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline','Autres projets','Ccat','ccat','Cc','cc']
-targetcats = ['Category:Commons category link is the pagename', 'Category:Commons category link is defined as the pagename', 'Category:Commons category link is locally defined','Category:Commons category link is on Wikidata using P373']
-# targetcats = ['Catégorie:Catégorie Commons avec lien local différent sur Wikidata']
+targetcats = ['Category:Commons category link is the pagename', 'Category:Commons category link is defined as the pagename', 'Category:Commons category link is locally defined','Category:Commons category link is on Wikidata using P373', 'Catégorie:Catégorie Commons avec lien local différent sur Wikidata', 'Categoria:!Ligação da categoria no Commons está no Wikidata']
 include_cat = True
 
 # templates = ['Commons','Common','Wikicommons','Wikicommon']
@@ -589,9 +587,9 @@ for targetcat in targetcats:
 	# 	except:
 	# 		print("That didn't work")
 	# exit()
-		
+
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')
-		
+
 # EOF

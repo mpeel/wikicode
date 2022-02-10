@@ -15,6 +15,7 @@ import time
 # Settings
 targetcat = "Category:British Library King's Topographical collection"
 newcat = "Category:Uploaded by the British Library"
+targetcat = newcat
 nummodified = 0
 maxnum = 1
 
@@ -26,8 +27,15 @@ def addcat(page, newcat):
 		if page.text == '':
 			print("Error - page is empty!")
 			return 0
-		elif newcat not in page.text:
+
+		for cat in page.categories():
+			if 'Uploaded by the British Library' in cat.title():
+				print('Already in category')
+				return 0
+
+		if newcat not in page.text:
 			page.text = page.text + "\n[[" + newcat + "]]"
+			input('Would save!')
 			page.save(u"Adding [[:" + newcat + "]]")
 			return 1
 		else:

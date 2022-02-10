@@ -43,6 +43,7 @@ useimport = '' #'import.csv'
 newstyle = False
 database = False
 usesearch = False
+usecatquery = False
 
 existing_uses = {}
 if database:
@@ -69,7 +70,7 @@ templatestobebelow = ["Object location", "object location", "Authority control",
 templates_to_skip_to_end = ["Cultural Heritage Russia", "cultural Heritage Russia", "Historic landmark", "historic landmark", "FOP-Armenia", "{{HPC","NavigationBox"]
 
 def search_entities(site, itemtitle,limit=100,offset=0):
-     params = { 'action' :'query', 
+     params = { 'action' :'query',
                 'list': 'search',
                 'format' : 'json',
                 'srlimit': limit,
@@ -116,7 +117,7 @@ def addtemplate(target):
             test_item = clm2.getTarget()
             test_item_dict = test_item.get()
     except:
-        null = 0    
+        null = 0
     try:
         p1472 = test_item_dict['claims']['P1472']
         # print(p1472)
@@ -308,7 +309,7 @@ if random:
             if target.title() not in existing_uses:
                 nummodified += addtemplate(target)
                 print(nummodified)
-            
+
             if nummodified >= maxnum:
                 print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
                 break
@@ -321,7 +322,7 @@ elif usetemplate:
         if target.title() not in existing_uses:
             nummodified += addtemplate(target)
             print(nummodified)
-        
+
         if nummodified >= maxnum:
             print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
@@ -425,6 +426,27 @@ elif usesearch:
                 targetcat = pywikibot.Page(commons, str(result['title']))
                 nummodified += addtemplate(targetcat)
 
+elif usecatquery:
+    maxnum = 4000000
+    step = 10000
+    num = int(maxnum/step)
+    for i in range(0,num):
+
+        query = 'SELECT ?item ?commonscat ?sitelink ?name WHERE {'\
+        '  ?sitelink schema:about ?item; schema:isPartOf <https://commons.wikimedia.org/>; schema:name ?name .'\
+        '  FILTER( CONTAINS(STR(?sitelink), \'Category:\') = true ) .'\
+        '  } LIMIT ' + str(step) + ' OFFSET ' + str(i*step)
+        print(query)
+
+        generator = pywikibot.data.sparql.SparqlQuery(query, repo=wikidata_site)
+        for title in generator:
+            if title not in existing_uses:
+                cat = pywikibot.Category(commons,item)
+                nummodified += addtemplate(cat)
+                numchecked += 1
+                print(str(nummodified) + " - " + str(numchecked) + "/" + str(len(seen)) + "/" + str(len(active)) + "/" + str(len(next_active)))
+            else:
+                continue
 
 elif newstyle:
     # New style of category walker

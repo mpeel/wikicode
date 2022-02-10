@@ -44,7 +44,7 @@ def newitem(category, items):
 	return
 
 def search_entities(site, itemtitle):
-	 params = { 'action' :'wbsearchentities', 
+	 params = { 'action' :'wbsearchentities',
 				'format' : 'json',
 				'language' : 'en',
 				'type' : 'item',
@@ -53,7 +53,7 @@ def search_entities(site, itemtitle):
 	 return request.submit()
 
 def search_entities_es(site, itemtitle):
-	 params = { 'action' :'wbsearchentities', 
+	 params = { 'action' :'wbsearchentities',
 				'format' : 'json',
 				'language' : 'es',
 				'type' : 'item',
@@ -70,7 +70,7 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 
 
 def do_check(page,create=True, search=True):
-	print(page.title())
+	print('https://commons.wikimedia.org/wiki/'+page.title().replace(' ','_'))
 	# See if we have a Wikidata item already
 	try:
 		wd_item = pywikibot.ItemPage.fromPage(page)
@@ -112,6 +112,12 @@ def do_check(page,create=True, search=True):
 			hascoord = False
 		if iscat==False and hascoord==False and ishuman==False:
 			input('Add coordinate?')
+		test = 'n'
+		if '{{Wikidata Infobox}}' not in page.text:
+			test = input('No infobox, add?')
+			if test != 'n':
+				page.text = '{{Wikidata Infobox}}\n' + page.text
+				page.save('Add {{Wikidata Infobox}}')
 		return 0
 	except:
 		print(page.title() + ' - no page found')
@@ -178,10 +184,10 @@ def do_check(page,create=True, search=True):
 
 # targetcats = ['Category:La Palma']
 # targetcats = ['Category:San Cristóbal de La Laguna']
-# targetcats = ['Category:Santa Cruz de La Palma']
+targetcats = ['Category:Santa Cruz de La Palma']
 # targetcats = ['Category:Museums in La Palma']
 # targetcats = ['Category:Uses of Wikidata Infobox with manual qid']
-targetcats = ['Category:Tenerife']
+# targetcats = ['Category:Tenerife']
 numchecked = 0
 catschecked = 0
 create = True
@@ -217,7 +223,7 @@ else:
 			print(target.title())
 			nummodified += do_check(target,create)
 			print(nummodified)
-			
+
 			if nummodified >= maxnum:
 				print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
 				break

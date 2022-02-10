@@ -52,7 +52,7 @@ def newitem(category, enwp, items,commonscat_has_item=False):
 	return
 
 def search_entities(site, itemtitle):
-	 params = { 'action' :'wbsearchentities', 
+	 params = { 'action' :'wbsearchentities',
 				'format' : 'json',
 				'language' : 'en',
 				'type' : 'item',
@@ -91,7 +91,7 @@ for targetcat in targetcats:
 					print(page.title())
 					continue
 
-			# Cut-off at a maximum number of edits	
+			# Cut-off at a maximum number of edits
 			print("")
 			print(nummodified)
 			if nummodified >= maxnum:
@@ -123,9 +123,9 @@ for targetcat in targetcats:
 				target_text = page.get()
 			except:
 				print("Something is wrong here - fix it")
-				text = input("Save? ")
+				# text = input("Save? ")
 				continue
-				
+
 			id_val = 0
 			abort = 0
 			commonscat_string = ""
@@ -285,24 +285,24 @@ for targetcat in targetcats:
 								except:
 									null = 0
 
-					if done == 0:
-						try:
-							text = commonscat_item.title()
-							print('http://commons.wikimedia.org/wiki/'+text.replace(' ','_'))
-							print('Create a new item?')
-							text = input('Save?')
-							if text != 'n':
-								# Start assembling the Wikdata entry
-								items = []
-								if 'Category' in page.title():
-									items.append(['P31','Q4167836'])
-								test = newitem(commonscat_item, page, items,True)
-								try:
-									page.touch()
-								except:
-									null = 0
-						except:
-							continue
+					# if done == 0:
+					# 	try:
+					# 		text = commonscat_item.title()
+					# 		print('http://commons.wikimedia.org/wiki/'+text.replace(' ','_'))
+					# 		print('Create a new item?')
+					# 		text = input('Save?')
+					# 		if text != 'n':
+					# 			# Start assembling the Wikdata entry
+					# 			items = []
+					# 			if 'Category' in page.title():
+					# 				items.append(['P31','Q4167836'])
+					# 			test = newitem(commonscat_item, page, items,True)
+					# 			try:
+					# 				page.touch()
+					# 			except:
+					# 				null = 0
+					# 	except:
+					# 		continue
 
 
 # EOF
