@@ -50,7 +50,7 @@ for subcat in subcats:
 	username = username.strip()
 	if '/' in username:
 		username = username.split('/')[0]
-	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' +
+	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|'
 
 	count = 0
 	filenames = []
@@ -60,7 +60,7 @@ for subcat in subcats:
 			filenames.append(file.title())
 			count += 1
 
-	 subcat.title().replace('Category:','') + ']] || align="right" | ' + count + '\n'
+	pagetext = pagetext + subcat.title().replace('Category:','') + ']] || align="right" | ' + count + '\n'
 
 pagetext = pagetext + '\n|}[[Category:Quality images by user| ]]'
 page.text = pagetext

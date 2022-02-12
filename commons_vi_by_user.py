@@ -59,7 +59,7 @@ for subcat in subcats:
 			filenames.append(file.title())
 			count += 1
 
-	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' + subcat.title().replace('Category:','') + ']] || align="right" | ' + count + '\n'
+	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' + subcat.title().replace('Category:','') + ']] || align="right" | ' + str(count) + '\n'
 
 pagetext = pagetext + '\n|}[[Category:Valued images by user| ]]'
 page.text = pagetext
