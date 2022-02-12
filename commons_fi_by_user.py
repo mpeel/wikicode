@@ -54,7 +54,7 @@ for subcat in subcats:
 
 	count = 0
 	filenames = []
-	files = pagegenerators.CategorizedPageGenerator(cat, recurse=True);
+	files = pagegenerators.CategorizedPageGenerator(subcat, recurse=True);
 	for file in files:
 		if file.title() not in filenames:
 			filenames.append(file.title())
