@@ -14,7 +14,7 @@ skip = ['by country', 'by subject', 'images from', 'Wiki Loves']
 
 
 page = pywikibot.Page(commons, destinationpage)
-pagetext = '{{en|This is a list of [[Commons:Featured pictures|featured pictures]] by user. If you want to be included in this list, create a subcategory of [[:Category:Featured pictures by creator]] with the format \'Featured images by <username>\', and you will be included in this list with the next bot update (daily). This page is automatically updated by [[User:Pi bot]]. If you want to change the format of this page, or want to be excluded from this list, please contact [[User:Mike Peel]]. Manual changes will be ignored by the bot update.}}\n== {{LangSwitch|cs=Tabulka|de=Tabelle|en=Table|es=Tabla|zh=表格}} ==\n\n{{purge}}\n{|class="wikitable sortable" cellspacing="0"\n!{{LangSwitch|de=Benutzer|en=User|es=Usuario|zh=用戶}}\n!{{LangSwitch|de=Kategorie|en=Category|es=Categoría|zh=分類}}\n!{{LangSwitch|de=Anzahl QIs|es=Imágenes Destacadas|en=Featured Pictures {{FP star|size=15}}|zh=優質圖像數量}}\n'
+pagetext = '{{en|This is a list of [[Commons:Featured pictures|featured pictures]] by user. If you want to be included in this list, create a subcategory of [[:Category:Featured pictures by creator]] with the format \'Featured images by <username>\', and you will be included in this list with the next bot update (daily). This page is automatically updated by [[User:Pi bot]]. If you want to change the format of this page, or want to be excluded from this list, please contact [[User:Mike Peel]]. Manual changes will be ignored by the bot update.}}\n== {{LangSwitch|cs=Tabulka|de=Tabelle|en=Table|es=Tabla|zh=表格}} ==\n\n{|class="wikitable sortable" cellspacing="0"\n!{{LangSwitch|de=Benutzer|en=User|es=Usuario|zh=用戶}}\n!{{LangSwitch|de=Kategorie|en=Category|es=Categoría|zh=分類}}\n!{{LangSwitch|de=Anzahl QIs|es=Imágenes Destacadas|en=Featured Pictures {{FP star|size=15}}|zh=優質圖像數量}}\n'
 cat = pywikibot.Category(commons, targetcat)
 subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 for subcat in subcats:
@@ -50,7 +50,17 @@ for subcat in subcats:
 	username = username.strip()
 	if '/' in username:
 		username = username.split('/')[0]
-	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' + subcat.title().replace('Category:','') + ']] || align="right" | {{PAGESINCAT:'+subcat.title().replace('Category:','') + '|files}}\n'
+	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' +
+
+	count = 0
+	filenames = []
+	files = pagegenerators.CategorizedPageGenerator(cat, recurse=True);
+	for file in files:
+		if file.title() not in filenames:
+			filenames.append(file.title())
+			count += 1
+
+	subcat.title().replace('Category:','') + ']] || align="right" | ' | str(count) + '\n'
 
 pagetext = pagetext + '\n|}[[Category:Featured pictures by creator| ]]'
 page.text = pagetext
