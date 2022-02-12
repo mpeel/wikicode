@@ -60,7 +60,7 @@ for subcat in subcats:
 			filenames.append(file.title())
 			count += 1
 
-	pagetext = pagetext + subcat.title().replace('Category:','') + ']] || align="right" | ' + count + '\n'
+	pagetext = pagetext + subcat.title().replace('Category:','') + ']] || align="right" | ' + str(count) + '\n'
 
 pagetext = pagetext + '\n|}[[Category:Quality images by user| ]]'
 page.text = pagetext
