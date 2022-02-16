@@ -11,45 +11,28 @@ wiki_repo = wiki.data_repository()
 enwiki = pywikibot.Site('en', 'wikipedia')
 enwiki_repo = enwiki.data_repository() 
 
-# article_name = "Oxford Dictionary of World Religions"
-# QID = "Q7115313"
-
 targetcat = 'Category:Online dictionaries'
 cat = pywikibot.Category(enwiki, targetcat)
-
-def wiki_title_to_wikidata_id(title: str) -> str:
-        protocol = 'https'
-        base_url = 'en.wikipedia.org/w/api.php'
-        params = f'action=query&prop=pageprops&format=json&titles={title}'
-        url = f'{protocol}://{base_url}?{params}'
-        
-        response = requests.get(url)
-        json = response.json()
-        for pages in json['query']['pages'].values():
-            wikidata_id = pages['pageprops']['wikibase_item']
-        return wikidata_id
 
 subpages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 for subpage in subpages:
     article_name = subpage.title()
-    # print (article_name)   
-    QID = wiki_title_to_wikidata_id(subpage.title())
-    # print(QID)          
+    wikidata_item = pywikibot.ItemPage.fromPage(subpage)        
 
     article = wikipedia.page(article_name).content
-    wikidata_item = pywikibot.ItemPage(wiki_repo, QID)
+    # wikidata_item = pywikibot.ItemPage(wiki_repo, QID)
     item_dict = wikidata_item.get() 
 
     try:
         test = item_dict['claims']['P577']
-        print(article_name + 'has publication date in Wikidata Item.')
+        print(article_name + ' has publication date in Wikidata Item.')
     except:
         # todo: have to create new item 
-        print (article_name + 'does not have publication date in Wikidata Item.')
+        print (article_name + ' does not have publication date in Wikidata Item.')
 
         for item in article.split("."):
             if "published" in item:
-                #check synonims for publish
+                #to do: check synonyms for the word publish
                 line_with_date = item.strip()
                 print(line_with_date)
 
