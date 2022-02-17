@@ -38,9 +38,9 @@ exit()
 # print(authorIsNewbie(page=page,lang=lang))
 print(pageIsRubbish(page,lang=lang))
 print(pageIsBiography(page,lang=lang))
-birthdate = calculateBirthDateFull(page=page,lang=lang)
+birthdate = calculateBirthDate(page=page,lang=lang)
 print(birthdate)
-deathdate = calculateDeathDateFull(page=page,lang=lang)
+deathdate = calculateDeathDate(page=page,lang=lang)
 if deathdate != '0-0-0':
 	print(deathdate)
 itemfound = pywikibot.ItemPage.fromPage(page)
@@ -76,7 +76,7 @@ exit()
 # 			print("Candidate %s has sitelink, skiping" % (itemfoundq))
 # 			numcandidates -= 1
 # 			continue
-# 		pagebirthyear = calculateBirthDate(page=page, lang=lang)
+# 		pagebirthyear = calculateBirthYear(page=page, lang=lang)
 # 		pagebirthyear = pagebirthyear and int(pagebirthyear.split('-')[0]) or ''
 # 		if not pagebirthyear:
 # 			print("Page doesnt have birthdate, skiping")

@@ -229,7 +229,7 @@ def calculateGender(page='', lang=''):
 			return 'female'
 	return ''
 
-def calculateBirthDate(page='', lang=''):
+def calculateBirthYear(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
@@ -258,7 +258,7 @@ def calculateBirthDate(page='', lang=''):
 				return m[0]
 	return ''
 
-def calculateBirthDateFull(page='', lang=''):
+def calculateBirthDate(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
@@ -351,7 +351,7 @@ def calculateBirthDateFull(page='', lang=''):
 					m = False
 	return ''
 
-def calculateDeathDate(page='', lang=''):
+def calculateDeathYear(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
@@ -381,7 +381,7 @@ def calculateDeathDate(page='', lang=''):
 
 	return ''
 
-def calculateDeathDateFull(page='', lang=''):
+def calculateDeathDate(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en':
@@ -567,8 +567,8 @@ def pageIsRubbish(page='', lang=''):
 def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 	if repo and wikisite and item and page and lang:
 		gender = calculateGender(page=page, lang=lang)
-		birthdate = calculateBirthDateFull(page=page, lang=lang)
-		deathdate = calculateDeathDateFull(page=page, lang=lang)
+		birthdate = calculateBirthDate(page=page, lang=lang)
+		deathdate = calculateDeathDate(page=page, lang=lang)
 		occupations = calculateOccupations(wikisite=wikisite, page=page, lang=lang)
 		try:
 			item.get()
@@ -655,9 +655,9 @@ def main():
 							numcandidates -= 1
 							continue
 						if lang == 'pt':
-							pagebirthyear = calculateBirthDateFull(page=page,lang=lang)
+							pagebirthyear = calculateBirthDate(page=page,lang=lang)
 						else:
-							pagebirthyear = calculateBirthDate(page=page, lang=lang)
+							pagebirthyear = calculateBirthYear(page=page, lang=lang)
 						pagebirthyear = pagebirthyear and int(pagebirthyear.split('-')[0]) or ''
 						if not pagebirthyear:
 							print("Page doesnt have birthdate, skiping")

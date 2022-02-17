@@ -50,8 +50,8 @@ for page in pagegenerators.CategorizedPageGenerator(cat, recurse=False):
 			print('* [['+page.title()+"]] - '''NO INFOBOX'''")
 		else:
 			enwiki_description = 'English footballer'
-			birthdate = calculateBirthDateFull(page=page,lang='en')
-			deathdate = calculateDeathDateFull(page=page,lang='en')
+			birthdate = calculateBirthDate(page=page,lang='en')
+			deathdate = calculateDeathDate(page=page,lang='en')
 			if birthdate and deathdate:
 				enwiki_description += ' (' + str(birthdate[0:4]) + "-" + str(deathdate[0:4]) + ')'
 			elif birthdate:

@@ -199,7 +199,7 @@ for targetcat in targetcats:
 		# 	   (not len(list(page.getReferences(namespaces=[0])))):
 		# 		print("Page didnt pass minimum quality")
 
-		# pagebirthyear = calculateBirthDate(page=page, lang=lang)
+		# pagebirthyear = calculateBirthYear(page=page, lang=lang)
 		# pagebirthyear = pagebirthyear and int(pagebirthyear.split('-')[0]) or ''
 		# if not pagebirthyear:
 		# 	print("Page doesnt have birthdate")
