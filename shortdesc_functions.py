@@ -54,8 +54,8 @@ def shortdesc_generator(wikipedia, page, debug, trip, startpoint, endpoint, requ
 			print(page.title() + ' - mentions ' + excluded)
 			return ''
 	enwiki_description = description
-	birthdate = calculateBirthDateFull(page=page).strip()
-	deathdate = calculateDeathDateFull(page=page).strip()
+	birthdate = calculateBirthDate(page=page).strip()
+	deathdate = calculateDeathDate(page=page).strip()
 
 	if birthdate != '' and deathdate != '' and add_birth_date and add_death_date:
 		enwiki_description += ' (' + str(birthdate[0:5]).replace('-','').strip() + "–" + str(deathdate[0:4]) + ')'
@@ -227,7 +227,7 @@ def get_pageinfo(site, itemtitle):
 	 return request.submit()
 
 # This calculates the birth date based on common syntaxes present in biographies
-def calculateBirthDateFull(page=''):
+def calculateBirthDate(page=''):
 	if not page:
 		return ''
 	m = re.findall(r'\{\{(?:B|b)irth (?:D|d)ate and age\s*\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))
@@ -259,7 +259,7 @@ def calculateBirthDateFull(page=''):
 	return ''
 
 # This calculates the death date based on common syntaxes present in biographies
-def calculateDeathDateFull(page=''):
+def calculateDeathDate(page=''):
 	if not page:
 		return ''
 	m = re.findall(r'\{\{(?:D|d)da\|(\d+)\s*\|\s*(\d+)\s*\|\s*(\d+)', page.text.replace('|df=yes','').replace('|df=y','').replace('|mf=yes','').replace('|mf=y',''))

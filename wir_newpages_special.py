@@ -79,7 +79,7 @@ for lang in langs:
 						print("Candidate %s has sitelink, skiping" % (itemfoundq))
 						numcandidates -= 1
 						continue
-					pagebirthyear = calculateBirthDate(page=page, lang=lang)
+					pagebirthyear = calculateBirthYear(page=page, lang=lang)
 					pagebirthyear = pagebirthyear and int(pagebirthyear.split('-')[0]) or ''
 					if not pagebirthyear:
 						print("Page doesnt have birthdate, skiping")
