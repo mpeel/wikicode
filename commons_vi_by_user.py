@@ -53,11 +53,17 @@ for subcat in subcats:
 
 	count = 0
 	filenames = []
-	files = pagegenerators.CategorizedPageGenerator(subcat, recurse=True);
+	files = pagegenerators.CategorizedPageGenerator(subcat, recurse=False);
 	for file in files:
 		if file.title() not in filenames:
 			filenames.append(file.title())
 			count += 1
+	for result in pagegenerators.SubCategoriesPageGenerator(subcat, recurse=False):
+		files = pagegenerators.CategorizedPageGenerator(result, recurse=False);
+		for file in files:
+			if file.title() not in filenames:
+				filenames.append(file.title())
+				count += 1
 
 	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' + subcat.title().replace('Category:','') + ']] || align="right" | ' + str(count) + '\n'
 
