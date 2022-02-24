@@ -218,10 +218,10 @@ def calculateGender(page='', lang=''):
 		malepoints = 0
 		femalepoints = 0
 		categories = page.categories()
-		for item in categories:
-			if 'hombre' in item.title().lower():
+		for category in categories:
+			if 'hombre' in category.title().lower():
 				malepoints+=1
-			elif 'mujer' in item.title().lower():
+			elif 'mujer' in category.title().lower():
 				femalepoints+=1
 		if malepoints > femalepoints:
 			return 'male'
@@ -252,10 +252,13 @@ def calculateBirthYear(page='', lang=''):
 		m = re.findall(r'(?im)\{\{\s*[Nn][Ff]\|(\d+)\s*[\|\}]', page.text)
 		if m:
 			return m[0]
-		elif not m:
-			m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Nacidos en (\d+)\s*[\|\]]', page.text)
-			if m:
-				return m[0]
+		m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Nacidos en (\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	elif lang == 'it':
+		m = re.findall(r'(?im)\|\s*[Aa]nno\s*[Nn]ascita\s*\=\s*(\d+)\s*\|', page.text)
+		if m:
+			return m[0]
 	return ''
 
 def calculateBirthDate(page='', lang=''):
@@ -341,14 +344,13 @@ def calculateBirthDate(page='', lang=''):
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
-		elif not m:
-			m = re.findall(r'(?im)[Ff]echa\s*de\s*nacimiento\s*\=(?:\s*\[*)*(\d+)(?:\]*\s*)*de(?:\s*\[*)*(\w+)(?:\]*\s*)*de(?:\s*\[*)*(\d+)', page.text)
-			if m:
-				try:
-					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
-					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
-				except:
-					m = False
+		m = re.findall(r'(?im)[Ff]echa\s*de\s*nacimiento\s*\=(?:\s*\[*)*(\d+)(?:\]*\s*)*de(?:\s*\[*)*(\w+)(?:\]*\s*)*de(?:\s*\[*)*(\d+)', page.text)
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 	return ''
 
 def calculateDeathYear(page='', lang=''):
@@ -374,11 +376,13 @@ def calculateDeathYear(page='', lang=''):
 		m = re.findall(r'(?im)\{\{\[Nn][Ff]\|\d*\|(\d+)\s*[\|\}]', page.text)
 		if m:
 			return m[0]
-		elif not m:
-			m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Fallecidos en (\d+)\s*[\|\]]', page.text)
-			if m:
-				return m[0]
-
+		m = re.findall(r'(?im)\[\[\s*(?:Categoría|Category)\s*:\s*Fallecidos en (\d+)\s*[\|\]]', page.text)
+		if m:
+			return m[0]
+	elif lang == 'it':
+		m = re.findall(r'(?im)\|\s*[Aa]nno\s*[Mm]orte\s*\=\s*(\d+)\s*\|', page.text)
+		if m:
+			return m[0]
 	return ''
 
 def calculateDeathDate(page='', lang=''):
@@ -445,14 +449,13 @@ def calculateDeathDate(page='', lang=''):
 		m = re.findall(r'(?im)[Ff]echa\s*de\s*fallecimiento\s*\=\s*\{\{[Ff]echa(?:\s*\w*)*\s*\|(\d+)\|(\w+)\|(\d+)', page.text)
 		if m:
 			return str(m[0][2]) + '-' + str(m[0][1]) + '-' + str(m[0][0])
-		elif not m:
-			m = re.findall(r'(?im)[Ff]echa\s*de\s*fallecimiento\s*\=(?:\s*\[*)*(\d+)(?:\]*\s*)*de(?:\s*\[*)*(\w+)(?:\]*\s*)*de(?:\s*\[*)*(\d+)', page.text)
-			if m:
-				try:
-					temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
-					return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
-				except:
-					m = False
+		m = re.findall(r'(?im)[Ff]echa\s*de\s*fallecimiento\s*\=(?:\s*\[*)*(\d+)(?:\]*\s*)*de(?:\s*\[*)*(\w+)(?:\]*\s*)*de(?:\s*\[*)*(\d+)', page.text)
+		if m:
+			try:
+				temp = dateparser.parse(str(m[0][0])+' '+str(m[0][1])+' '+str(m[0][2]), settings={'DATE_ORDER': 'DMY'})
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 	return ''
 
 def calculateOccupations(wikisite='', page='', lang=''):
