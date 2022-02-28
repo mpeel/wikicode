@@ -45,6 +45,7 @@ for subcat in subcats:
 	username = username.replace('Photographs by','')
 	username = username.replace('Files by','')
 	username = username.replace('Category:','')
+	username = username.replace('Yann Forget:','Yann')
 	if '(' in username:
 		username = username.split('(')[0]
 	username = username.strip()
