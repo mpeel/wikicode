@@ -351,6 +351,15 @@ def calculateBirthDate(page='', lang=''):
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
+	elif lang == 'it':
+		m1 = re.findall(r'(?im)[Gg]iorno[Mm]ese[Mm]orte\s*\=\s*(\d+)\W*\s*(\w+)', page.text)
+		m2 = re.findall(r'(?im)[A]nno[Mm]orte\s*\=\s*(\d+)', page.text)
+		if m1 and m2:
+			try:
+				temp = dateparser.parse(str(m1[0][0])+' '+str(m1[0][1])+' '+str(m2[0]), settings={'DATE_ORDER': 'DMY'})
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 	return ''
 
 def calculateDeathYear(page='', lang=''):
