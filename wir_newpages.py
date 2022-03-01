@@ -116,7 +116,7 @@ def getAllCountries():
 def addImportedFrom(repo='', claim='', lang=''):
 	# Disabled to reduce number of edits
 	return
-	langs = { 'en': 'Q328', 'fr': 'Q8447', 'de': 'Q48183', 'es': 'Q8449'}
+	langs = { 'en': 'Q328', 'fr': 'Q8447', 'de': 'Q48183', 'es': 'Q8449', 'it': 'Q11920'}
 	if repo and claim and lang and lang in langs.keys():
 		importedfrom = pywikibot.Claim(repo, 'P143') #imported from
 		importedwp = pywikibot.ItemPage(repo, langs[lang])
@@ -351,6 +351,15 @@ def calculateBirthDate(page='', lang=''):
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
+	elif lang == 'it':
+		m1 = re.findall(r'(?im)[Gg]iorno[Mm]ese[Nn]ascita\s*\=\s*(\d+)\W*\s*(\w+)', page.text)
+		m2 = re.findall(r'(?im)[A]nno[Nn]ascita\s*\=\s*(\d+)', page.text)
+		if m1 and m2:
+			try:
+				temp = dateparser.parse(str(m1[0][0])+' '+str(m1[0][1])+' '+str(m2[0]), settings={'DATE_ORDER': 'DMY'})
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
 	return ''
 
 def calculateDeathYear(page='', lang=''):
@@ -456,6 +465,16 @@ def calculateDeathDate(page='', lang=''):
 				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
 			except:
 				m = False
+	elif lang == 'it':
+		m1 = re.findall(r'(?im)[Gg]iorno[Mm]ese[Mm]orte\s*\=\s*(\d+)\W*\s*(\w+)', page.text)
+		m2 = re.findall(r'(?im)[A]nno[Mm]orte\s*\=\s*(\d+)', page.text)
+		if m1 and m2:
+			try:
+				temp = dateparser.parse(str(m1[0][0])+' '+str(m1[0][1])+' '+str(m2[0]), settings={'DATE_ORDER': 'DMY'})
+				return str(temp.year) + '-' + str(temp.month) + '-' + str(temp.day)
+			except:
+				m = False
+	return ''
 	return ''
 
 def calculateOccupations(wikisite='', page='', lang=''):
@@ -474,6 +493,8 @@ def calculateOccupations(wikisite='', page='', lang=''):
 			cats = re.findall(r'(?i)\[\[\s*(?:Catégorie|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
 		elif lang == 'es':
 			cats = re.findall(r'(?i)\[\[\s*(?:Categoría|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
+		elif lang == 'it':
+			cats = re.findall(r'(?i)\[\[\s*(?:Categorie|Category)\s*\:([^\[\]\|]+?)[\]\|]', page.text)
 		for cat in cats:
 			cat = cat.strip()
 			catpage = pywikibot.Page(wikisite, 'Category:%s' % (cat)) #Category: works for any lang
@@ -592,7 +613,7 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
 	repo = wdsite.data_repository()
-	langs = ['es', 'en', 'fr', 'pt'] #, 'de'
+	langs = ['es', 'en', 'fr', 'pt', 'it'] #, 'de'
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
 		total = 100
