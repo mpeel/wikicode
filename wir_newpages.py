@@ -116,7 +116,7 @@ def getAllCountries():
 def addImportedFrom(repo='', claim='', lang=''):
 	# Disabled to reduce number of edits
 	return
-	langs = { 'en': 'Q328', 'fr': 'Q8447', 'de': 'Q48183', 'es': 'Q8449', 'it': 'Q11920'}
+	langs = { 'en': 'Q328', 'fr': 'Q8447', 'de': 'Q48183', 'es': 'Q8449', 'it': 'Q11920', 'simple': 'Q200183'}
 	if repo and claim and lang and lang in langs.keys():
 		importedfrom = pywikibot.Claim(repo, 'P143') #imported from
 		importedwp = pywikibot.ItemPage(repo, langs[lang])
@@ -613,7 +613,7 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
 	repo = wdsite.data_repository()
-	langs = ['es', 'en', 'fr', 'pt', 'it'] #, 'de'
+	langs = ['es', 'en', 'fr', 'pt', 'it', 'simple'] #, 'de'
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
 		total = 100

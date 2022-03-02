@@ -11,7 +11,7 @@ import requests
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
-langs = ['pt','en','de','es']
+langs = ['pt','en','de','es','it', 'simple']
 exclusions = ['Category:','Template:','Wikipedia:','Help:','Portal:','Book:','Module:','Gadget:']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')

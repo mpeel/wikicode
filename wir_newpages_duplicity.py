@@ -32,7 +32,7 @@ def parseduplicity(url,lang='en'):
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
-langs = ['es','en', 'fr', 'de','pt']
+langs = ['es','en', 'fr', 'de','pt','it', 'simple']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
 	total = 1000
