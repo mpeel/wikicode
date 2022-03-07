@@ -15,26 +15,23 @@ targetcat = 'Category:Online dictionaries'
 cat = pywikibot.Category(enwiki, targetcat)
 
 subpages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
+
 for subpage in subpages:
     article_name = subpage.title()
-    wikidata_item = pywikibot.ItemPage.fromPage(subpage)        
-
-    article = wikipedia.page(article_name).content
-    # wikidata_item = pywikibot.ItemPage(wiki_repo, QID)
+    wikidata_item = pywikibot.ItemPage.fromPage(subpage)    
+    article = subpage.text
     item_dict = wikidata_item.get() 
 
     try:
         test = item_dict['claims']['P577']
-        print(article_name + ' has publication date in Wikidata Item.')
+        # print(article_name + ' has publication date in Wikidata Item.')
     except:
         # todo: have to create new item 
-        print (article_name + ' does not have publication date in Wikidata Item.')
-
+        # print (article_name + ' does not have publication date in Wikidata Item.')
         for item in article.split("."):
-            if "published" in item:
-                #to do: check synonyms for the word publish
+            m = re.findall('publish' , item, flags=re.IGNORECASE)
+            if m:
                 line_with_date = item.strip()
-                print(line_with_date)
 
 # extracting date variants
 def date_extractor(line_with_date): 
@@ -68,7 +65,7 @@ def date_extractor(line_with_date):
             search4[ind]=vals.group()
 
     date_series = pd.concat([pd.Series(search1),pd.Series(search2),pd.Series(search3),pd.Series(search4)])
-    
+
     # return date_series
     print(date_series)
 
