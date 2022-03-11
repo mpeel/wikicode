@@ -11,13 +11,17 @@ import requests
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
-langs = ['en','de']
+langs = ['en','de', 'es', 'simple', 'fr']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
 	if lang == 'en':
 		targetcats = ['Category:Date of birth not in Wikidata', 'Category:Date of death not in Wikidata','Category:Articles without Wikidata item']
-	else:
+	elif lang == 'de':
 		targetcats = ['Kategorie:Wikipedia:Artikel ohne Wikidata-Datenobjekt']
+	elif lang = 'simple':
+		targetcats = ['Category:Articles without Wikidata item']
+	elif lang = 'fr':
+		targetcats = ['Catégorie:Wikipédia:Article sans élément Wikidata associé']
 	for targetcat in targetcats:
 		cat = pywikibot.Category(wikisite, targetcat)
 		pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False)
