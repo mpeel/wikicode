@@ -66,13 +66,13 @@ for categories in range(0,2):
 
 			# Optional skip-ahead to resume broken runs
 			if trip == 0:
-				if "WordPress.com" in page.title():
+				if "Timeline" in page.title():
 					trip = 1
 				else:
 					print(page.title())
 					continue
 
-			# Cut-off at a maximum number of edits	
+			# Cut-off at a maximum number of edits
 			print("")
 			print("")
 			print("")
@@ -209,12 +209,14 @@ for categories in range(0,2):
 						null = 0
 
 				# Double-check that there is a sitelink on Wikidata
+				sitelink = ''
 				try:
 					sitelink = get_sitelink_title(item_dict['sitelinks']['commonswiki'])
 					sitelink_check = 1
 				except:
 					sitelink_check = 0
 				print("sitelink: " + str(sitelink_check))
+				print(sitelink)
 
 
 			# Only attempt to do the next part if we have a commons category link both locally and on wikidata
@@ -250,7 +252,7 @@ for categories in range(0,2):
 				print('')
 				print(category_text2)
 				print('')
-				
+
 				print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
 				print('Current category is:')
 				print(' http://commons.wikimedia.org/wiki/Category:'+id_val.replace(' ','_'))
@@ -338,5 +340,5 @@ for categories in range(0,2):
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')
-		
+
 # EOF

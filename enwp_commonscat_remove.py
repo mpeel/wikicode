@@ -52,7 +52,7 @@ targetcats = ['Commons category link is locally defined']
 for categories in range(0,2):
 	for targetcat in targetcats:
 		cat = pywikibot.Category(enwp, targetcat)
-		if categories == 0:
+		if categories == 1:
 			pages = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 		else:
 			pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
@@ -79,7 +79,7 @@ for categories in range(0,2):
 					print(page.title())
 					continue
 
-			# Cut-off at a maximum number of edits	
+			# Cut-off at a maximum number of edits
 			print("")
 			print("")
 			print("")
@@ -176,7 +176,7 @@ for categories in range(0,2):
 						null = 0
 
 			# continue
-			
+
 
 			# Get the candidate commonscat link
 			try:
@@ -311,7 +311,7 @@ for categories in range(0,2):
 					else:
 						null = 0
 						test = 'o'
-				
+
 					# if test == 'n':
 						# continue
 						# test = input("Enter correct category here: ")
@@ -353,5 +353,5 @@ for categories in range(0,2):
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')
-		
+
 # EOF

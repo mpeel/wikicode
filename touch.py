@@ -28,6 +28,8 @@ catname = 'Category:Commons category link is the pagename'
 # catname = 'Category:Articles with missing Wikidata information'
 # catname=  'Category:Inconsistent wikidata for Commons category'
 # catname = 'Category:Photos by Mike Peel'
+catname = 'Category:Pages with script errors'
+catname = 'Category:90minut template with ID not in Wikidata'
 cat = pywikibot.Category(commons,catname)
 print(cat)
 i = 0
@@ -52,4 +54,3 @@ for result in pagegenerators.CategorizedPageGenerator(cat, recurse=False):
 	# 	null = 1
 	i += 1
 	print (i)
-

@@ -38,7 +38,7 @@ def create_commons_category(category, site, qid=''):
 
 
 	return category
-	
+
 # Because https://phabricator.wikimedia.org/T265800
 def get_sitelink_title(sitelink):
 	# If you use the new version, uncomment this line

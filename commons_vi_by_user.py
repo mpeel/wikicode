@@ -14,7 +14,7 @@ skip = ['by country', 'by subject', 'images from', 'Wiki Loves']
 
 
 page = pywikibot.Page(commons, destinationpage)
-pagetext = 'This is a list of [[Commons:Valued images|valued images]] by user. If you want to be included in this list, create a subcategory of [[:Category:Valued images by user]] with the format \'Valued images by <username>\', and you will be included in this list with the next bot update (daily). This page is automatically updated by [[User:Pi bot]]. If you want to change the format of this page, or want to be excluded from this list, please contact [[User:Mike Peel]]. Manual changes will be ignored by the bot update.\n== {{LangSwitch|cs=Tabulka|de=Tabelle|en=Table|zh=表格}} ==\n\n{{purge}}\n{|class="wikitable sortable" cellspacing="0"\n!{{LangSwitch|de=Benutzer|en=User|zh=用戶}}\n!{{LangSwitch|de=Kategorie|en=Category|zh=分類}}\n!{{LangSwitch|de=Anzahl VIs|en=Number VIs {{VI seal|size=15}}|zh=優質圖像數量}}\n'
+pagetext = '{{en|This is a list of [[Commons:Valued images|valued images]] by user. If you want to be included in this list, create a subcategory of [[:Category:Valued images by user]] with the format \'Valued images by <username>\', and you will be included in this list with the next bot update (daily). This page is automatically updated by [[User:Pi bot]]. If you want to change the format of this page, or want to be excluded from this list, please contact [[User:Mike Peel]]. Manual changes will be ignored by the bot update.}}\n== {{LangSwitch|cs=Tabulka|de=Tabelle|en=Table|zh=表格}} ==\n\n{|class="wikitable sortable" cellspacing="0"\n!{{LangSwitch|de=Benutzer|en=User|es=Usuario|zh=用戶}}\n!{{LangSwitch|de=Kategorie|es=Categoría|en=Category|zh=分類}}\n!{{LangSwitch|de=Anzahl VIs|en=Number VIs {{VI seal|size=15}}|zh=優質圖像數量}}\n'
 cat = pywikibot.Category(commons, targetcat)
 subcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
 for subcat in subcats:
@@ -45,12 +45,28 @@ for subcat in subcats:
 	username = username.replace('Photographs by','')
 	username = username.replace('Files by','')
 	username = username.replace('Category:','')
+	username = username.replace('Yann Forget','Yann')
 	if '(' in username:
 		username = username.split('(')[0]
 	username = username.strip()
 	if '/' in username:
 		username = username.split('/')[0]
-	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' + subcat.title().replace('Category:','') + ']] || align="right" | {{PAGESINCAT:'+subcat.title().replace('Category:','') + '|files}}\n'
+
+	count = 0
+	filenames = []
+	files = pagegenerators.CategorizedPageGenerator(subcat, recurse=False);
+	for file in files:
+		if file.title() not in filenames:
+			filenames.append(file.title())
+			count += 1
+	for result in pagegenerators.SubCategoriesPageGenerator(subcat, recurse=False):
+		files = pagegenerators.CategorizedPageGenerator(result, recurse=False);
+		for file in files:
+			if file.title() not in filenames:
+				filenames.append(file.title())
+				count += 1
+
+	pagetext = pagetext + '|-\n'+'|[[User:'+username+'|'+username+']] || [[:'+subcat.title() + '|' + subcat.title().replace('Category:','') + ']] || align="right" | ' + str(count) + '\n'
 
 pagetext = pagetext + '\n|}[[Category:Valued images by user| ]]'
 page.text = pagetext

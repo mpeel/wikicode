@@ -13,7 +13,7 @@ from pywikibot import pagegenerators
 from pywikibot.data import api
 import urllib
 from pibot_functions import *
-from database_login import *
+# from database_login import *
 from wir_newpages import *
 import os
 
@@ -36,7 +36,7 @@ prefix = 'en'
 doing_cats = False
 
 
-templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q17586305','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850','Q15631954','Q5902043', 'Q14456068','Q105097863','Q11032822']
+templates_to_skip = ['Q4847311','Q6687153','Q21528265','Q26004972','Q6838010','Q14446424','Q7926719','Q5849910','Q6535522','Q12857463','Q14397354','Q18198962','Q13107809','Q6916118','Q15630429','Q6868608','Q6868546','Q5931187','Q26021926','Q21684530','Q20310993','Q25970270','Q57620750','Q4844001','Q97159332','Q20765099','Q17586361','Q17588240','Q13420881','Q17589095','Q17586294','Q13421187','Q97709865','Q17586502','Q5828850','Q15631954','Q5902043', 'Q14456068','Q105097863','Q11032822']
 
 def newitem(category, enwp, items,commonscat_has_item=False):
 	new_item = pywikibot.ItemPage(repo)
@@ -199,7 +199,7 @@ for targetcat in targetcats:
 		# 	   (not len(list(page.getReferences(namespaces=[0])))):
 		# 		print("Page didnt pass minimum quality")
 
-		# pagebirthyear = calculateBirthYear(page=page, lang=lang)
+		# pagebirthyear = calculateBirthDate(page=page, lang=lang)
 		# pagebirthyear = pagebirthyear and int(pagebirthyear.split('-')[0]) or ''
 		# if not pagebirthyear:
 		# 	print("Page doesnt have birthdate")

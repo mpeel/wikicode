@@ -121,7 +121,7 @@ for targetcat in targetcats:
 			else:
 				print('Has sitelink')
 
-			# continue
+			continue
 			print("\nhttp://"+prefix+".wikipedia.org/wiki/" + page.title().replace(' ','_'))
 			# Get the candidate commonscat link
 			try:
@@ -242,7 +242,7 @@ for targetcat in targetcats:
 								continue
 							if test == 'c':
 								skip_rest = True
-							
+
 
 				if count > 20:
 					print("There was a problem here")
@@ -252,5 +252,5 @@ for targetcat in targetcats:
 
 
 print('Done! Edited ' + str(nummodified) + ' entries')
-		
+
 # EOF

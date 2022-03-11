@@ -2,19 +2,19 @@
 import pywikibot
 import datetime
 import dateparser
-from wir_newpages_es import *
+from wir_newpages import *
 
 lang = 'es'
-article = 'Vladímir Alexándrov'
+article = 'Óscar Herrera Palacios'
 enwp_site = 'eswiki'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
 repo = enwiki.data_repository()  # this is a DataSite object
 page = pywikibot.Page(enwiki, article)
-for cat in page.categories():
-	print(cat.title())
-exit()
+# for cat in page.categories():
+# 	print(cat.title())
+# exit()
 # if '#redirect' in page.text.lower():
 # 	print("Page is a redirect but isn't marked as one")
 # for template, _ in page.templatesWithParams():

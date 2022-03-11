@@ -45,7 +45,7 @@ lang = GET.get('lang')
 if action == 'desc':
 	# print 'desc'
 	print "Content-type: application/json\n\n"
-	print callback + " ( " + json.dumps({'label': {'en':'Commons category matches'}, 'description': {'en':'Match Commons categories with Wikidata items, and add the commons sitelink to Wikidata.'}, 'instructions': {'en':'These matches look plausible. But are they really? Please help us to reject the bad ones by clicking "No" - and if you are sure that it is right, add the link to Wikidata using "Match". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to commons:User:Mike Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/120px-Commons-logo.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'Q1':'Any', 'Q5':'Person', 'Q16521':'Taxon'}}]}) + " )\n"
+	print callback + " ( " + json.dumps({'label': {'en':'Commons category matches'}, 'description': {'en':'Match Commons categories with Wikidata items, and add the commons sitelink to Wikidata.'}, 'instructions': {'en':'These matches look plausible. But are they really? Please help us to reject the bad ones by clicking "No" - and if you are sure that it is right, add the link to Wikidata using "Match". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to commons:User:Mike Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/120px-Commons-logo.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'Q1':'Any'}}]}) + " )\n" #, 'Q5':'Person', 'Q16521':'Taxon'
 elif action == 'tiles':
 	print "Content-type: application/json\n\n"
 	i = 0
@@ -86,8 +86,22 @@ elif action == 'tiles':
 			mydb.commit()
 			# exit()
 			continue
-
-		cattext = targetcat.get()
+		badtile = 0
+		try:
+			cattext = targetcat.get()
+		except:
+			badtile = 1
+		if badtile == 1:
+			sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 1 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+			mycursor.execute(sql)
+			mydb.commit()
+			# exit()
+			continue
+		if 'redirect' in cattext.lower():
+			sql = 'UPDATE candidates SET done = 1, user = "NA", decision = 1 WHERE cid = "'+str(myresult[0])+'" AND done = 0'
+			mycursor.execute(sql)
+			mydb.commit()
+			continue
 		split = cattext.split('[[')
 		categorystring = ""
 		for testitem in split:

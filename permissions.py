@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8  -*-
-# 
+#
 # Script to fetch the Google Spreadsheet with the info in, and write it to a meta page.
 # Mike Peel        18 Feb 2017    Started
 # Mike Peel        19 Feb 2017    Bug fixes, link to code location
@@ -29,7 +29,7 @@ repo = site.data_repository()
 page = pywikibot.Page(site, u"WMF Advanced Permissions")
 
 now = datetime.datetime.now()
-text = u'This table is a mirror of the Google spreadsheet [https://docs.google.com/spreadsheet/pub?key=0AvhjkTJIpW2zdDl1bVBuOU1jQUJwOHd5YmhmSzFaZHc here], please arrange changes to that spreadsheet rather than changing this page yourself. The table was last <abbr title="The data in this wikitable being identical to the Google spreadsheet data at that time, apart from formatting.">synchronized</abbr> at ' + str(datetime.date(now.year, now.month, now.day)) + '. The synchronisation code [https://bitbucket.org/mikepeel/wikicode/src/master/permissions.py is available]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Username !! Received !! Usecase !! Rights\n|-'
+text = u'This table is a mirror of the Google spreadsheet [https://docs.google.com/spreadsheet/pub?key=0AvhjkTJIpW2zdDl1bVBuOU1jQUJwOHd5YmhmSzFaZHc here], please arrange changes to that spreadsheet rather than changing this page yourself. The table was last <abbr title="The data in this wikitable being identical to the Google spreadsheet data at that time, apart from formatting.">synchronized</abbr> at ' + str(datetime.date(now.year, now.month, now.day)) + '. The synchronisation code [https://github.com/mpeel/wikicode/blob/master/permissions.py is available]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Username !! Received !! Usecase !! Rights\n|-'
 
 i = 0
 for row in cr:
@@ -65,3 +65,5 @@ if (test1 != test2):
     page.save(u"Updating")
 else:
     print('Not updating: page is identical')
+
+# EOF
