@@ -11,7 +11,7 @@ import requests
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
 repo = wdsite.data_repository()
-langs = ['pt','en','de','es','it', 'simple']
+langs = ['it', 'simple', 'pt','en','de','es']
 exclusions = ['Category:','Template:','Wikipedia:','Help:','Portal:','Book:','Module:','Gadget:']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
@@ -59,7 +59,10 @@ for lang in langs:
 			print(page.title().encode('utf-8'), 'need item', gender)
 			wtitle = page.title()
 			wtitle_ = wtitle.split('(')[0].strip()
-			searchitemurl = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&search=%s&language=%s&format=xml' % (urllib.parse.quote(wtitle_), lang)
+			searchstring = lang
+			if lang == 'simple':
+				searchstring == 'en'
+			searchitemurl = 'https://www.wikidata.org/w/api.php?action=wbsearchentities&search=%s&language=%s&format=xml' % (urllib.parse.quote(wtitle_), searchstring)
 			raw = getURL(searchitemurl)
 			print(searchitemurl.encode('utf-8'))
 
