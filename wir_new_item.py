@@ -3,10 +3,12 @@
 # Started 6 December 2021 by Mahfuza
 # 21 November 2018 - focus on Category:Online dictionaries
 
+import re 
+import requests
 import pandas as pd
 import wikipedia
+
 import pywikibot 
-import requests
 from pywikibot import pagegenerators
 
 wiki = pywikibot.Site('wikidata', 'wikidata') 
@@ -55,7 +57,7 @@ def date_extractor(line_with_date):
 
 #find QID
 def wiki_title_to_wikidata_id(title: str) -> str:
-        protocol = 'https'
+	protocol = 'https'
         base_url = 'en.wikipedia.org/w/api.php'
         params = f'action=query&prop=pageprops&format=json&titles={title}'
         url = f'{protocol}://{base_url}?{params}'
@@ -75,18 +77,7 @@ def newitem(category, items):
 	data = {'sitelinks': [{'site': 'commonswiki', 'title': category.title()}]}
 	candidate_item.editEntity(data, summary=u'Add commons sitelink')
 
-	for item in items:
-		claim = pywikibot.Claim(repo, item[0])
-		if item[0] == 'P569' or item[0] == 'P570':
-			claim.setTarget(item[1])
-		else:
-			claim.setTarget(pywikibot.ItemPage(repo, item[1]))
-		try:
-			candidate_item.addClaim(claim, summary=u'Setting '+item[0]+' value')
-			claim.addSources([statedin, retrieved], summary=u'Add source.')
-		except:
-			print "That didn't work"
-	return
+	return candidate_item
 
 for subpage in subpages:
     article_name = subpage.title()
@@ -101,13 +92,16 @@ for subpage in subpages:
         for line in article.split("."):
             if 'publish' in line:
                 date = date_extractor(line.strip())
+                
                 QID = wiki_title_to_wikidata_id(article.title())
                 items.append(['P577', QID]) 
+                
                 new_item = newitem(subpage, items)
                 newclaim = pywikibot.Claim(repo, 'P910')
                 newclaim.setTarget(new_item)
                 topic_item.addClaim(newclaim, summary=u'Link to category item')
-        	break 
+        	
+		break 
 
             else:
                 print("This article does not have any info about publishing date.")  
