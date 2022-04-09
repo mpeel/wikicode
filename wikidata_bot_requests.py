@@ -31,6 +31,7 @@ lines = listpage.text.splitlines()
 for line in lines:
 	if ('Wikidata:Requests for permissions/Bot' in line or 'Wikidata:Requests_for_permissions/Bot' in line) and 'Header' not in line:
 		botpagetitle = line.strip().replace('{{','').replace('}}','')
+		print(botpagetitle)
 		botpage = pywikibot.Page(wikidata_site, botpagetitle)
 		if '{{approved}}' in botpage.text.lower():
 			try:
