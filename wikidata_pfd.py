@@ -36,7 +36,7 @@ newarchivepage = archivepage.text
 listpage = pywikibot.Page(wikidata_site, 'Wikidata:Properties for deletion')
 split_text = '<!-- Below are request currently on hold, means consensus has been reached and they are waiting for deletion -->'
 newpage = listpage.text.split(split_text)[0]
-newpage_part2 = split_text + listpage.text.split('split_text')[1]
+newpage_part2 = split_text + listpage.text.split(split_text)[1]
 lines = newpage.splitlines()
 
 # Get the watchlist notice code
