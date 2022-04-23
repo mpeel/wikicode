@@ -51,7 +51,7 @@ print(pfd_on_notice)
 
 # Now let's run through the list and see what has been approved or withdrawn
 for line in lines:
-	if ('Wikidata:Properties for deletion' in line) and 'Header' not in line and 'text/' not in line: and 'text2/' not in line and "<!--" not in line:
+	if ('Wikidata:Properties for deletion' in line) and 'Header' not in line and 'text/' not in line and 'text2/' not in line and "<!--" not in line:
 		pagetitle = line.strip().replace('{{','').replace('}}','')
 		print(pagetitle)
 		pid = pagetitle.split('/')[1].replace('P','').replace('p','')
