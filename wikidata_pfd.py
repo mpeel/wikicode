@@ -26,7 +26,7 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 
 # Get the current archive page
 if datetime.now().strftime('%Y') == '2022':
-	archivepagename = 'Wikidata:Properties for deletion/Archive/2022/3'
+	archivepagename = 'Wikidata:Properties for deletion/Archive/2022/4'
 else:
 	archivepagename = 'Wikidata:Requests for permissions/RfBot/'+datetime.now().strftime('%Y')
 archivepage = pywikibot.Page(wikidata_site, archivepagename)
@@ -62,12 +62,7 @@ for line in lines:
 			# Add to the archive
 			newarchivepage = newarchivepage + '\n' + line
 			# Remove from PfD
-			print(newpage)
-			print('Test')
-			print(line)
 			newpage = newpage.replace(line, '')
-			print(newpage)
-			exit()
 
 			# Remove it from the watchlist
 			if pid in pfd_on_notice:
