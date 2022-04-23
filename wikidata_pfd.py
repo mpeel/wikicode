@@ -34,8 +34,9 @@ newarchivepage = archivepage.text
 
 # Get the list of open PfD requests
 listpage = pywikibot.Page(wikidata_site, 'Wikidata:Properties for deletion')
-newpage = listpage.text.split('On hold')[0]
-newpage_part2 = 'On hold' + listpage.text.split('On hold')[1]
+split_text = '<!-- Below are request currently on hold, means consensus has been reached and they are waiting for deletion -->'
+newpage = listpage.text.split(split_text)[0]
+newpage_part2 = split_text + listpage.text.split('split_text')[1]
 lines = newpage.splitlines()
 
 # Get the watchlist notice code
@@ -50,7 +51,7 @@ print(pfd_on_notice)
 
 # Now let's run through the list and see what has been approved or withdrawn
 for line in lines:
-	if ('Wikidata:Properties for deletion' in line) and 'Header' not in line and 'text/' not in line:
+	if ('Wikidata:Properties for deletion' in line) and 'Header' not in line and 'text/' not in line: and 'text2/' not in line and "<!--" not in line:
 		pagetitle = line.strip().replace('{{','').replace('}}','')
 		print(pagetitle)
 		pid = pagetitle.split('/')[1].replace('P','').replace('p','')
