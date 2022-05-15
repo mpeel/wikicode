@@ -84,7 +84,7 @@ maxnumedited = 10000
 cat = pywikibot.Category(wiki, 'Category:Coordinates not on Wikidata')
 # cat = pywikibot.Category(wiki, 'Categoria:!Artigos com coordenadas por transcrever a Wikidata')
 # cat = pywikibot.Category(wiki, 'Categoria:!Artigos com coordenadas locais')
-coord_templates = ['Coord']
+coord_templates = ['Coord','Location']
 
 pages = pagegenerators.CategorizedPageGenerator(cat, recurse=False);
 for page in pages:
