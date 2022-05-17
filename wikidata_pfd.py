@@ -45,7 +45,7 @@ split = watchlist.text.split('{{PropertyRFD|')
 pfd_on_notice = []
 for pfd_line in split:
 	prop = pfd_line.split('}}')[0]
-	if prop not in pfd_on_notice and len(prop) < 5:
+	if prop not in pfd_on_notice and len(prop) < 6:
 		pfd_on_notice.append(prop)
 print(pfd_on_notice)
 
