@@ -32,7 +32,7 @@ if int(month[0]) == 0:
 archivepagename = 'Wikidata:Properties for deletion/Archive/'+str(year)+'/'+str(month)
 archivepage = pywikibot.Page(wikidata_site, archivepagename)
 if archivepage.text == '':
-	archivepage.text = '{{Archive|category=Archived properties for deletion}}\n'
+	archivepage.text = '{{Archive|category=Archived properties for deletion}}\n\n'
 	archivepage.save('Set up archive page')
 newarchivepage = archivepage.text
 
