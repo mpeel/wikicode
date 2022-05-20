@@ -27,7 +27,7 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 # Get the current archive page
 year = datetime.now().strftime('%Y')
 month = datetime.now().strftime('%m')
-if month[0] == 0:
+if int(month[0]) == 0:
 	month = month[1]
 archivepagename = 'Wikidata:Properties for deletion/Archive/'+str(year)+'/'+str(month)
 archivepage = pywikibot.Page(wikidata_site, archivepagename)
