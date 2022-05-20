@@ -21,7 +21,7 @@ j = 0
 debug = False
 
 def search_entities(site, itemtitle,limit=100,offset=0):
-	 params = { 'action' :'query', 
+	 params = { 'action' :'query',
 	 			'list': 'search',
 				'format' : 'json',
 				'srlimit': limit,
@@ -58,9 +58,9 @@ def newitem(category, items,cat=True):
 			print("That didn't work")
 	return candidate_item
 
-searchstrings = ['":Exterior_of"', '":Interior_of"', '":View_of"','":Views_of"','":View_from"','":Views_from"']
-properties = ['P8596', 'P7561', 'P8989','P8989','P8933','P8933']
-combines = ['Q1385033','Q2998430','Q2075301','Q2075301','Q2075301','Q2075301']
+searchstrings = [":Exterior_of", ":Interior_of", ":View_of",":Views_of",":View_from",":Views_from", "(exterior)", "(interior)"]
+properties = ['P8596', 'P7561', 'P8989','P8989','P8933','P8933','P8596', 'P7561']
+combines = ['Q1385033','Q2998430','Q2075301','Q2075301','Q2075301','Q2075301','Q1385033','Q2998430']
 for k in range(0,len(searchstrings)):
 	offset = 0
 	step = 100
@@ -145,4 +145,3 @@ for k in range(0,len(searchstrings)):
 
 					if j >= maxnum:
 						exit()
-
