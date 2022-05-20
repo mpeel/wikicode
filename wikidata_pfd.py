@@ -25,11 +25,15 @@ wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
 # Get the current archive page
-if datetime.now().strftime('%Y') == '2022':
-	archivepagename = 'Wikidata:Properties for deletion/Archive/2022/4'
-else:
-	archivepagename = 'Wikidata:Requests for permissions/RfBot/'+datetime.now().strftime('%Y')
+year = datetime.now().strftime('%Y')
+month = datetime.now().strftime('%m')
+if month[0] == 0:
+	month = month[1]
+archivepagename = 'Wikidata:Properties for deletion/Archive/'+str(year)+'/'+str(month)
 archivepage = pywikibot.Page(wikidata_site, archivepagename)
+if archivepage.text == '':
+	archivepage.text = '{{Archive|category=Archived properties for deletion}}\n'
+	archivepage.save('Set up archive page')
 newarchivepage = archivepage.text
 
 # Get the list of open PfD requests
@@ -48,6 +52,7 @@ for pfd_line in split:
 	if prop not in pfd_on_notice and len(prop) < 6:
 		pfd_on_notice.append(prop)
 print(pfd_on_notice)
+pfd_not_live = pfd_on_notice.copy()
 
 # Now let's run through the list and see what has been approved or withdrawn
 for line in lines:
@@ -56,6 +61,9 @@ for line in lines:
 		print(pagetitle)
 		pid = pagetitle.split('/')[1].replace('P','').replace('p','')
 		pfdpage = pywikibot.Page(wikidata_site, pagetitle)
+
+		if pid in pfd_not_live:
+			pfd_not_live.remove(pid)
 
 		# Check the last 3 lines of the proposal to see if it's closed
 		pfdlines = pfdpage.text.splitlines()
@@ -76,6 +84,12 @@ for line in lines:
 				pfd_on_notice.append(pid)
 				watchlist.text = rebuild_watchnotice(pfd_on_notice)
 				watchlist.save('+ [[Property:P'+pid+']] ([[Wikidata:Properties_for_deletion/P'+pid+'|discussion]]')
+
+# Remove entries that are 'on hold' or have been manually archived from the watchlist notice
+for pid in pfd_not_live:
+	if pid in pfd_on_notice:
+		pfd_on_notice.remove(pid)
+		watchlist.text = rebuild_watchnotice(pfd_on_notice)
 
 # Do some last tidying up
 newpage = newpage.replace('Properties_for_deletion','Properties for deletion')
