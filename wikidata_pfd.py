@@ -90,6 +90,7 @@ for pid in pfd_not_live:
 	if pid in pfd_on_notice:
 		pfd_on_notice.remove(pid)
 		watchlist.text = rebuild_watchnotice(pfd_on_notice)
+		watchlist.save('- [[Property:P'+pid+']] ([[Wikidata:Properties_for_deletion/P'+pid+'|discussion]]')
 
 # Do some last tidying up
 newpage = newpage.replace('Properties_for_deletion','Properties for deletion')
