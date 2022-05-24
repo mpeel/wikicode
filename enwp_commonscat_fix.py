@@ -61,7 +61,7 @@ for categories in range(0,2):
 					print(page.title())
 					continue
 
-			# Cut-off at a maximum number of edits	
+			# Cut-off at a maximum number of edits
 			print("")
 			print(nummodified)
 			if nummodified >= maxnum:
@@ -117,6 +117,11 @@ for categories in range(0,2):
 								id_val = id_val.split("|")[1]
 						else:
 							id_val = id_val.split("|")[0]
+					except:
+						continue
+				if "1=" in id_val:
+					try:
+						id_val = id_val.split('1=')[1]
 					except:
 						continue
 				try:
@@ -244,7 +249,7 @@ for categories in range(0,2):
 							nummodified += 1
 							page.save(savemessage)
 							continue
-				
+
 				# Now check to see if the local one is a redirect to the wikidata one
 				if 'Category:'+id_val != sitelink:
 					sitelink_redirect = ''
@@ -299,5 +304,5 @@ for categories in range(0,2):
 				# ... That's all for now
 
 print('Done! Edited ' + str(nummodified) + ' entries')
-		
+
 # EOF
