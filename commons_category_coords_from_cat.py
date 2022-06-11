@@ -227,7 +227,7 @@ for cat in targetcats:
 								cat.text = target_text
 								cat.save('Coordinates now through the infobox')
 								numedited += 1
-		cat.touch()
-		if numedited >= maxnumedited:
-			print(numedited)
-			exit()
+	cat.touch()
+	if numedited >= maxnumedited:
+		print(numedited)
+		exit()
