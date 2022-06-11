@@ -5,6 +5,7 @@
 
 import pywikibot
 import numpy as np
+from pywikibot import pagegenerators
 
 def get_precision(val):
 	# print(val)
