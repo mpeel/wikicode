@@ -23,6 +23,9 @@ def calc_coord(params):
 	lat = False
 	lon = False
 	precision = False
+	if any('globe' in s.lower() for s in params):
+		if not any('earth' in s.lower() for s in params):
+			return lat, lon, precision
 	if len(params) >= 8:
 		if 'S' in params[3] or 'N' in params[3]:
 			lat = float(params[0]) + (float(params[1])/60.0)+(float(params[2])/(60.0*60.0))

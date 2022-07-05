@@ -23,6 +23,9 @@ def calc_coord(params):
 	lat = False
 	lon = False
 	precision = False
+	if any('globe' in s.lower() for s in params):
+		if not any('earth' in s.lower() for s in params):
+			return lat, lon, precision
 	if len(params) >= 8:
 		if 'S' in params[3] or 'N' in params[3]:
 			lat = float(params[0]) + (float(params[1])/60.0)+(float(params[2])/(60.0*60.0))
@@ -133,7 +136,7 @@ for cat in targetcats:
 		for clm in P31:
 			# print(clm)
 			# print(clm.getTarget().title())
-			if clm.getTarget().title() == 'Q5' or clm.getTarget().title() == 'Q4830453' or clm.getTarget().title() == 'Q783794' or clm.getTarget().title() == 'Q22667' or clm.getTarget().title() == 'Q13406463' or clm.getTarget().title() == 'Q4167836': 
+			if clm.getTarget().title() == 'Q5' or clm.getTarget().title() == 'Q4830453' or clm.getTarget().title() == 'Q783794' or clm.getTarget().title() == 'Q22667' or clm.getTarget().title() == 'Q13406463' or clm.getTarget().title() == 'Q4167836':
 				ishuman = True
 	if ishuman:
 		print('Not importing coordinate for a human, business, company, railway, list, or category')
