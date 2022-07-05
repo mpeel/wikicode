@@ -17,11 +17,13 @@ nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
-debug = True
-manual = True
-#category = 'Category:Cultural heritage monuments in Austria with known IDs'#'Category:Listed buildings in Wales with known IDs'#'Category:Listed buildings in England with known IDs'
-#templates = ['Denkmalgeschütztes Objekt Österreich','denkmalgeschütztes Objekt Österreich', 'doo', 'Doo']#['Listed building Wales', 'listed building Wales']#['Listed building England', 'listed building England']
-#properties = ['P2951']#['P1216', 'P1216']
+#category = 'Category:Cultural heritage monuments in Austria with known IDs'#'Category:Listed buildings in Wales with known IDs'#
+#templates = ['Denkmalgeschütztes Objekt Österreich','denkmalgeschütztes Objekt Österreich', 'doo', 'Doo']#['Listed building Wales', 'listed building Wales']
+#properties = ['P2951']#
+category = 'Category:Listed buildings in England with known IDs'
+templates = ['Listed building England', 'listed building England']
+properties = ['P1216', 'P1216']
+shortname = 'NHLE'
 # category = 'Category:Rijksmonumenten with known IDs'
 # templates = ['Rijksmonument','rijksmonument',]
 # properties = ['P359']
@@ -38,10 +40,10 @@ manual = True
 # templates = ['Mérimée', 'Merimee','mérimée', 'merimee']
 # properties = ['P380']
 # shortname = 'Mérimée ID'
-category = 'Category:Protected areas with known WDPA-ID'#'Category:Base Mérimée'
-templates = ['WDPA']
-properties = ['P809']
-shortname = 'WDPA ID'
+# category = 'Category:Protected areas with known WDPA-ID'#'Category:Base Mérimée'
+# templates = ['WDPA']
+# properties = ['P809']
+# shortname = 'WDPA ID'
 
 def checkid(targetcat):
     print(targetcat)
@@ -163,5 +165,5 @@ for targetcat in targetcats:
         exit()
 
 print('Done! Edited ' + str(nummodified) + ' entries')
-                
+
 # EOF
