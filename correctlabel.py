@@ -8,9 +8,12 @@ from pywikibot import pagegenerators
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()
 
-lang = 'lb'
-string = 'chemesch Verbindung'
-replacement = 'cheemesch Verbindung'
+# lang = 'lb'
+# string = 'chemesch Verbindung'
+# replacement = 'cheemesch Verbindung'
+lang = 'cs'
+string = 'ulice v Chotovinech'
+replacement = 'ulice v Chotovinách'
 savemessage = 'Change ' + lang + ' label to '
 debug = False
 query = 'SELECT '\
@@ -61,4 +64,3 @@ while count > 0:
 				wd_item.editDescriptions(newdescriptions, summary=savemessage + newdescription)
 			except:
 				print("Something went wrong")
-			
