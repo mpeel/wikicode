@@ -197,13 +197,15 @@ def calculateGender(page='', lang=''):
 	if not page:
 		return ''
 	if lang == 'en' or lang == 'simple':
-		femalepoints = len(re.findall(r'(?i)\b(she|her|hers)\b', page.text))
-		malepoints = len(re.findall(r'(?i)\b(he|his|him)\b', page.text))
-		if re.search(r'(?im)\b(Category\s*:[^\]\|]*?female|Category\s*:[^\]\|]*?women|Category\s*:[^\]\|]*?actresses)\b', page.text) or \
+		texttemp = page.text
+		texttemp = texttemp.replace('against women','')
+		femalepoints = len(re.findall(r'(?i)\b(she|her|hers)\b', texttemp))
+		malepoints = len(re.findall(r'(?i)\b(he|his|him)\b', texttemp))
+		if re.search(r'(?im)\b(Category\s*:[^\]\|]*?female|Category\s*:[^\]\|]*?women|Category\s*:[^\]\|]*?actresses)\b', texttemp) or \
 		   (len(page.text) <= 2000 and femalepoints >= 1 and malepoints == 0) or \
 		   (femalepoints >= 2 and femalepoints > malepoints*3):
 			return 'female'
-		elif re.search(r'(?im)\b(Category\s*:[^\]]*? male|Category\s*:[^\]]*? men)\b', page.text) or \
+		elif re.search(r'(?im)\b(Category\s*:[^\]]*? male|Category\s*:[^\]]*? men)\b', texttemp) or \
 		   (len(page.text) <= 2000 and malepoints >= 1 and femalepoints == 0) or \
 		   (malepoints >= 2 and malepoints > femalepoints*3):
 			return 'male'

@@ -4,9 +4,9 @@ import datetime
 import dateparser
 from wir_newpages import *
 
-lang = 'es'
-article = 'Óscar Herrera Palacios'
-enwp_site = 'eswiki'
+lang = 'en'
+article = 'Donald Broadnax'
+enwp_site = 'enwiki'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
@@ -43,6 +43,7 @@ print(birthdate)
 deathdate = calculateDeathDate(page=page,lang=lang)
 if deathdate != '0-0-0':
 	print(deathdate)
+print(calculateGender(page,lang=lang))
 itemfound = pywikibot.ItemPage.fromPage(page)
 # addDeathDateClaim(repo=repo,item=wd_item,date=deathdate,lang=lang)
 # exit()
