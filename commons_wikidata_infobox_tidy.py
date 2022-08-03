@@ -19,11 +19,11 @@ commons = pywikibot.Site('commons', 'commons')
 repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = False
-templates = ['Інфабокс','Wdbox','Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata', 'WI', 'Wdbox', 'Wikidatainfobox']
+templates = ['Wikidata box', 'Інфабокс','Wdbox','Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata', 'WI', 'Wdbox', 'Wikidatainfobox']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location', 'Object location', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en", 'Individual aircraft', 'individual aircraft', 'Wikidata place','wikidata place', 'Articles via Wikidata', 'Articles via Wikidata |P301=']
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Tidy Wikidata Infobox call"
-wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox", "Wdbox", "wdbox", 'WI', 'wikidatainfobox', 'Інфабокс', 'інфабокс']
+wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox", "Wdbox", "wdbox", 'WI', 'wikidatainfobox', 'Інфабокс', 'інфабокс', 'Wikidata box', 'wikidata box']
 
 def migratecat(targetcat):
     print(targetcat)
@@ -165,7 +165,7 @@ def migratecat(targetcat):
 # Check for uses of the Wikidata Infobox redirects
 for i in range(0,len(templates)):
     template = pywikibot.Page(commons, 'Template:'+templates[i])
-    targetcats = template.embeddedin(namespaces='14')
+    targetcats = template.embeddedin()#namespaces='14')
     for targetcat in targetcats:
         print(targetcat)
         print("\n" + targetcat.title())
