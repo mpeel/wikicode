@@ -19,3 +19,4 @@ cd /home/pi/Documents/git/wikicode/
 /usr/bin/python3 wikidata_p1753_inverse.py
 /usr/bin/python3 wikidata_p1754_inverse.py
 /usr/bin/python3 astrocoords_fix_globe.py
+/usr/bin/python3 astrocoords_copy_to_P376.py
