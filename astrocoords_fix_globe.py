@@ -20,7 +20,7 @@ for i in range(0,len(globes)):
 	globe_item = pywikibot.ItemPage(repo, globes[i])
 	for j in range(0,len(globes)):
 		if i != j:
-			print('Finding cases of coordinates on ' + globe_names[j].capitalise() + ' that should be on ' + globe_names[i].capitalise())
+			print('Finding cases of coordinates on ' + globe_names[j].capitalize() + ' that should be on ' + globe_names[i].capitalize())
 			query = 'SELECT DISTINCT ?item'\
 			'{'\
 			'   ?item wdt:P376 wd:'+str(globes[i])+' ;'\
@@ -43,4 +43,4 @@ for i in range(0,len(globes)):
 				for clm in P625:
 					coordinate = clm.getTarget()
 					new_coordinate = pywikibot.Coordinate(lat=coordinate.lat, lon=coordinate.lon, precision=coordinate.precision, globe_item=globe_item,site=repo)
-					clm.changeTarget(new_coordinate,summary='Correct globe to '+globe_names[i].capitalise() + ' based on P376 value')
+					clm.changeTarget(new_coordinate,summary='Correct globe to '+globe_names[i].capitalize() + ' based on P376 value')
