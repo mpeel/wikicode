@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8  -*-
-# 
+#
 # Script to fetch Guardian obit RSS feed, and cross-compare with Wikidata
 # Mike Peel    26 Feb 2017    Started
 # Mike Peel    18 Mar 2017    Bug fixes (catch more titles in nameattempt, unicode issue)
@@ -80,14 +80,20 @@ for item in entries:
 			wd_id = wd_item.getID()
 			text = text + '[[:d:' + wd_id + '|' + wd_id + ']]'
 			if 'P569' in wd_item.claims:
-				birth_date = wd_item.claims['P569'][0].getTarget()
-				birth_date2 = birth_date.toTimestr()
-				birth_date2 = birth_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				try:
+					birth_date = wd_item.claims['P569'][0].getTarget()
+					birth_date2 = birth_date.toTimestr()
+					birth_date2 = birth_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				except:
+					birth_date2 = "<br />"
 				text = text + "<br />b: " + birth_date2
 			if 'P570' in wd_item.claims:
-				death_date = wd_item.claims['P570'][0].getTarget()
-				death_date2 = death_date.toTimestr()
-				death_date2 = death_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				try:
+					death_date = wd_item.claims['P570'][0].getTarget()
+					death_date2 = death_date.toTimestr()
+					death_date2 = death_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				except:
+					death_date2 = '<br />'
 				text = text + "<br />d: " + death_date2
 		text = text + ' || [' + item['link'] + ' ' + item['title'].replace("|","{{!}}") + '], ' + date +' || <nowiki>{{cite news | url = ' + item['link'] + ' | title = ' + item['title'].replace("|","{{!}}") + ' | work = [[The New York Times]] | date = ' + date + '}}</nowiki> || {{Find sources|' + nameattempt + '}}\n'
 
