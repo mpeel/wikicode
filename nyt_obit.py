@@ -7,6 +7,7 @@
 # Mike Peel    14 Apr 2017    Tweaks (split on ':')
 # Mike Peel     2 Jul 2017    Bug fix (catch blank nameattempt)
 # Mike Peel    17 Oct 2020    Update to Python 3
+# Mike Peel    18 Aug 2022    Try-except for Wikidata statements
 import datetime
 import feedparser
 import pywikibot
