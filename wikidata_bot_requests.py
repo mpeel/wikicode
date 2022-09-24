@@ -41,7 +41,7 @@ for line in lines:
 				print("That didn't work")
 				exit()
 			null = 0
-		if '{{withdrawn}}' in botpage.text.lower() or '{{not done|withdrawn}}' in botpage.text.lower() or '{{Not done|disapproved}}' in botpage.text.lower():
+		if '{{withdrawn}}' in botpage.text.lower() or '{{not done|withdrawn}}' in botpage.text.lower() or '{{not done|disapproved}}' in botpage.text.lower():
 			try:
 				newarchivepage = newarchivepage.replace('= Unsuccessful requests =','= Unsuccessful requests =\n* ' + line.replace('{','[').replace('}',']'))
 				newbotpage = newbotpage.replace(line+'\n', '')
