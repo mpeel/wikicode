@@ -58,7 +58,7 @@ def newitem(category, items,cat=True):
 			print("That didn't work")
 	return candidate_item
 
-searchstrings = [ "- Exterior", "- Interior)", ":Exterior_of", ":Interior_of", ":View_of",":Views_of",":View_from",":Views_from", "(exterior)", "(interior)"]
+searchstrings = [ "- Exterior", "- Interior", ":Exterior_of", ":Interior_of", ":View_of",":Views_of",":View_from",":Views_from", "(exterior)", "(interior)"]
 properties = [ 'P8596', 'P7561', 'P8596', 'P7561', 'P8989','P8989','P8933','P8933','P8596', 'P7561']
 combines = ['Q1385033','Q2998430', 'Q1385033','Q2998430','Q2075301','Q2075301','Q2075301','Q2075301','Q1385033','Q2998430']
 for k in range(0,len(searchstrings)):
