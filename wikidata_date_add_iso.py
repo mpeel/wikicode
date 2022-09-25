@@ -27,8 +27,11 @@ for page in pages:
 	except:
 		continue
 	print(date)
-	newdate = parser.parse(date)
-	isodate = newdate.isoformat().split('T')[0]
+	try:
+		newdate = parser.parse(date)
+		isodate = newdate.isoformat().split('T')[0]
+	except:
+		continue
 	print(isodate)
 	aliases = []
 	try:
