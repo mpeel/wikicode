@@ -22,7 +22,10 @@ pages = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
 for page in pages:
 	print('https://www.wikidata.org/wiki/'+page.title())
 	item_dict = page.get()
-	date = item_dict['labels']['en']
+	try:
+		date = item_dict['labels']['en']
+	except:
+		continue
 	print(date)
 	newdate = parser.parse(date)
 	isodate = newdate.isoformat().split('T')[0]
