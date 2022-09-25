@@ -41,14 +41,12 @@ replacements = [
 {'lang': 'pt', 'string': 'Estrada europeia ', 'replacement': 'estrada europeia '},\
 {'lang': 'pt-br', 'string': 'Estrada europeia ', 'replacement': 'estrada europeia '},\
 {'lang': 'ro', 'string': 'Drumul european ', 'replacement': 'drumul european '},\
-
-#     uk aliases beginning with "Автошлях "
-#     cs aliases beginning with "Železniční trať "
-#     cs aliases beginning with "Trať "
-#     pl aliases beginning with "Linia kolejowa "
+{'lang': 'uk', 'string': "Автошлях ", 'replacement': 'aвтошлях'},\
+{'lang': 'cs', 'string': "Trať ", 'replacement': "trať "},\
+{'lang': 'pl', 'string': "Linia kolejowa ", 'replacement': "linia kolejowa "},\
 ]
 
-debug = True
+debug = False
 for replacement in replacements:
 	savemessage = 'Change ' + replacement['lang'] + ' label to '
 	query = 'SELECT ?item ?label'\
@@ -93,3 +91,22 @@ for replacement in replacements:
 					sleep(1)
 				except:
 					print("Something went wrong")
+
+			try:
+				aliases = item_dict['aliases'][replacement['lang']]
+				oldaliases = aliases.copy()
+				for i in range(0,len(aliases)):
+					aliases[i] = aliases[i].replace(replacement['string'],replacement['replacement'],1)
+				if oldaliases != aliases:
+					newaliases = {replacement['lang']: aliases}
+					test = 'y'
+					if debug:
+						test = input('Save?')
+					if test == 'y':
+						try:
+							wd_item.editAliases(aliases=aliases, summary=savemessage + 'lower case')
+							sleep(1)
+						except:
+							print("Something went wrong")
+			except:
+				continue
