@@ -88,7 +88,6 @@ for replacement in replacements:
 			if test == 'y':
 				try:
 					wd_item.editLabels(labels=newlabels, summary=savemessage + newlabel)
-					sleep(1)
 				except:
 					print("Something went wrong")
 
@@ -105,7 +104,6 @@ for replacement in replacements:
 					if test == 'y':
 						try:
 							wd_item.editAliases(aliases=aliases, summary=savemessage + 'lower case')
-							sleep(1)
 						except:
 							print("Something went wrong")
 			except:
