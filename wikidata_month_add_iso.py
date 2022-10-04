@@ -16,7 +16,7 @@ commons = pywikibot.Site('commons', 'commons')
 
 query = 'SELECT DISTINCT ?item WHERE {'\
 '     ?item p:P31 ?statement0.'\
-'      ?statement0 (ps:P31/(wdt:P279*)) wd:Q47150325.'\
+'      ?statement0 (ps:P31/(wdt:P279*)) wd:Q47018478.'\
 '}'
 pages = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
 for page in pages:
@@ -30,7 +30,7 @@ for page in pages:
 		print(date)
 		try:
 			newdate = parser.parse(date)
-			isodate = newdate.isoformat().split('T')[0]
+			isodate = newdate.isoformat().split('-')[0] + "-" + newdate.isoformat().split('-')[1]
 		except:
 			continue
 		print(isodate)
