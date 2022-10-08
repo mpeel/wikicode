@@ -28,7 +28,7 @@ with conn.cursor() as cur:
 	" JOIN page AS p1 ON c1.cl_from=p1.page_id AND p1.page_namespace=14 AND p1.page_is_redirect=0"\
 	" JOIN page_props AS pp ON pp.pp_page = p1.page_id AND pp.pp_propname = 'wikibase_item'"\
 	" LEFT JOIN templatelinks AS tl ON tl.tl_from = p1.page_id AND tl.tl_from_namespace = 14 AND  tl_target_id = (SELECT lt_id FROM linktarget WHERE lt_namespace = 10 AND lt_title = 'Wikidata_Infobox')"\
-	" WHERE tl.tl_target_id IS NULL"
+	" WHERE tl.tl_target_id IS NULL")
 	vals = cur.fetchall()
 	f = open("/data/project/pibot/commons_infobox_candidates.csv", "w", encoding='utf-8')
 	if len(vals) > 0:
