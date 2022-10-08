@@ -5,16 +5,12 @@ import os
 from ftplib import FTP
 from ftplogin import *
 
-
 login_file = open("replica.my.cnf","r")
 login = login_file.readlines()
 user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
-# host = '127.0.0.1'
-host = 'commonswiki.analytics.db.svc.wikimedia.cloud'#os.environ['MYSQL_HOST']
-# port = 4711
+host = 'commonswiki.analytics.db.svc.wikimedia.cloud'
 port = 3306
-
 
 conn = pymysql.connect(
 	host=host,
@@ -22,28 +18,11 @@ conn = pymysql.connect(
 	password=password,
 	port=port
 )
-# print(conn)
-
-# From https://paws-public.wmflabs.org/paws-public/User:YuviPanda/examples/revisions-sql.ipynb
-# with conn.cursor() as cur:
-#     cur.execute('use enwiki_p')
-#     cur.execute("""
-#         SELECT *
-#         FROM revision JOIN page
-#             ON page.page_id = revision.rev_page
-#         WHERE page.page_namespace = 0 AND page.page_title = 'India'
-#         ORDER BY revision.rev_timestamp DESC
-#         LIMIT 1
-#     """)
-#     print(cur.fetchall())
-# exit()
-# print('Hi!')
 start = 0
 step = 10
 run = True
 with conn.cursor() as cur:
 	cur.execute('use commonswiki_p')
-	# while run == True:
 	cur.execute("SELECT DISTINCT pp.pp_value, p1.page_title"\
 	" FROM categorylinks AS c1"\
 	" JOIN page AS p1 ON c1.cl_from=p1.page_id AND p1.page_namespace=14 AND p1.page_is_redirect=0"\
@@ -64,5 +43,3 @@ with conn.cursor() as cur:
 	ftp.storbinary('STOR commons_infobox_candidates.txt', file)
 	file.close()
 	ftp.quit()
-
-# print(1)
