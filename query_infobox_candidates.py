@@ -6,7 +6,7 @@ from ftplib import FTP
 from ftplogin import *
 
 
-login_file = open("replica.my.cnf","r") 
+login_file = open("replica.my.cnf","r")
 login = login_file.readlines()
 user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
@@ -29,9 +29,9 @@ conn = pymysql.connect(
 #     cur.execute('use enwiki_p')
 #     cur.execute("""
 #         SELECT *
-#         FROM revision JOIN page 
+#         FROM revision JOIN page
 #             ON page.page_id = revision.rev_page
-#         WHERE page.page_namespace = 0 AND page.page_title = 'India' 
+#         WHERE page.page_namespace = 0 AND page.page_title = 'India'
 #         ORDER BY revision.rev_timestamp DESC
 #         LIMIT 1
 #     """)
@@ -44,18 +44,12 @@ run = True
 with conn.cursor() as cur:
 	cur.execute('use commonswiki_p')
 	# while run == True:
-	cur.execute("SELECT DISTINCT pp.pp_value, p1.page_title, tl.tl_namespace, tl.tl_title"\
+	cur.execute("SELECT DISTINCT pp.pp_value, p1.page_title"\
 	" FROM categorylinks AS c1"\
 	" JOIN page AS p1 ON c1.cl_from=p1.page_id AND p1.page_namespace=14 AND p1.page_is_redirect=0"\
 	" JOIN page_props AS pp ON pp.pp_page = p1.page_id AND pp.pp_propname = 'wikibase_item'"\
-	" LEFT JOIN templatelinks AS tl ON tl.tl_from = p1.page_id AND tl.tl_from_namespace = 14 AND tl.tl_namespace = 10 AND tl.tl_title = 'Wikidata_Infobox' "\
-	" WHERE tl.tl_title IS NULL")
-	# " LEFT JOIN templatelinks AS t2 ON t2.tl_from = p1.page_id AND t2.tl_from_namespace = 14 AND t2.tl_namespace = 10 AND t2.tl_title = 'Date navbox' "\
-	# " LEFT JOIN templatelinks AS t3 ON t3.tl_from = p1.page_id AND t3.tl_from_namespace = 14 AND t3.tl_namespace = 10 AND t3.tl_title = 'Category redirect' "\
-	# " LEFT JOIN templatelinks AS t4 ON t4.tl_from = p1.page_id AND t4.tl_from_namespace = 14 AND t4.tl_namespace = 10 AND t4.tl_title = 'Disambig' "\
-	# " WHERE tl.tl_title IS NULL AND t2.tl_title IS NULL AND t3.tl_title IS NULL AND t4.tl_title IS NULL"\
-	# " WHERE tl.tl_title IS NULL"\
-	# " LIMIT " + str(step) + " OFFSET " + str(start))
+	" LEFT JOIN templatelinks AS tl ON tl.tl_from = p1.page_id AND tl.tl_from_namespace = 14 AND  tl_target_id = (SELECT lt_id FROM linktarget WHERE lt_namespace = 10 AND lt_title = 'Wikidata_Infobox')"\
+	" WHERE tl.tl_target_id IS NULL"
 	vals = cur.fetchall()
 	f = open("/data/project/pibot/commons_infobox_candidates.csv", "w", encoding='utf-8')
 	if len(vals) > 0:
