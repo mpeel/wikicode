@@ -15,8 +15,9 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
 
 query = 'SELECT DISTINCT ?item WHERE {'\
-'     ?item p:P31 ?statement0.'\
-'      ?statement0 (ps:P31/(wdt:P279*)) wd:Q47150325.'\
+'  ?item p:P31 ?statement0.'\
+'  ?statement0 (ps:P31/(wdt:P279*)) wd:Q47150325.'\
+'  FILTER NOT EXISTS {?item rdf:type ontolex:LexicalEntry.}'\
 '}'
 pages = pagegenerators.WikidataSPARQLPageGenerator(query, site=repo)
 for page in pages:
