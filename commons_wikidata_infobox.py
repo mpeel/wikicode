@@ -149,7 +149,7 @@ def addtemplate(target):
         for option in templatestoavoid:
             if '{{'+option in target_text or '{{ '+option in target_text:
                 print('Category uses ' + option + ', skipping')
-        return 0
+                return 0
 
     # Check the Wikidata item to see if we want to skip this.
     wd_id = 0
