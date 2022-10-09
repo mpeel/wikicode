@@ -23,7 +23,7 @@ templates = ['Wikidata box', 'Інфабокс','Wdbox','Wikidata infobox', 'Inf
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location', 'Object location', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en", 'Individual aircraft', 'individual aircraft', 'Wikidata place','wikidata place', 'Articles via Wikidata', 'Articles via Wikidata |P301=']
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Tidy Wikidata Infobox call"
-wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox", "Wdbox", "wdbox", 'WI', 'wikidatainfobox', 'Інфабокс', 'інфабокс', 'Wikidata box', 'wikidata box']
+wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox", "Wdbox", "wdbox", 'WI', 'wikidatainfobox', 'Інфабокс', 'інфабокс', 'Wikidata box', 'wikidata box', 'Wikidatainfobox', 'wikidatainfobox']
 
 def migratecat(targetcat):
     print(targetcat)
@@ -117,6 +117,9 @@ def migratecat(targetcat):
             target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid ="+wd_item2.title(),'{{Wikidata Infobox')
             target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid = "+wd_item2.title(),'{{Wikidata Infobox')
         target_text = target_text.replace("{{"+wikidatainfobox[i],'{{Wikidata Infobox')
+        target_text = target_text.replace("{{ "+wikidatainfobox[i],'{{Wikidata Infobox')
+        target_text = target_text.replace("{{"+wikidatainfobox[i].replace(" ","_"),'{{Wikidata Infobox')
+        target_text = target_text.replace("{{ "+wikidatainfobox[i].replace(" ","_"),'{{Wikidata Infobox')
 
     lines = target_text.splitlines()
     insertline = 0
