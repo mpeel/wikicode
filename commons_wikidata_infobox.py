@@ -147,7 +147,7 @@ def addtemplate(target):
     # We have a category that's linked to a Wikidata item. Check if we want to add the template:
     if any(option in target_text for option in templatestoavoid):
         for option in templatestoavoid:
-            if option in target_text:
+            if '{{'+option in target_text or '{{ '+option in target_text:
                 print('Category uses ' + option + ', skipping')
         return 0
 
