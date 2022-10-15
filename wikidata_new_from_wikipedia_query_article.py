@@ -260,12 +260,12 @@ for prefix in wikipedias:
 					print('Hello')
 					# try:
 					# No existing sitelink found, add it to the database as a possibility
-					mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + targetcat.title() + '" AND site = "'+prefix+'"')
+					mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
 					myresult = mycursor.fetchone()
 					print(myresult)
 					if not myresult:
 						sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
-						val = (qid, targetcat.title(),prefix)
+						val = (qid, page.title(),prefix)
 						mycursor.execute(sql, val)
 						mydb.commit()
 					# except:
@@ -295,12 +295,12 @@ for prefix in wikipedias:
 						print('Hello')
 						try:
 							# # No existing sitelink found, add it to the database as a possibility
-							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + targetcat.title() + '" AND site = "'+prefix+'"')
+							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
 							myresult = mycursor.fetchone()
 							print(myresult)
 							if not myresult:
 								sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
-								val = (qid, targetcat.title(),prefix)
+								val = (qid, page.title(),prefix)
 								mycursor.execute(sql, val)
 								mydb.commit()
 						except:
