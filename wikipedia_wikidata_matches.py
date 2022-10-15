@@ -22,6 +22,13 @@ enwiki = pywikibot.Site('en', 'wikipedia')
 simplewiki = pywikibot.Site('simple', 'wikipedia')
 ptwiki = pywikibot.Site('pt', 'wikipedia')
 dewiki = pywikibot.Site('de', 'wikipedia')
+eswiki = pywikibot.Site('es', 'wikipedia')
+frwiki = pywikibot.Site('fr', 'wikipedia')
+itwiki = pywikibot.Site('it', 'wikipedia')
+nlwiki = pywikibot.Site('nl', 'wikipedia')
+plwiki = pywikibot.Site('pl', 'wikipedia')
+svwiki = pywikibot.Site('sv', 'wikipedia')
+eowiki = pywikibot.Site('eo', 'wikipedia')
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -43,7 +50,8 @@ lang = GET.get('lang')
 if action == 'desc':
 	# print 'desc'
 	print "Content-type: application/json\n\n"
-	print callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any'}}]}) + " )\n"#, 'en':'English', 'simple':'Simple','pt':'Portuguese','de':'German'
+	print callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'simple':'Simple','pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano','nl':'Nederlands','pl':'Polski','sv':'Svenska','eo':'Esperanto'}}]}) + " )\n"
+
 elif action == 'tiles':
 	print "Content-type: application/json\n\n"
 	i = 0
@@ -55,9 +63,36 @@ elif action == 'tiles':
 		itemtype = GET.get('type')
 	except:
 		itemtype = 'Any'
-
+	torun = 'any'
+	if itemtype != 'Any':
+		if itemtype == 'en':
+			torun = 'en'
+		elif itemtype == 'simple':
+			torun = 'simple'
+		elif itemtype == 'de':
+			torun = 'de'
+		elif itemtype == 'pt':
+			torun = 'pt'
+		elif itemtype == 'es':
+			torun = 'es'
+		elif itemtype == 'fr':
+			torun = 'fr'
+		elif itemtype == 'it':
+			torun = 'it'
+		elif itemtype == 'nl':
+			torun = 'nl'
+		elif itemtype == 'pl':
+			torun = 'pl'
+		elif itemtype == 'sv':
+			torun = 'sv'
+		elif itemtype == 'eo':
+			torun = 'eo'
 	while finished == 0:
-		mycursor.execute('SELECT * FROM newarticles WHERE done = 0 ORDER BY RAND() LIMIT 1')#%d' % (int(num),))
+		if torun == 'any':
+			sql = 'SELECT * FROM newarticles WHERE done = 0 ORDER BY RAND() LIMIT 1'
+		else:
+			sql = 'SELECT * FROM newarticles WHERE done = 0 AND site = "'+torun+'" ORDER BY RAND() LIMIT 1'
+		mycursor.execute(sql)
 		myresult = mycursor.fetchone()
 		if myresult[3] == 'en':
 			site = enwiki
@@ -67,6 +102,20 @@ elif action == 'tiles':
 			site = dewiki
 		elif myresult[3] == 'pt':
 			site = ptwiki
+		elif myresult[3] == 'es':
+			site = eswiki
+		elif myresult[3] == 'fr':
+			site = frwiki
+		elif myresult[3] == 'it':
+			site = itwiki
+		elif myresult[3] == 'nl':
+			site = nlwiki
+		elif myresult[3] == 'pl':
+			site = plwiki
+		elif myresult[3] == 'sv':
+			site = svwiki
+		elif myresult[3] == 'eo':
+			site = eowiki
 		else:
 			continue
 		# Make sure it doesn't have an ID yet

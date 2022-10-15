@@ -12,3 +12,5 @@ cd /home/pi/Documents/git/wikicode/
 /usr/bin/python3 enwp_coords.py
 /usr/bin/python3 commons_category_coords.py
 /usr/bin/python3 commons_category_coords_from_cat.py
+/usr/bin/python3 wikidata_new_from_wikipedia_query_article_nocreate.py
+/usr/bin/python3 wikidata_new_from_wikipedia_query_category_nocreate.py
