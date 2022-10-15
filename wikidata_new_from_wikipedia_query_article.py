@@ -244,6 +244,34 @@ for prefix in wikipedias:
 				print('Search results but old')
 				if lastedited_time < days_since_last_edit_but_search:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
+					results = wikidataEntries['search']
+					numresults = len(results)
+					for i in range(0,numresults):
+						qid = results[i]['id']
+						print(qid)
+						try:
+							candidate_item = pywikibot.ItemPage(repo, qid)
+							candidate_item_dict = candidate_item.get()
+						except:
+							print('Huh - no page found')
+						skip = 0
+						incat = 0
+						try:
+							sitelink = get_sitelink_title(candidate_item_dict['sitelinks'][prefix+'wiki'])
+						except:
+							print('Hello')
+							try:
+								# # No existing sitelink found, add it to the database as a possibility
+								mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + targetcat.title() + '" AND site = "'+prefix+'"')
+								myresult = mycursor.fetchone()
+								print(myresult)
+								if not myresult:
+									sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
+									val = (qid, targetcat.title(),prefix)
+									mycursor.execute(sql, val)
+									mydb.commit()
+							except:
+								print('Something went wrong when adding it to the database!')
 					continue
 			if prefix != 'en':
 				wikidataEntries = search_entities(repo, page.title(),lang='en')
