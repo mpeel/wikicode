@@ -16,6 +16,17 @@ from wir_newpages import *
 from ftplib import FTP
 from ftplogin import *
 import random
+from database_login import *
+import mysql.connector
+from pibot_functions import *
+
+mydb = mysql.connector.connect(
+  host=database_host,
+  user=database_user,
+  passwd=database_password,
+  database=database_database
+)
+mycursor = mydb.cursor()
 
 def parsequarry(quarryfile):
 	with open(quarryfile, mode='r') as infile:
