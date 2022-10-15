@@ -258,18 +258,18 @@ for prefix in wikipedias:
 						sitelink = get_sitelink_title(candidate_item_dict['sitelinks'][prefix+'wiki'])
 					except:
 						print('Hello')
-						try:
-							# # No existing sitelink found, add it to the database as a possibility
-							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + targetcat.title() + '" AND site = "'+prefix+'"')
-							myresult = mycursor.fetchone()
-							print(myresult)
-							if not myresult:
-								sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
-								val = (qid, targetcat.title(),prefix)
-								mycursor.execute(sql, val)
-								mydb.commit()
-						except:
-							print('Something went wrong when adding it to the database!')
+						# try:
+						# No existing sitelink found, add it to the database as a possibility
+						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + targetcat.title() + '" AND site = "'+prefix+'"')
+						myresult = mycursor.fetchone()
+						print(myresult)
+						if not myresult:
+							sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
+							val = (qid, targetcat.title(),prefix)
+							mycursor.execute(sql, val)
+							mydb.commit()
+						# except:
+						# 	print('Something went wrong when adding it to the database!')
 				if lastedited_time < days_since_last_edit_but_search:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
 					continue
