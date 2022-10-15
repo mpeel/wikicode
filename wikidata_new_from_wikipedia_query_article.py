@@ -207,7 +207,7 @@ for prefix in wikipedias:
 			print('Created: ' + str(created_time))
 			if created_time < days_since_creation:
 				print('Recently created ('+str(created_time)+')')
-				continue
+				# Continue moved to after search
 			elif created_time > 90:
 				old_page = True
 
@@ -242,8 +242,41 @@ for prefix in wikipedias:
 			wikidataEntries = search_entities(repo, page.title(),lang=prefix)
 			if wikidataEntries['search'] != []:
 				print('Search results but old')
+				results = wikidataEntries['search']
+				numresults = len(results)
+				for i in range(0,numresults):
+					qid = results[i]['id']
+					print(qid)
+					try:
+						candidate_item = pywikibot.ItemPage(repo, qid)
+						candidate_item_dict = candidate_item.get()
+					except:
+						print('Huh - no page found')
+					skip = 0
+					incat = 0
+					try:
+						sitelink = get_sitelink_title(candidate_item_dict['sitelinks'][prefix+'wiki'])
+					except:
+						print('Hello')
+						try:
+							# # No existing sitelink found, add it to the database as a possibility
+							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + targetcat.title() + '" AND site = "'+prefix+'"')
+							myresult = mycursor.fetchone()
+							print(myresult)
+							if not myresult:
+								sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
+								val = (qid, targetcat.title(),prefix)
+								mycursor.execute(sql, val)
+								mydb.commit()
+						except:
+							print('Something went wrong when adding it to the database!')
 				if lastedited_time < days_since_last_edit_but_search:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
+					continue
+			if prefix != 'en':
+				wikidataEntries = search_entities(repo, page.title(),lang='en')
+				if wikidataEntries['search'] != []:
+					print('Search results but old')
 					results = wikidataEntries['search']
 					numresults = len(results)
 					for i in range(0,numresults):
@@ -272,43 +305,14 @@ for prefix in wikipedias:
 									mydb.commit()
 							except:
 								print('Something went wrong when adding it to the database!')
-					continue
-			if prefix != 'en':
-				wikidataEntries = search_entities(repo, page.title(),lang='en')
-				if wikidataEntries['search'] != []:
-					print('Search results but old')
 					if lastedited_time < days_since_last_edit_but_search:
 						print('Recently edited with search results ('+str(lastedited_time)+')')
-						results = wikidataEntries['search']
-						numresults = len(results)
-						for i in range(0,numresults):
-							qid = results[i]['id']
-							print(qid)
-							try:
-								candidate_item = pywikibot.ItemPage(repo, qid)
-								candidate_item_dict = candidate_item.get()
-							except:
-								print('Huh - no page found')
-							skip = 0
-							incat = 0
-							try:
-								sitelink = get_sitelink_title(candidate_item_dict['sitelinks'][prefix+'wiki'])
-							except:
-								print('Hello')
-								try:
-									# # No existing sitelink found, add it to the database as a possibility
-									mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + targetcat.title() + '" AND site = "'+prefix+'"')
-									myresult = mycursor.fetchone()
-									print(myresult)
-									if not myresult:
-										sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
-										val = (qid, targetcat.title(),prefix)
-										mycursor.execute(sql, val)
-										mydb.commit()
-								except:
-									print('Something went wrong when adding it to the database!')
-
 						continue
+
+			# Now continue if recently created
+			if created_time < days_since_creation:
+				print('Recently created ('+str(created_time)+')')
+				continue
 
 			## Part 4 - editing
 
