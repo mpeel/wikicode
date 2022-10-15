@@ -24,7 +24,8 @@ for lang in languages:
 	)
 	with conn.cursor() as cur:
 		cur.execute('use '+lang+'wiki_p')
-		cur.execute("SELECT page_title FROM page WHERE page_namespace=0 AND page_is_redirect=0 AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=0 AND pp_propname='wikibase_item')")
+		cut.execute("SELECT page_title FROM page JOIN page_props ON page_id = pp_page WHERE pp_propname = 'unexpectedUnconnectedPage' AND pp_sortkey = -0;")
+		# cur.execute("SELECT page_title FROM page WHERE page_namespace=0 AND page_is_redirect=0 AND page_id NOT IN (SELECT page_id FROM page JOIN page_props ON page_id=pp_page WHERE page_namespace=0 AND pp_propname='wikibase_item')")
 		vals = cur.fetchall()
 		f = open("/data/project/pibot/"+lang+"wp_articles.csv", "w", encoding='utf-8')
 		if len(vals) > 0:
