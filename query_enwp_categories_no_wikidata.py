@@ -6,13 +6,13 @@ from ftplib import FTP
 from ftplogin import *
 
 
-login_file = open("replica.my.cnf","r") 
+login_file = open("replica.my.cnf","r")
 login = login_file.readlines()
 user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
 port = 3306
 
-languages = ['en', 'pt', 'de', 'simple']
+languages = ['en', 'pt', 'de', 'simple','es','fr','it','nl','pl','sv','eo']
 
 for lang in languages:
 	host = lang+'wiki.analytics.db.svc.wikimedia.cloud'
