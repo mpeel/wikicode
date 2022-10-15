@@ -36,11 +36,13 @@ def parsequarry(quarryfile):
 	return targets
 
 def parseredirects(quarryfile):
-	with open(quarryfile, mode='r') as infile:
-		targets = infile.read()
-		targets = targets.splitlines()
-	return targets
-
+	try:
+		with open(quarryfile, mode='r') as infile:
+			targets = infile.read()
+			targets = targets.splitlines()
+		return targets
+	except:
+		return []
 def parseduplicity(url,lang='en'):
 	try:
 		r = requests.get(url)
