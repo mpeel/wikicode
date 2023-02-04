@@ -21,6 +21,8 @@ repo = wikidata_site.data_repository()  # this is a DataSite object
 archivepagename = 'Wikidata:Requests for permissions/RfBot/'+datetime.now().strftime('%B')+' '+datetime.now().strftime('%Y')
 archivepage = pywikibot.Page(wikidata_site, archivepagename)
 newarchivepage = archivepage.text
+if newarchivepage == '':
+	newarchivepage = "{{DEFAULTSORT:*Bot "+datetime.now().strftime('%Y')+" "+datetime.now().strftime('%m')+"}}\n{{archive|category=Archived requests for permissions}}\n= Successful requests =\n\n= Unsuccessful requests =\n"
 
 # Get the list of open bot requests
 listpage = pywikibot.Page(wikidata_site, 'Wikidata:Requests for permissions/Bot')
