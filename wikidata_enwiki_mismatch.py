@@ -77,9 +77,12 @@ for subcat in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 					# print(wikidataval)
 					count = 0
 					for clm in wikidataval:
-						# print(clm)
-						snakid = clm.snak
 						count += 1
+						# Work-around since title() has 1st letter capitalised
+						if clm.type == 'external-id':
+							compval = clm.getTarget()
+						else:
+							compval = clm.getTarget().title()
 						compval = clm.getTarget().title()
 					if count == 1 and localid.strip() != compval.strip():
 						# OK, we have a local ID, and a single Wikidata ID, return for mismatch
