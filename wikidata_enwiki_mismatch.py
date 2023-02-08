@@ -92,7 +92,6 @@ for subcat in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 							compval = clm.getTarget()
 						else:
 							compval = clm.getTarget().title()
-						compval = clm.getTarget().title()
 					if count == 1 and localid.strip() != compval.strip():
 						# OK, we have a local ID, and a single Wikidata ID, return for mismatch
 						f.write('"'+wd_item.title()+'","'+snakid + '","'+propid+'","'+compval+'",,"'+localid+'","http://en.wikipedia.org/wiki/'+urllib.parse.quote(page.title().replace(' ','_'))+'"\n')
