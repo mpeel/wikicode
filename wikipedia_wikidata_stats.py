@@ -10,9 +10,9 @@ from database_login import *
 
 GET={}
 args=os.getenv("QUERY_STRING").split('&')
-# print(args)
+# print args
 
-for arg in args: 
+for arg in args:
 	t=arg.split('=')
 	if len(t)>1: k,v=arg.split('='); GET[k]=v
 
@@ -30,7 +30,7 @@ mycursor = mydb.cursor()
 
 print("Content-type: text/html\n\n")
 
-mycursor.execute('SELECT decision, count(*) as NUM FROM candidates GROUP BY decision ORDER BY NUM DESC')
+mycursor.execute('SELECT decision, count(*) as NUM FROM newarticles GROUP BY decision ORDER BY NUM DESC')
 myresult = mycursor.fetchall()
 print('<table style="border:1px solid black;">')
 total = 0
@@ -54,7 +54,7 @@ print("<tr><td>" + str(total) + "</td><td>Total</td></tr>")
 print("</table>")
 
 
-mycursor.execute('SELECT user, count(*) as NUM FROM candidates GROUP BY user ORDER BY NUM DESC')
+mycursor.execute('SELECT user, count(*) as NUM FROM newarticles GROUP BY user ORDER BY NUM DESC')
 myresult = mycursor.fetchall()
 print('<table style="border:1px solid black;">')
 for val in myresult:
