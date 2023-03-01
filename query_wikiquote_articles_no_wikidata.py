@@ -12,7 +12,7 @@ user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
 port = 3306
 
-languages = ['en']#, 'pt', 'de', 'simple','es','fr','it','nl','pl','sv','eo']
+languages = ['en','pt','fr','de','es']#, 'pt', 'de', 'simple','es','fr','it','nl','pl','sv','eo']
 
 for lang in languages:
 	host = lang+'wikiquote.analytics.db.svc.wikimedia.cloud'
