@@ -35,7 +35,7 @@ for lang in languages:
 		f.close()
 		ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
 		ftp.cwd('wiki')
-		file = open('/data/project/pibot/'+lang+'wpquote_articles.csv','rb')
+		file = open('/data/project/pibot/'+lang+'wquote_articles.csv','rb')
 		ftp.storbinary('STOR '+lang+'wp_articles.csv', file)
 		file.close()
 		ftp.quit()
