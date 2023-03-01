@@ -15,7 +15,7 @@ port = 3306
 languages = ['en']#, 'pt', 'de', 'simple','es','fr','it','nl','pl','sv','eo']
 
 for lang in languages:
-	host = lang+'wiki.analytics.db.svc.wikimedia.cloud'
+	host = lang+'wikiquote.analytics.db.svc.wikimedia.cloud'
 	conn = pymysql.connect(
 		host=host,
 		user=user,
