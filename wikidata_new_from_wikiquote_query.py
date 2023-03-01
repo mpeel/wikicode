@@ -270,9 +270,9 @@ for prefix in wikipedias:
 							mydb.commit()
 					except:
 						print('Something went wrong when adding it to the database!')
-			if lastedited_time < days_since_last_edit_but_search:
-				print('Recently edited with search results ('+str(lastedited_time)+')')
-				continue
+			# if lastedited_time < days_since_last_edit_but_search:
+			# 	print('Recently edited with search results ('+str(lastedited_time)+')')
+			# 	continue
 		if prefix != 'en':
 			wikidataEntries = search_entities(repo, page.title(),lang='en')
 			if wikidataEntries['search'] != []:
@@ -305,9 +305,9 @@ for prefix in wikipedias:
 								mydb.commit()
 						except:
 							print('Something went wrong when adding it to the database!')
-				if lastedited_time < days_since_last_edit_but_search:
-					print('Recently edited with search results ('+str(lastedited_time)+')')
-					continue
+				# if lastedited_time < days_since_last_edit_but_search:
+				# 	print('Recently edited with search results ('+str(lastedited_time)+')')
+				# 	continue
 
 		# Now continue if recently created
 		# if created_time < days_since_creation:
