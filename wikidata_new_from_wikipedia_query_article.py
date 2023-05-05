@@ -277,7 +277,6 @@ for prefix in wikipedias:
 			if prefix != 'en':
 				wikidataEntries = search_entities(repo, page.title(),lang='en')
 				if wikidataEntries['search'] != []:
-					input('Hi')
 					print('Search results but old')
 					results = wikidataEntries['search']
 					numresults = len(results)
@@ -316,7 +315,6 @@ for prefix in wikipedias:
 			print(myresult)
 			if myresult:
 				print('We have matches in the game, skip this')
-				input('Continue')
 				continue
 
 
