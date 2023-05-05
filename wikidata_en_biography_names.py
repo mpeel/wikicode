@@ -152,7 +152,7 @@ for i in range(0,numsteps):
 				test = 'y'
 			if test == 'y':
 				try:
-					page.editLabels(labels={'en': label}, summary=u'Copy ' + labellang + ' label to en label "' + label + '"')
+					page.editLabels(labels={'en': label}, summary=u'Copy ' + labellang + ' label to en label "' + label + '"',minor=True)
 					nummodified += 1
 				except:
 					print('Edit failed')
