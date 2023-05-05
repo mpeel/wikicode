@@ -264,7 +264,7 @@ for prefix in wikipedias:
 							myresult = mycursor.fetchone()
 							print(myresult)
 							if not myresult:
-								sql = 'INSERT INTO newarticles (qid, candidate, site) VALUES ("%s", "%s", "%s")'
+								sql = 'INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)'
 								val = (qid, page.title(),prefix)
 								mycursor.execute(sql, val)
 								mydb.commit()
@@ -300,7 +300,7 @@ for prefix in wikipedias:
 								myresult = mycursor.fetchone()
 								print(myresult)
 								if not myresult:
-									sql = 'INSERT INTO newarticles (qid, candidate, site) VALUES ("%s", "%s", "%s")'
+									sql = 'INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)'
 									val = (qid, page.title(),prefix)
 									mycursor.execute(sql, val)
 									mydb.commit()
