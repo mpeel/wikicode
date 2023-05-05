@@ -326,6 +326,8 @@ for prefix in wikipedias:
 				if lastedited_time < days_since_last_edit_but_search:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
 					continue
+				# temp continue to avoid creating items with search results - to improve!
+				continue
 			if prefix != 'en':
 				wikidataEntries = search_entities(repo, page.title().replace('Categoria:','Category:').replace('Kategorie:','Category:'),lang='en')
 				if wikidataEntries['search'] != []:
@@ -360,6 +362,8 @@ for prefix in wikipedias:
 					if lastedited_time < days_since_last_edit_but_search:
 						print('Recently edited with search results ('+str(lastedited_time)+')')
 						continue
+					# temp continue to avoid creating items with search results - to improve!
+					continue
 
 			if created_time < days_since_creation:
 				print('Recently created ('+str(created_time)+')')

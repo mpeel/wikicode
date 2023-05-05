@@ -166,6 +166,9 @@ for prefix in wikipedias:
 			if 'quality' in pagename.lower():
 				print('quality')
 				continue
+			if 'afc submissions' in pagename.lower():
+				print('AfC')
+				continue
 			if 'wiki' in pagename.lower():
 				print('wiki')
 				continue
