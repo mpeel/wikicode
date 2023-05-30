@@ -259,7 +259,7 @@ for prefix in wikipedias:
 					print('Hello')
 					try:
 						# No existing sitelink found, add it to the database as a possibility
-						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
+						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+mycursor.escape_string(qid)+'" AND candidate = "' + mycursor.escape_string(page.title()) + '" AND site = "'+prefix+'"')
 						myresult = mycursor.fetchall()
 						print(myresult)
 						if not myresult:
@@ -295,7 +295,7 @@ for prefix in wikipedias:
 						print('Hello')
 						try:
 							# # No existing sitelink found, add it to the database as a possibility
-							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
+							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+mycursor.escape_string(qid)+'" AND candidate = "' + mycursor.escape_string(page.title()) + '" AND site = "'+mycursor.escape_string(prefix)+'"')
 							myresult = mycursor.fetchall()
 							print(myresult)
 							if not myresult:
@@ -310,7 +310,7 @@ for prefix in wikipedias:
 					continue
 
 		print('Checking for uncleared database matches...')
-		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title() + '" AND site = "'+prefix+'"'
+		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + mycursor.escape_string(page.title()) + '" AND site = "'+prefix+'"'
 		print(query)
 		mycursor.execute(query)
 		myresult = mycursor.fetchall()
