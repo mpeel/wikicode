@@ -317,7 +317,7 @@ for prefix in wikipedias:
 			if myresult:
 				print('We have matches in the game, skip this')
 				continue
-
+			print('Check clear, onwards')
 
 			# Now continue if recently created
 			if created_time < days_since_creation:
