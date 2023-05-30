@@ -273,7 +273,7 @@ for prefix in wikipedias:
 				if lastedited_time < days_since_last_edit_but_search:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
 					continue
-
+			print('Hi')
 			if prefix != 'en':
 				wikidataEntries = search_entities(repo, page.title(),lang='en')
 				if wikidataEntries['search'] != []:
@@ -310,6 +310,7 @@ for prefix in wikipedias:
 						print('Recently edited with search results ('+str(lastedited_time)+')')
 						continue
 
+			print('Checking for uncleared database matches...')
 			mycursor.execute('SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
 			myresult = mycursor.fetchone()
 			print(myresult)
