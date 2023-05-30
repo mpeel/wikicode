@@ -4,7 +4,7 @@
 # Mike Peel     03-Jan-2021      v1 - start
 # Mike Peel		05-Jan-2021		 v2 - expand based on newitem.py
 # Mike Peel     14-Jan-2021      v3 - expand biographies
-# MIke Peel     30-Jan-2021      v4 - fully automate
+# Mike Peel     30-Jan-2021      v4 - fully automate
 
 import pywikibot
 from pywikibot import pagegenerators
@@ -18,7 +18,6 @@ from ftplogin import *
 from database_login import *
 import mysql.connector
 from pibot_functions import *
-import re
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -260,7 +259,7 @@ for prefix in wikipedias:
 					print('Hello')
 					try:
 						# No existing sitelink found, add it to the database as a possibility
-						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+re.escape(qid)+'" AND candidate = "' + re.escape(page.title()) + '" AND site = "'+prefix+'"')
+						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title().replace('"','\"') + '" AND site = "'+prefix+'"')
 						myresult = mycursor.fetchall()
 						print(myresult)
 						if not myresult:
@@ -296,7 +295,7 @@ for prefix in wikipedias:
 						print('Hello')
 						try:
 							# # No existing sitelink found, add it to the database as a possibility
-							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+re.escape(qid)+'" AND candidate = "' + re.escape(page.title()) + '" AND site = "'+re.escape(prefix)+'"')
+							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title().replace('"','\"') + '" AND site = "'+prefix+'"')
 							myresult = mycursor.fetchall()
 							print(myresult)
 							if not myresult:
@@ -311,7 +310,7 @@ for prefix in wikipedias:
 					continue
 
 		print('Checking for uncleared database matches...')
-		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + re.escape(page.title()) + '" AND site = "'+prefix+'"'
+		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title().replace('"','\"') + '" AND site = "'+prefix+'"'
 		print(query)
 		mycursor.execute(query)
 		myresult = mycursor.fetchall()
