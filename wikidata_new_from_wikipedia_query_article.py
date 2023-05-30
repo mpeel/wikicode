@@ -311,8 +311,12 @@ for prefix in wikipedias:
 						continue
 
 			print('Checking for uncleared database matches...')
-			mycursor.execute('SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
+			query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title() + '" AND site = "'+prefix+'"'
+			print(query)
+			mycursor.execute(query)
+			print('Ran')
 			myresult = mycursor.fetchone()
+			print('result')
 			print(myresult)
 			if myresult:
 				print('We have matches in the game, skip this')
