@@ -310,11 +310,15 @@ for prefix in wikipedias:
 					continue
 
 		print('Checking for uncleared database matches...')
-		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title().replace('"','\"') + '" AND site = "'+prefix+'"'
-		print(query)
-		mycursor.execute(query)
-		myresult = mycursor.fetchall()
-		print(myresult)
+		try:
+			query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title().replace('"','\"') + '" AND site = "'+prefix+'"'
+			print(query)
+			mycursor.execute(query)
+			myresult = mycursor.fetchall()
+			print(myresult)
+		except:
+			# In case the query doesn't work, problems with " in the SQL...
+			myresult = False
 		if myresult:
 			print('We have matches in the game, skip this')
 			continue
