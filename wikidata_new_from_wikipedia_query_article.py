@@ -18,6 +18,7 @@ from ftplogin import *
 from database_login import *
 import mysql.connector
 from pibot_functions import *
+import re
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -259,7 +260,7 @@ for prefix in wikipedias:
 					print('Hello')
 					try:
 						# No existing sitelink found, add it to the database as a possibility
-						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+mydb._cmysql.escape_string(qid)+'" AND candidate = "' + mydb._cmysql.escape_string(page.title()) + '" AND site = "'+prefix+'"')
+						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+re.escape(qid)+'" AND candidate = "' + re.escape(page.title()) + '" AND site = "'+prefix+'"')
 						myresult = mycursor.fetchall()
 						print(myresult)
 						if not myresult:
@@ -295,7 +296,7 @@ for prefix in wikipedias:
 						print('Hello')
 						try:
 							# # No existing sitelink found, add it to the database as a possibility
-							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+mydb._cmysql.escape_string(qid)+'" AND candidate = "' + mydb._cmysql.escape_string(page.title()) + '" AND site = "'+mydb._cmysql.escape_string(prefix)+'"')
+							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+re.escape(qid)+'" AND candidate = "' + re.escape(page.title()) + '" AND site = "'+re.escape(prefix)+'"')
 							myresult = mycursor.fetchall()
 							print(myresult)
 							if not myresult:
@@ -310,7 +311,7 @@ for prefix in wikipedias:
 					continue
 
 		print('Checking for uncleared database matches...')
-		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + mydb._cmysql.escape_string(page.title()) + '" AND site = "'+prefix+'"'
+		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + re.escape(page.title()) + '" AND site = "'+prefix+'"'
 		print(query)
 		mycursor.execute(query)
 		myresult = mycursor.fetchall()
