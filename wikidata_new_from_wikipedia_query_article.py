@@ -260,7 +260,7 @@ for prefix in wikipedias:
 					try:
 						# No existing sitelink found, add it to the database as a possibility
 						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
-						myresult = mycursor.fetchone()
+						myresult = mycursor.fetchall()
 						print(myresult)
 						if not myresult:
 							sql = 'INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)'
@@ -296,7 +296,7 @@ for prefix in wikipedias:
 						try:
 							# # No existing sitelink found, add it to the database as a possibility
 							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
-							myresult = mycursor.fetchone()
+							myresult = mycursor.fetchall()
 							print(myresult)
 							if not myresult:
 								sql = 'INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)'
@@ -313,14 +313,13 @@ for prefix in wikipedias:
 		query = 'SELECT * FROM newarticles WHERE done=0 AND candidate = "' + page.title() + '" AND site = "'+prefix+'"'
 		print(query)
 		mycursor.execute(query)
-		print('Ran')
-		myresult = mycursor.fetchone()
-		print('result')
+		myresult = mycursor.fetchall()
 		print(myresult)
 		if myresult:
 			print('We have matches in the game, skip this')
 			continue
-		print('Check clear, onwards')
+		else:
+			print('Check clear, onwards')
 
 		# Now continue if recently created
 		if created_time < days_since_creation:
