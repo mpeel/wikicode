@@ -215,7 +215,25 @@ def calculateGender(page='', lang=''):
 		elif re.findall(r'(?im)\b(Category|Kategorie)\s*:\s*Mann\s*[\]\|]', page.text):
 			return 'male'
 	elif lang == 'fr':
-		return '' #todo: ne nee
+		# test for birth verb in introduction paragraph
+		texttemp = page.text.split('\n==')[0].lower()
+		femalepoints = texttemp.count(' née ')
+		malepoints = texttemp.count(' né ')
+		if femalepoints and not malepoints:
+			return 'female'
+		if malepoints and not femalepoints:
+			return 'male'
+			
+		# test for pronouns in whoole text
+		texttemp = page.text.lower()
+		femalepoints = texttemp.count(' elle ')
+		malepoints = texttemp.count(' il ')
+		if (len(page.text) <= 2000 and femalepoints >= 1 and malepoints == 0) or \
+		   (femalepoints >= 2 and femalepoints > malepoints*3):
+			return 'female'
+		elif (len(page.text) <= 2000 and malepoints >= 1 and femalepoints == 0) or \
+		   (malepoints >= 2 and malepoints > femalepoints*3):
+			return 'male'
 	elif lang == 'es':
 		malepoints = 0
 		femalepoints = 0
