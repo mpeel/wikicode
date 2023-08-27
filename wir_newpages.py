@@ -36,12 +36,12 @@ import dateparser
 import datetime
 
 def removeAccents(s):
-   return ''.join(c for c in unicodedata.normalize('NFD', s)
+	return ''.join(c for c in unicodedata.normalize('NFD', s)
 				  if unicodedata.category(c) != 'Mn')
 
 def getURL(url='', retry=True, timeout=30):
 	raw = ''
-	req = urllib.request.Request(url, headers={ 'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:55.0) Gecko/20100101 Firefox/55.0' })
+	req = urllib.request.Request(url, headers={ 'User-Agent': 'Pi_bot/0.0 (https://github.com/mpeel/wikicode/)' })
 	try:
 		raw = urllib.request.urlopen(req, timeout=timeout).read().strip().decode('utf-8')
 	except:
@@ -73,9 +73,9 @@ def isScriptAlive(filename=''):
 	else:
 		print('Alive file not found. We continue this instance')
 		try:
-		   _thread.start_new_thread(isScriptAliveCore, (alivefilename,) )
+			_thread.start_new_thread(isScriptAliveCore, (alivefilename,) )
 		except:
-		   print("Error: unable to start thread")
+			print("Error: unable to start thread")
 
 def getUserEditCount(user='', site=''):
 	if user and site:
@@ -199,15 +199,16 @@ def calculateGender(page='', lang=''):
 	if lang == 'en' or lang == 'simple':
 		texttemp = page.text
 		texttemp = texttemp.replace('against women','')
+		texttemp = texttemp.replace("women's",'')
 		femalepoints = len(re.findall(r'(?i)\b(she|her|hers)\b', texttemp))
 		malepoints = len(re.findall(r'(?i)\b(he|his|him)\b', texttemp))
 		if re.search(r'(?im)\b(Category\s*:[^\]\|]*?female|Category\s*:[^\]\|]*?women|Category\s*:[^\]\|]*?actresses)\b', texttemp) or \
-		   (len(page.text) <= 2000 and femalepoints >= 1 and malepoints == 0) or \
-		   (femalepoints >= 2 and femalepoints > malepoints*3):
+			(len(page.text) <= 2000 and femalepoints >= 1 and malepoints == 0) or \
+			(femalepoints >= 2 and femalepoints > malepoints*3):
 			return 'female'
 		elif re.search(r'(?im)\b(Category\s*:[^\]]*? male|Category\s*:[^\]]*? men)\b', texttemp) or \
-		   (len(page.text) <= 2000 and malepoints >= 1 and femalepoints == 0) or \
-		   (malepoints >= 2 and malepoints > femalepoints*3):
+			(len(page.text) <= 2000 and malepoints >= 1 and femalepoints == 0) or \
+			(malepoints >= 2 and malepoints > femalepoints*3):
 			return 'male'
 	elif lang == 'de':
 		if re.findall(r'(?im)\b(Category|Kategorie)\s*:\s*Frau\s*[\]\|]', page.text):
@@ -229,10 +230,10 @@ def calculateGender(page='', lang=''):
 		femalepoints = texttemp.count(' elle ')
 		malepoints = texttemp.count(' il ')
 		if (len(page.text) <= 2000 and femalepoints >= 1 and malepoints == 0) or \
-		   (femalepoints >= 2 and femalepoints > malepoints*3):
+			(femalepoints >= 2 and femalepoints > malepoints*3):
 			return 'female'
 		elif (len(page.text) <= 2000 and malepoints >= 1 and femalepoints == 0) or \
-		   (malepoints >= 2 and malepoints > femalepoints*3):
+			(malepoints >= 2 and malepoints > femalepoints*3):
 			return 'male'
 	elif lang == 'es':
 		malepoints = 0
@@ -668,9 +669,9 @@ def main():
 				if authorIsNewbie(page=page, lang=lang):
 					print("Newbie author, checking quality...")
 					if pageIsRubbish(page=page, lang=lang) or \
-					   (not pageCategories(page=page, lang=lang)) or \
-					   (not pageReferences(page=page, lang=lang)) or \
-					   (not len(list(page.getReferences(namespaces=[0])))):
+						(not pageCategories(page=page, lang=lang)) or \
+						(not pageReferences(page=page, lang=lang)) or \
+						(not len(list(page.getReferences(namespaces=[0])))):
 						print("Page didnt pass minimum quality, skiping")
 						continue
 
