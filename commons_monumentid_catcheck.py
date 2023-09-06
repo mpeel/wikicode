@@ -18,7 +18,7 @@ repo = commons.data_repository()  # this is a DataSite object
 debug = True
 manual = True
 savemessage="Add category for monument"
-skipto = ''
+skipto = 'File:Wiki Ocupa São Carlos - Imóvel à R. São Sebastião - Igreja Presbiteriana (7).jpg'
 # Start the category walker
 template = pywikibot.Page(commons, 'Template:MonumentID')
 images = template.embeddedin()
@@ -63,7 +63,7 @@ for image in images:
 		print(sitelink)
 		testcat = pywikibot.Category(commons, sitelink)
 		subcats = []
-		for subcat in testcat.subcategories(recurse=3):
+		for subcat in testcat.subcategories(recurse=2):
 			if subcat not in hiddencats:
 				if subcat not in normalcats:
 					if not subcat.isHiddenCategory():
