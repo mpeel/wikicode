@@ -3,7 +3,7 @@ import datetime
 from ftplogin import *
 
 now = datetime.datetime.today()
-today = now.strftime('%Y-%m-%d')
+today = "2023-10-09"
 nextmonth = ((now.replace(day=1) + datetime.timedelta(days=32)).replace(day=1)).strftime('%Y-%m-%d')
 print(today)
 print(nextmonth)
