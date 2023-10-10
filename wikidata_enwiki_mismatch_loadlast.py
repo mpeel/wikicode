@@ -2,6 +2,12 @@ import os
 import datetime
 from ftplogin import *
 
+now = datetime.datetime.today()
+today = now.strftime('%Y-%m-%d')
+nextmonth = ((now.replace(day=1) + datetime.timedelta(days=32)).replace(day=1)).strftime('%Y-%m-%d')
+print(today)
+print(nextmonth)
+
 os.system(' curl -X POST "https://mismatch-finder.toolforge.org/api/imports" \
 -H "Accept: application/json" \
 -H "Authorization: Bearer '+mismatch_bearer_token+'" \
