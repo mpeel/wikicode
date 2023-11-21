@@ -396,6 +396,11 @@ for prefix in wikipedias:
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q101352')) # Surname
 					new_item.addClaim(claim, summary='Surname')
+				elif 'tv program)' in page.title().lower():
+					# input('Is Tv Program - OK?')
+					claim = pywikibot.Claim(repo,'P31')
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q15416')) # TV program
+					new_item.addClaim(claim, summary='TV program')
 
 
 
