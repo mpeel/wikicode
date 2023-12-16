@@ -1,1 +1,1 @@
-toolforge jobs run myjob --command /data/project/pibot/query_run.sh --image bullseye
+toolforge jobs run query_run --command /data/project/pibot/query_run.sh
