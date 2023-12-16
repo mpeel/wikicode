@@ -1,0 +1,1 @@
+toolforge jobs run myjob --command query_run.sh --image bullseye
