@@ -1,1 +1,1 @@
-toolforge jobs run query_run --image tool-pywikibot/pywikibot-scripts-stable:latest --command /data/project/pibot/query_run.sh
+toolforge jobs run queryrun --image tool-pywikibot/pywikibot-scripts-stable:latest --command /data/project/pibot/query_run.sh
