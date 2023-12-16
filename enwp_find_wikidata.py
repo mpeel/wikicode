@@ -32,6 +32,9 @@ prefix = 'en'
 # enwp = pywikibot.Site('de', 'wikipedia')
 # enwp_site = 'dewiki'
 # prefix = 'de'
+enwp = pywikibot.Site('dag', 'wikipedia')
+enwp_site = 'dagwiki'
+prefix = 'dag'
 
 doing_cats = False
 
