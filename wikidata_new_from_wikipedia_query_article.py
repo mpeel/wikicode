@@ -335,7 +335,11 @@ for prefix in wikipedias:
 		# Remove trailing brackets from the page title
 		page_title = page.title()
 		if page_title[-1] == ')':
-			page_title = page_title[:page_title.rfind('(')]
+			bracketIndex = page_title.rfind('(')
+			if 'season ' in page_title[bracketIndex:]:
+				page_title = page_title[:bracketIndex-1]+', '+page_title[bracketIndex+1:-1]
+			else:
+				page_title = page_title[:bracketIndex]
 		page_title = page_title.strip()
 		# If we're here, then create a new item
 		if prefix == 'simple':
