@@ -249,17 +249,17 @@ def calculateGender(page='', lang=''):
 		elif femalepoints > malepoints:
 			return 'female'
 	elif lang == 'pt':
-        	malepoints = 0
-        	femalepoints = 0
-        	categories = page.categories()
-        	# test for categories
-        	for category in categories:
-        	    	for term in ['homens','masculin']:
-	                	if term in category.title().lower():
-                    			malepoints+=1
-            		for term in ['mulheres', 'feminin']:
-				if term in category.title().lower():
-					femalepoints+=1
+			malepoints = 0
+			femalepoints = 0
+			categories = page.categories()
+			# test for categories
+			for category in categories:
+				for term in ['homens','masculin']:
+					if term in category.title().lower():
+						malepoints+=1
+				for term in ['mulheres', 'feminin']:
+					if term in category.title().lower():
+						femalepoints+=1
 		# test for initial text
 		if ' é uma ' in page.text[0:500].lower():
 			femalepoints+=1
