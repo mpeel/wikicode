@@ -29,6 +29,7 @@ nlwiki = pywikibot.Site('nl', 'wikipedia')
 plwiki = pywikibot.Site('pl', 'wikipedia')
 svwiki = pywikibot.Site('sv', 'wikipedia')
 eowiki = pywikibot.Site('eo', 'wikipedia')
+dagwiki = pywikibot.Site('dag', 'wikipedia')
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -49,7 +50,7 @@ if int(num) > 5:
 lang = GET.get('lang')
 if action == 'desc':
 	print("Content-type: application/json\n\n")
-	print(callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'simple':'Simple','pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano','nl':'Nederlands','pl':'Polski','sv':'Svenska','eo':'Esperanto'}}]}) + " )\n")
+	print(callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'simple':'Simple','pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano','nl':'Nederlands','pl':'Polski','sv':'Svenska','eo':'Esperanto','dag':'Dagbanli'}}]}) + " )\n")
 
 elif action == 'tiles':
 	print("Content-type: application/json\n\n")
@@ -115,6 +116,8 @@ elif action == 'tiles':
 			site = svwiki
 		elif myresult[3] == 'eo':
 			site = eowiki
+		elif myresult[3] == 'dag':
+			site = dagwiki
 		else:
 			continue
 		# Make sure it doesn't have an ID yet

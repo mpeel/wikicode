@@ -67,3 +67,15 @@ for val in myresult:
 		print(str(val[0]))
 	print("</td></tr>")
 print("</table>")
+
+mycursor.execute('SELECT site, count(*) as NUM FROM newarticles WHERE done=0 GROUP BY site ORDER BY NUM DESC')
+myresult = mycursor.fetchall()
+print('<table style="border:1px solid black;">')
+total = 0
+for val in myresult:
+	print('<tr><td style="text-align:right;">' + str(val[1]) + "</td><td>")
+	print(str(val[0]))
+	print("</td></tr>")
+	total += int(val[1])
+print("<tr><td>" + str(total) + "</td><td>Total</td></tr>")
+print("</table>")
