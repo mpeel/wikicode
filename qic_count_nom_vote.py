@@ -4,6 +4,7 @@ import re
 commons = pywikibot.Site('commons', 'commons')
 
 pagename = 'Commons:Quality images candidates/candidate list'
+reportpagename = 'Commons:Quality images candidates/statistics'
 page = pywikibot.Page(commons, pagename)
 text = page.get()
 
@@ -28,24 +29,27 @@ for line in text.split("\n"):
 		# print(line_parts)
 		user = userRE.search(line)
 		# print(user)
-		nominator = user.group(1)
 		try:
-			nominators[nominator] = nominators[nominator] + 1
-			# print(nominators[nominator])
-		except:
-			nominators[nominator] = 1
-		# print(nominators)
-		next_test = line.split(user.group(1))[-1]
-		# print(next_test)
-		searchresult = userRE.search(next_test)
-		if searchresult != None:
-			reviewer = searchresult.group(1)
+			nominator = user.group(1)
 			try:
-				reviewers[reviewer] = reviewers[reviewer] + 1
-				# print(reviewers[reviewer])
+				nominators[nominator] = nominators[nominator] + 1
+				# print(nominators[nominator])
 			except:
-				reviewers[reviewer] = 1
-			# print(user2.group(1))
+				nominators[nominator] = 1
+			# print(nominators)
+			next_test = line.split(user.group(1))[-1]
+			# print(next_test)
+			searchresult = userRE.search(next_test)
+			if searchresult != None:
+				reviewer = searchresult.group(1)
+				try:
+					reviewers[reviewer] = reviewers[reviewer] + 1
+					# print(reviewers[reviewer])
+				except:
+					reviewers[reviewer] = 1
+				# print(user2.group(1))
+		except:
+			pass
 
 
 
@@ -94,5 +98,9 @@ for key, value in reviewers.items():
 		# print(key + " " + str(value))
 # print(nominators)
 # print(reviewers)
-report_page = report_page + '\n|}'
+report_page = report_page + '\n|}\n[[Category:Quality images]]'
 print(report_page)
+reportingpage = pywikibot.Page(commons, reportpagename)
+reportingpage.text = report_page
+reportingpage.save('Updating')
+
