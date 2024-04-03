@@ -25,6 +25,7 @@ for line in text.split("\n"):
 
 	if inGallery and line[:8] != "<gallery" and len(line) > 0:
 		line = line.replace('By [[User', '')
+		line = line.replace('by [[User', '')
 		line_parts = line.split("|")
 		# print(line_parts)
 		user = userRE.search(line)
