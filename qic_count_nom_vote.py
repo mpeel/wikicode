@@ -7,13 +7,8 @@ commons = pywikibot.Site('commons', 'commons')
 pagenames = ['Commons:Quality images candidates/candidate list']
 reportpagename = 'Commons:Quality images candidates/statistics'
 
-pagenames.append(datetime.datetime.utcnow().strftime("Commons:Quality images candidates/Archives %B %d %Y"))
-pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=1)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
-pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=2)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
-pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=3)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
-pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=4)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
-pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=5)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
-pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=6)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
+for i in range(0,7):
+	pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=i)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
 
 userRE = re.compile("\[\[[Uu]ser:([^\|\]]+)[^\]]*\]\]")
 nominators = {}
