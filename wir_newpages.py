@@ -607,7 +607,7 @@ def pageIsBiography(page='', lang=''):
 					if not re.search(r'(?im)(:(Catégorie|Category)\s*:\s*(Naissance|Décès) en)', page.text):
 						return True
 	elif lang == 'pt':
-		if not page.title().startswith('Lista ') and 'homicídio' not in page.title().lower():
+		if not page.title().startswith('Lista ') and 'homicídio' not in page.title().lower() and 'mortes em' not in page.title().lower():
 			if len(page.title().split(' ')) <= 5:
 				if re.search(r'(?im)((Categoria|Category)\s*:\s*(Naturais|Nascidos|Pessoas vivas|Mortos))', page.text):
 					return True
