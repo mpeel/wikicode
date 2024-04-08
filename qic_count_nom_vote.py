@@ -1,83 +1,89 @@
 import pywikibot
 import re
+import datetime
 
 commons = pywikibot.Site('commons', 'commons')
 
-pagename = 'Commons:Quality images candidates/candidate list'
+pagenames = ['Commons:Quality images candidates/candidate list']
 reportpagename = 'Commons:Quality images candidates/statistics'
-page = pywikibot.Page(commons, pagename)
-text = page.get()
+
+pagenames.append(datetime.datetime.utcnow().strftime("Commons:Quality images candidates/Archives %B %d %Y"))
+pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=1)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
+pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=2)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
+pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=3)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
+pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=4)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
+pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=5)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
+pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=6)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
 
 userRE = re.compile("\[\[[Uu]ser:([^\|\]]+)[^\]]*\]\]")
-
 nominators = {}
 reviewers = {}
+for pagename in pagenames:
+	page = pywikibot.Page(commons, pagename)
+	text = page.get()
+	inGallery = False
+	inConsensual = 0
+	for line in text.split("\n"):
+		if line[:8] == "<gallery" and inGallery == False:
+			inGallery = True
+		elif line == "</gallery>" and inGallery == True:
+			inGallery = False
+		elif line == "= Consensual review =" and inConsensual == 0:
+			inConsensual = 1
 
-inGallery = False
-inConsensual = 0
-for line in text.split("\n"):
-	if line[:8] == "<gallery" and inGallery == False:
-		inGallery = True
-	elif line == "</gallery>" and inGallery == True:
-		inGallery = False
-	elif line == "= Consensual review =" and inConsensual == 0:
-		inConsensual = 1
-
-	if inGallery and line[:8] != "<gallery" and len(line) > 0:
-		line = line.replace('By [[User', '')
-		line = line.replace('by [[User', '')
-		line_parts = line.split("|")
-		# print(line_parts)
-		user = userRE.search(line)
-		# print(user)
-		try:
-			nominator = user.group(1)
-			try:
-				nominators[nominator] = nominators[nominator] + 1
-				# print(nominators[nominator])
-			except:
-				nominators[nominator] = 1
-			# print(nominators)
-			next_test = line.split(user.group(1))[-1]
-			# print(next_test)
-			searchresult = userRE.search(next_test)
-			if searchresult != None:
-				reviewer = searchresult.group(1)
-				try:
-					reviewers[reviewer] = reviewers[reviewer] + 1
-					# print(reviewers[reviewer])
-				except:
-					reviewers[reviewer] = 1
-				# print(user2.group(1))
-		except:
-			pass
-
-
-
-	if inConsensual:
-		if "{{/" in line:
+		if inGallery and line[:8] != "<gallery" and len(line) > 0:
 			line = line.replace('By [[User', '')
+			line = line.replace('by [[User', '')
 			line_parts = line.split("|")
 			# print(line_parts)
 			user = userRE.search(line)
 			# print(user)
-			nominator = user.group(1)
 			try:
-				nominators[nominator] = nominators[nominator] + 1
-				# print(nominators[nominator])
-			except:
-				nominators[nominator] = 1
-		else:
-			searchresult = userRE.search(line)
-			if searchresult != None:
-				reviewer = searchresult.group(1)
+				nominator = user.group(1)
 				try:
-					reviewers[reviewer] = reviewers[reviewer] + 1
-					# print(reviewers[reviewer])
+					nominators[nominator] = nominators[nominator] + 1
+					# print(nominators[nominator])
 				except:
-					reviewers[reviewer] = 1
+					nominators[nominator] = 1
+				# print(nominators)
+				next_test = line.split(user.group(1))[-1]
+				# print(next_test)
+				searchresult = userRE.search(next_test)
+				if searchresult != None:
+					reviewer = searchresult.group(1)
+					try:
+						reviewers[reviewer] = reviewers[reviewer] + 1
+						# print(reviewers[reviewer])
+					except:
+						reviewers[reviewer] = 1
+					# print(user2.group(1))
+			except:
+				pass
 
-report_page = "This page reports statistics for [[Commons:Quality images candidates/candidate list]]. It is automatically maintained by [[User:Pi bot]], please do not edit it!\n\n{| class=\"wikitable sortable\"\n!User!!Nominations!!Reviews"
+		if inConsensual:
+			if "{{/" in line:
+				line = line.replace('By [[User', '')
+				line_parts = line.split("|")
+				# print(line_parts)
+				user = userRE.search(line)
+				# print(user)
+				nominator = user.group(1)
+				try:
+					nominators[nominator] = nominators[nominator] + 1
+					# print(nominators[nominator])
+				except:
+					nominators[nominator] = 1
+			else:
+				searchresult = userRE.search(line)
+				if searchresult != None:
+					reviewer = searchresult.group(1)
+					try:
+						reviewers[reviewer] = reviewers[reviewer] + 1
+						# print(reviewers[reviewer])
+					except:
+						reviewers[reviewer] = 1
+
+report_page = "This page reports statistics for [[Commons:Quality images candidates/candidate list]] (including the last 7 archived days). It is automatically maintained by [[User:Pi bot]], please do not edit it as the bot will overwrite any changes tomorrow!\n\n{| class=\"wikitable sortable\"\n!User!!Nominations!!Reviews"
 
 users_done = []
 for key, value in nominators.items():
