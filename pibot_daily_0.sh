@@ -4,6 +4,7 @@ source /home/pi/.bashrc
 export PYTHONPATH=/home/pi/Documents/git/core:$PYTHONPATH
 cd /home/pi/Documents/git/wikicode/
 
+/usr/bin/python3 wikidata_import_infobox_qid.py
 /usr/bin/python3 commons_wikidata_infobox_tidy.py
 /usr/bin/python3 commons_wikidata_infobox.py
 /usr/bin/python3 wikidata_bot_requests.py
