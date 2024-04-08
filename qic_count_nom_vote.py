@@ -78,7 +78,7 @@ for pagename in pagenames:
 					except:
 						reviewers[reviewer] = 1
 
-report_page = "This page reports statistics for [[Commons:Quality images candidates/candidate list]] (including the last 7 archived days). It is automatically maintained by [[User:Pi bot]], please do not edit it as the bot will overwrite any changes tomorrow!\n\n{| class=\"wikitable sortable\"\n!User!!Nominations!!Reviews"
+report_page = "This page reports statistics for [[Commons:Quality images candidates/candidate list]] (including the last 7 archived days). It is automatically maintained by [[User:Pi bot]], please do not edit it as the bot will overwrite any changes tomorrow!\n\n{| class=\"wikitable sortable\"\n!User!!Nominations!!Reviews!!Nominations-Reviews"
 
 users_done = []
 for key, value in nominators.items():
@@ -92,11 +92,11 @@ for key, value in nominators.items():
 		report_page = report_page + '\n|- style="background-color:lightgreen'
 	else:
 		report_page = report_page + '\n|-'
-	report_page = report_page + '\n| ' + key + ' || ' + str(value) + ' || ' + str(review_count)
+	report_page = report_page + '\n| ' + key + ' || ' + str(value) + ' || ' + str(review_count) + ' || '+ str(review_count-value)
 for key, value in reviewers.items():
 	if key not in users_done:
 		report_page = report_page + '\n|- style="background-color:lightgreen'
-		report_page = report_page + '\n| ' + key + ' || 0 || ' + str(value)
+		report_page = report_page + '\n| ' + key + ' || 0 || ' + str(value) + '||' + str(value)
 		# print(key + " " + str(value))
 # print(nominators)
 # print(reviewers)
