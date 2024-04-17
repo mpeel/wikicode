@@ -24,7 +24,7 @@ commons = pywikibot.Site('commons', 'commons')
 debug = 0
 count = 0
 
-maxnum = 30000
+maxnum = 10000
 step = 100
 num = int(maxnum/step)
 for i in range(0,num):
