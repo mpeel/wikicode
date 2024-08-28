@@ -6,6 +6,7 @@ cd /home/pi/Documents/git/wikicode/
 
 /usr/bin/python3 wikidata_import_infobox_qid.py
 /usr/bin/python3 commons_wikidata_infobox_tidy.py
+/usr/bin/python3 commons_wikidata_infobox_new.py
 /usr/bin/python3 commons_wikidata_infobox.py
 /usr/bin/python3 wikidata_bot_requests.py
 /usr/bin/python3 wikidata_new_from_wikipedia_query_article.py

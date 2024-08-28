@@ -38,7 +38,7 @@ usequery = False
 usetemplate = ''#'Creator'#'Individual aircraft'
 usequarry = ''#'quarry.csv'
 quarry_reference = 'commons_infobox_candidates_old.txt'
-usequarry2 = 'commons_infobox_candidates.txt'
+usequarry2 = 'commons_infobox_candidates_new.txt'
 useimport = '' #'import.csv'
 newstyle = False
 database = False
@@ -56,7 +56,7 @@ if database:
 if usequarry2 != '':
     ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
     ftp.cwd('wiki')
-    ftp.retrbinary("RETR commons_infobox_candidates.txt" ,open('commons_infobox_candidates.txt', 'wb').write)
+    ftp.retrbinary("RETR commons_infobox_candidates_new.txt" ,open('commons_infobox_candidates_new.txt', 'wb').write)
     ftp.quit()
 
 
@@ -158,7 +158,7 @@ def addtemplate(target):
         for clm in p301:
             print(clm)
             # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
-            savemessage = '(legacy) Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
+            savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
             wd_id = clm.getTarget().title()
             # Check to see if it's linked to a list item, and avoid if so
             # test = pywikibot.ItemPage(repo, wd_id)
@@ -174,7 +174,7 @@ def addtemplate(target):
     except:
         # print('P301 not found')
         # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
-        savemessage = '(legacy) Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
+        savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
         # try:
         #     p971 = item_dict['claims']['P971']
         # except:
