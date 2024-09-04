@@ -9,6 +9,7 @@ import numpy as np
 import time
 import string
 from pywikibot import pagegenerators
+from pywikibot.data import api
 import urllib
 from pibot_functions import *
 import re
@@ -24,6 +25,17 @@ others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata',
 enwp = ['mainw', 'Mainw', 'on Wikipedia|en=', 'On Wikipedia|en=']
 savemessage="Tidy Wikidata Infobox call"
 wikidatainfobox = ["Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "infobox wikidata", "Infobox wikidata", "Wikidata  infobox", "wikidata  infobox", "Wikidata  Infobox", "wikidata  Infobox", "Wdbox", "wdbox", 'WI', 'wikidatainfobox', 'Інфабокс', 'інфабокс', 'Wikidata box', 'wikidata box', 'Wikidatainfobox', 'wikidatainfobox']
+
+def search_entities(site, itemtitle,limit=100,offset=0):
+     params = { 'action' :'query',
+                'list': 'search',
+                'format' : 'json',
+                'srlimit': limit,
+                'sroffset': offset,
+                'srnamespace': 14,
+                'srsearch': itemtitle}
+     request = api.Request(site=site, parameters=params)
+     return request.submit()
 
 def migratecat(targetcat):
     print(targetcat)
@@ -88,6 +100,7 @@ def migratecat(targetcat):
     for i in range(0,len(wikidatainfobox)):
         if wd_item != 0:
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item.title(),'{{Wikidata Infobox')
@@ -109,6 +122,7 @@ def migratecat(targetcat):
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\nqid="+wd_item.title(),'{{Wikidata Infobox')
         if wd_item2 != 0:
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item2.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item2.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item2.title(),'{{Wikidata Infobox')
@@ -174,6 +188,22 @@ def migratecat(targetcat):
                 return 0
     else:
         return 0
+
+# Check for wikidata= uses
+candidates = []
+try:
+    candidates = search_entities(commons, "insource:/\{Wikidata Infobox\|wikidata/",limit=100)
+except:
+    null = 0
+for candidate in candidates['query']['search']:
+    targetcat = pywikibot.Page(commons, str(candidate['title']))
+    print(targetcat)
+    print("\n" + targetcat.title())
+    nummodified += migratecat(targetcat)
+
+    if nummodified >= maxnum:
+        print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
+        exit()
 
 # Check through the manual ID category
 category = 'Category:Uses of Wikidata Infobox with manual qid'
