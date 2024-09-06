@@ -101,6 +101,7 @@ def migratecat(targetcat):
         if wd_item != 0:
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item.title(),'{{Wikidata Infobox')
@@ -123,6 +124,7 @@ def migratecat(targetcat):
         if wd_item2 != 0:
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item2.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item2.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item2.title(),'{{Wikidata Infobox')
@@ -189,10 +191,10 @@ def migratecat(targetcat):
     else:
         return 0
 
-# Check for wikidata= uses
+# Check for Wikidata= uses
 candidates = []
 try:
-    candidates = search_entities(commons, "insource:/\{Wikidata Infobox\|wikidata/",limit=100)
+    candidates = search_entities(commons, "insource:/\{Wikidata Infobox\|Wikidata/",limit=500)
 except:
     null = 0
 for candidate in candidates['query']['search']:
@@ -200,7 +202,23 @@ for candidate in candidates['query']['search']:
     print(targetcat)
     print("\n" + targetcat.title())
     nummodified += migratecat(targetcat)
+    targetcat.touch()
+    if nummodified >= maxnum:
+        print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
+        exit()
 
+# Check for wikidata= uses
+candidates = []
+try:
+    candidates = search_entities(commons, "insource:/\{Wikidata Infobox\|wikidata/",limit=500)
+except:
+    null = 0
+for candidate in candidates['query']['search']:
+    targetcat = pywikibot.Page(commons, str(candidate['title']))
+    print(targetcat)
+    print("\n" + targetcat.title())
+    nummodified += migratecat(targetcat)
+    targetcat.touch()
     if nummodified >= maxnum:
         print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
         exit()
