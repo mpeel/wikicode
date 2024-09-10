@@ -23,30 +23,48 @@ step = 10
 run = True
 with conn.cursor() as cur:
 	cur.execute('use commonswiki_p')
-	cur.execute("SELECT"\
-	" page_title,"
-	" (COUNT( eu_entity_id )) as ct"
-	" FROM"
-	"  page,"
-	"  page_props,"
-	"  wbc_entity_usage"
-	" WHERE"
-	"  pp_propname = \"unexpectedUnconnectedPage\""
-	"  AND page_id = pp_page"
-	"  AND page_namespace = 14"
-	"      AND NOT EXISTS"
-	"        ("
-	"        SELECT  null "
-	"        FROM    templatelinks"
-	"        WHERE   page_id = tl_from"
-	"        )  "
-	"  AND page_id = eu_page_id"
-	"  AND eu_aspect = \"S\""
-	"  /* AND page_title = \"Naupliastraße_(München)\" */"
-	" GROUP BY"
-	"  page_title"
-	" HAVING"
-	"  ct = 1")
+	cur.execute("SELECT DISTINCT"\
+	"  page_title"\
+	" FROM"\
+	"  page,"\
+	"  page_props,"\
+	"  wbc_entity_usage"\
+	" WHERE"\
+	"  pp_propname = \"unexpectedUnconnectedPage\""\
+	"  AND page_id = pp_page"\
+	"  AND page_namespace = 14"\
+	"      AND NOT EXISTS"\
+	"        ("\
+	"        SELECT  null "\
+	"        FROM    templatelinks"\
+	"        WHERE   page_id = tl_from"\
+	"        )  "\
+	"  AND page_id = eu_page_id"\
+	"  AND eu_aspect = \"S\"")
+	# cur.execute("SELECT"\
+	# " page_title,"
+	# " (COUNT( eu_entity_id )) as ct"
+	# " FROM"
+	# "  page,"
+	# "  page_props,"
+	# "  wbc_entity_usage"
+	# " WHERE"
+	# "  pp_propname = \"unexpectedUnconnectedPage\""
+	# "  AND page_id = pp_page"
+	# "  AND page_namespace = 14"
+	# "      AND NOT EXISTS"
+	# "        ("
+	# "        SELECT  null "
+	# "        FROM    templatelinks"
+	# "        WHERE   page_id = tl_from"
+	# "        )  "
+	# "  AND page_id = eu_page_id"
+	# "  AND eu_aspect = \"S\""
+	# "  /* AND page_title = \"Naupliastraße_(München)\" */"
+	# " GROUP BY"
+	# "  page_title"
+	# " HAVING"
+	# "  ct = 1")
 	vals = cur.fetchall()
 	f = open("/data/project/pibot/commons_infobox_candidates.csv", "w", encoding='utf-8')
 	if len(vals) > 0:
