@@ -60,7 +60,7 @@ if usequarry2 != '':
     ftp.quit()
 
 
-targetcats = ['Category:Female sportspeople by country by sport','Category:Male sportspeople by country by sport','Category:World War memorials in Germany','Category:Men of Austria by name','Category:Women of Austria by name','Category:Women of Germany by name','Category:Musical groups from Austria','Category:Musical groups from Germany','Category:Streets in Munich by name','Category:Streets in Vienna by name','Category:Cultural heritage monuments in Brandenburg with known ID','Category:Churches in Germany'] # 'Category:Men of Germany by name'
+targetcats = ['Category:Female sportspeople by country by sport','Category:Male sportspeople by country by sport','Category:World War memorials in Germany','Category:Men of Austria by name','Category:Women of Austria by name','Category:Musical groups from Austria','Category:Musical groups from Germany','Category:Streets in Munich by name','Category:Streets in Vienna by name','Category:Cultural heritage monuments in Brandenburg with known ID','Category:Churches in Germany'] # 'Category:Men of Germany by name', 'Category:Women of Germany by name'
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect", 'Monotypic taxon category redirect', 'monotypic taxon category redirect', 'Synonym taxon category redirect', 'synonym taxon category redirect', 'Invalid taxon category redirect', 'invalid taxon category redirect']
 
