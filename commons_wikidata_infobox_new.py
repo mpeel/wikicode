@@ -158,7 +158,7 @@ def addtemplate(target):
         for clm in p301:
             print(clm)
             # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
-            savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title() + ', linked to ' + clm.getTarget().title()
+            savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is [[:d:' + wd_item.title() + '|' + wd_item.title() + ']], linked to [[:d:' + clm.getTarget().title() + "|" + clm.getTarget().title() + "]]"
             wd_id = clm.getTarget().title()
             # Check to see if it's linked to a list item, and avoid if so
             # test = pywikibot.ItemPage(repo, wd_id)
@@ -174,7 +174,7 @@ def addtemplate(target):
     except:
         # print('P301 not found')
         # savemessage = 'Replacing {{Wikidata person}} with {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
-        savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is ' + wd_item.title()
+        savemessage = 'Adding {{Wikidata Infobox}}, current Wikidata ID is [[:d:' + wd_item.title() + "|" + wd_item.title() + "]]"
         # try:
         #     p971 = item_dict['claims']['P971']
         # except:
