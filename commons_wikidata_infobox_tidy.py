@@ -99,9 +99,9 @@ def migratecat(targetcat):
 
     for i in range(0,len(wikidatainfobox)):
         if wd_item != 0:
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item.title(),'{{Wikidata Infobox')
@@ -122,9 +122,9 @@ def migratecat(targetcat):
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\nqid="+wd_item.title()+"\n",'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\nqid="+wd_item.title(),'{{Wikidata Infobox')
         if wd_item2 != 0:
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item2.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item2.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item2.title(),'{{Wikidata Infobox')
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item2.title(),'{{Wikidata Infobox')
@@ -191,6 +191,7 @@ def migratecat(targetcat):
     else:
         return 0
 
+
 # Check for Wikidata= uses
 candidates = []
 try:
@@ -202,7 +203,7 @@ for candidate in candidates['query']['search']:
     print(targetcat)
     print("\n" + targetcat.title())
     nummodified += migratecat(targetcat)
-    targetcat.touch()
+    # targetcat.touch()
     if nummodified >= maxnum:
         print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
         exit()
@@ -218,7 +219,7 @@ for candidate in candidates['query']['search']:
     print(targetcat)
     print("\n" + targetcat.title())
     nummodified += migratecat(targetcat)
-    targetcat.touch()
+    # targetcat.touch()
     if nummodified >= maxnum:
         print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
         exit()
