@@ -11,5 +11,3 @@ cd /home/pi/Documents/git/wikicode/
 /usr/bin/python3 wikidata_viewof.py
 /usr/bin/python3 commonscat_redirects.py
 /usr/bin/python3 commons_date_find.py
-/usr/bin/python3 cochrane.py
-/usr/bin/python3 cochrane_fr.py
