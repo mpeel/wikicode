@@ -85,7 +85,7 @@ for regex in regexes:
         pmids = re.findall(r'\|\s*?pmid\s*?\=\s*?(\d+?)\s*?\|', text)
         print(len(pmids))
         for pmid in pmids:
-            pmid = '27687114'
+            # pmid = '27687114'
             if str(pmid) not in checkedpages:
                 print('https://pubmed.ncbi.nlm.nih.gov/%s' % pmid)
                 try:
