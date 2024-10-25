@@ -7,7 +7,19 @@ import datetime
 from pywikibot import pagegenerators
 
 debug = False
-maxnum = 500
+maxnum = 50
+
+def get_update_pmid(text):
+    checkstring = r'<divclass="linked-articles"id="linked-update">'
+    if re.search(checkstring, rawtext):
+        try:
+            text = text.split(checkstring)[1]
+        except:
+            return False
+        pm = re.findall(r'<aclass="docsum-title"href="/(\d+?)/"ref="article_id=', rawtext)[0]
+        return pm
+    else:
+        return False
 
 def update_report(page, old_pmid, new_pmid, ):
     report = pywikibot.Page(site, 'Wikipedia:WikiProject_Medicine/Cochrane_update')
@@ -73,7 +85,7 @@ for regex in regexes:
         pmids = re.findall(r'\|\s*?pmid\s*?\=\s*?(\d+?)\s*?\|', text)
         print(len(pmids))
         for pmid in pmids:
-            # pmid = '27093058'
+            pmid = '27687114'
             if str(pmid) not in checkedpages:
                 print('https://pubmed.ncbi.nlm.nih.gov/%s' % pmid)
                 try:
@@ -84,9 +96,8 @@ for regex in regexes:
                 # if 'WITHDRAWN' in res and re.search(r'<h3>Update in</h3><ul><li class="comments"><a href="/pubmed/\d+?"', res):
                 rawtext = re.sub(r'\s+', '', res)
                 # print(rawtext)
-                if re.search(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext):
-                    pm = re.findall(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext)[0]
-                    print(pm)
+                pm = get_update_pmid(rawtext)
+                if pm:
                     checkedpages[str(pmid)] = pm
                     # Check to make sure that the new paper doesn't also have an updated version...
                     try:
@@ -98,8 +109,8 @@ for regex in regexes:
                         # The new one's been withdrawn: we don't want to report this as an update.
                         checkedpages[str(pmid)] = 0
                     rawtext2 = re.sub(r'\s+', '', res2)
-                    if 'WITHDRAWN' in res2 and re.search(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext2):
-                        pm2 = re.findall(r'data-ga-category="comment_correction"data-ga-action="(\d+?)"data-ga-label="linked-update">', rawtext2)[0]
+                    pm2 = get_update_pmid(rawtext2)
+                    if 'WITHDRAWN' in res2 and pm2:
                         try:
                             r3 = requests.get('https://pubmed.ncbi.nlm.nih.gov/%s' % pm2, timeout=10.0)
                             res3 = r3.text
@@ -125,7 +136,7 @@ for regex in regexes:
                             update_report(page, pmid, checkedpages[str(pmid)])
         if text != page.text and debug == False:
             page.text = text
-            page.save(u'Adding "update inline" template for Cochrane reference')
+            # page.save(u'Adding "update inline" template for Cochrane reference')
             nummodified += 1
             if nummodified > maxnum - 1:
                 print('Reached the maximum of ' + str(maxnum) + ' pages modified, quitting!')
