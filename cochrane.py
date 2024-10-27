@@ -7,7 +7,7 @@ import datetime
 from pywikibot import pagegenerators
 
 debug = False
-maxnum = 50
+maxnum = 500
 
 def get_update_pmid(text):
     checkstring = r'<divclass="linked-articles"id="linked-update">'
@@ -136,7 +136,7 @@ for regex in regexes:
                             update_report(page, pmid, checkedpages[str(pmid)])
         if text != page.text and debug == False:
             page.text = text
-            # page.save(u'Adding "update inline" template for Cochrane reference')
+            page.save(u'Adding "update inline" template for Cochrane reference')
             nummodified += 1
             if nummodified > maxnum - 1:
                 print('Reached the maximum of ' + str(maxnum) + ' pages modified, quitting!')
