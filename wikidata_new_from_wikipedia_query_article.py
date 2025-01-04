@@ -390,10 +390,15 @@ for prefix in wikipedias:
 					claim = pywikibot.Claim(repo,'P31')
 					claim.setTarget(pywikibot.ItemPage(repo, 'Q11424')) # Film
 					new_item.addClaim(claim, summary='Film')
+				elif 'tv series) season' in page.title().lower():
+					# input('Is TV series - OK?')
+					claim = pywikibot.Claim(repo,'P31')
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q3464665')) # TV series season
+					new_item.addClaim(claim, summary='TV series season')
 				elif 'tv series)' in page.title().lower():
 					# input('Is TV series - OK?')
 					claim = pywikibot.Claim(repo,'P31')
-					claim.setTarget(pywikibot.ItemPage(repo, 'Q5398426')) # Film
+					claim.setTarget(pywikibot.ItemPage(repo, 'Q5398426')) # TV series
 					new_item.addClaim(claim, summary='TV series')
 				elif 'surname)' in page.title().lower():
 					# input('Is surname - OK?')
