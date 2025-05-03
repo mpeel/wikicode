@@ -584,7 +584,7 @@ def pageIsBiography(page='', lang=''):
 			return False
 		if 'racehorse' in page.text:
 			return False
-		elif not page.title().startswith('List ') and not page.title().startswith('Lists ') and not page.title().startswith('Mortos em') and 'disappearance' not in page.title().lower() and 'murder' not in page.title().lower() and 'killing' not in page.title().lower() and 'assassination' not in page.title().lower() and 'lynching' not in page.title().lower() and 'case of' not in page.title().lower() and 'death' not in page.title().lower() and 'discography' not in page.title().lower():
+		elif not page.title().startswith('List ') and not page.title().startswith('Lists ') and not page.title().startswith('Mortos em') and 'disappearance' not in page.title().lower() and 'murder' not in page.title().lower() and 'killing' not in page.title().lower() and 'assassination' not in page.title().lower() and 'lynching' not in page.title().lower() and 'case of' not in page.title().lower() and 'death' not in page.title().lower() and 'discography' not in page.title().lower() and '(dog)' not in page.title().lower():
 			if len(page.title().split(' ')) <= 5:
 				if re.search(r'(?im)(\'{3} \(born \d|Category\s*:\s*\d+ (births|deaths)|Category\s*:\s*Living people|birth_date\s*=|birth_place\s*=|death_date\s*=|death_place\s*=|Category\s*:\s*People from)', page.text):
 					return True
