@@ -12,7 +12,7 @@ user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
 port = 3306
 
-languages = ['en', 'pt', 'de', 'simple','es','fr','it','nl','pl','sv','eo','dag']
+languages = ['en', 'pt', 'de', 'simple','es','fr','it','nl','pl','sv','eo','dag','ml','af','cy','et']
 
 for lang in languages:
 	host = lang+'wiki.analytics.db.svc.wikimedia.cloud'
