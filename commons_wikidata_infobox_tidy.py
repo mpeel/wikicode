@@ -100,6 +100,7 @@ def migratecat(targetcat):
     for i in range(0,len(wikidatainfobox)):
         if wd_item != 0:
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
             # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item.title(),'{{Wikidata Infobox')
