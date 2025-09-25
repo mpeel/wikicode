@@ -175,6 +175,26 @@ for targetcat in targetcats:
         except:
             null = 1
         try:
+            value = (target_text.split("{{"+templates[i]+"\n| qid= "))[1].split("\n}}")[0]
+            try:
+                value = value.split('|')[0]
+            except:
+                null = 1
+            if value != 0 and id_val == 0:
+                id_val = value
+        except:
+            null = 1
+        try:
+            value = (target_text.split("{{"+templates[i]+"|\n   qid = "))[1].split("\n}}")[0]
+            try:
+                value = value.split('|')[0]
+            except:
+                null = 1
+            if value != 0 and id_val == 0:
+                id_val = value
+        except:
+            null = 1
+        try:
             value = (target_text.split("{{"+templates[i]+"\n|Wikidata = "))[1].split("\n}}")[0]
             try:
                 value = value.split('|')[0]
