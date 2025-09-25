@@ -276,7 +276,7 @@ for targetcat in targetcats:
                 id_val = value
         except:
             null = 1
-    id_val = id_val.trim().replace('qid=','').replace('qid =','').trim()
+    id_val = id_val.strip().replace('qid=','').replace('qid =','').strip()
     print(id_val)
     if id_val != 0 and "defaultsort" not in id_val:
         id_val = id_val.strip()
