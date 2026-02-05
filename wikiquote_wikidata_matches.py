@@ -156,30 +156,34 @@ elif action == 'tiles':
 			mydb.commit()
 			# exit()
 			continue
-
-		cleaned_text = target.text[0:500]
-		# for template calls {{..}}
-		cleaned_text = re.sub(r'\{\{[^}]*\}\}', '', cleaned_text)
-		# for [category:..] or other similar cases
-		cleaned_text = re.sub(r'\[\[(?:Category|Kategorie|Categoria)[^\]]*\]\]', '', cleaned_text, flags=re.IGNORECASE)
-		# for [file] or other similar
-		cleaned_text = re.sub(r'\[\[(?:File|Image|Datei|Fichier|Archivo|Imagem)[^\]]*\]\]', '', cleaned_text, flags=re.IGNORECASE)
-		# for __NOTOC__ and similar
-		cleaned_text = re.sub(r'__[A-Z]+__', '', cleaned_text)
-		#[Page|Display] to Display
-		cleaned_text = re.sub(r'\[\[(?:[wW]:|[^|\]]+\|)([^\]]+)\]\]', r'\1', cleaned_text)
-		# simple links without pipes
-		cleaned_text = re.sub(r'\[\[([^\]|]+)\]\]', r'\1', cleaned_text)
-		# section headers
-		cleaned_text = re.sub(r'={2,}[^=]+={2,}', '', cleaned_text)
-		# extra whitespace
-		cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
-		tile = {"id": myresult[0], "sections": [ {"type": "item", "q":myresult[1]}, {"type": "text","title": myresult[2],"url": 'https://'+myresult[3]+'.wikiquote.org/wiki/'+myresult[2].replace(' ','_'),'text':cleaned_text}], "controls": [{"type":"buttons", "entries":[{"type": "green","decision": "yes","label": "Match", "api_action": {'action': "wbsetsitelink", "id": myresult[1],"linksite": myresult[3]+'wikiquote',"linktitle": myresult[2]}}, {"type": "white", "decision": "skip", "label": "Skip"}, {"type": "blue", "decision": "no", "label": "No"}]}]}#'q:'+myresult[3]
-		# tile = {"id": myresult[0], "sections": [ {"type": "item", "q":myresult[1]}, {"type": "wikipage","title": myresult[2],"wiki": 'enwikiquote'}], "controls": [{"type":"buttons", "entries":[{"type": "green","decision": "yes","label": "Match", "api_action": {'action': "wbsetsitelink", "id": myresult[1],"linksite": myresult[3]+'wikiquote',"linktitle": myresult[2]}}, {"type": "white", "decision": "skip", "label": "Skip"}, {"type": "blue", "decision": "no", "label": "No"}]}]}#'q:'+myresult[3]
-		tiles.append(tile)
-		i += 1
-		if i >= int(num):
-			finished = 1
+		# no need to create tile if link already exists
+		try:
+			siteLink = candidate_item_dict['siteLinks'][myresult[3]+'wikiquote']
+		except:
+			cleaned_text = target.text[0:500]
+			# for template calls {{..}}
+			cleaned_text = re.sub(r'\{\{[^}]*\}\}', '', cleaned_text)
+			# for [category:..] or other similar cases
+			cleaned_text = re.sub(r'\[\[(?:Category|Kategorie|Categoria)[^\]]*\]\]', '', cleaned_text, flags=re.IGNORECASE)
+			# for [file] or other similar
+			cleaned_text = re.sub(r'\[\[(?:File|Image|Datei|Fichier|Archivo|Imagem)[^\]]*\]\]', '', cleaned_text, flags=re.IGNORECASE)
+			# for __NOTOC__ and similar
+			cleaned_text = re.sub(r'__[A-Z]+__', '', cleaned_text)
+			# [w:Page|Display] to Display (interwiki links)
+			cleaned_text = re.sub(r'\[\[[wW]:[^|]+\|([^\]]+)\]\]', r'\1', cleaned_text)
+			# [w:Page|Display] to Display (piped links)
+			cleaned_text = re.sub(r'\[\[[^\]|]+\|([^\]]+)\]\]', r'\1', cleaned_text)
+			# simple links without pipes
+			cleaned_text = re.sub(r'\[\[([^\]|]+)\]\]', r'\1', cleaned_text)
+			# section headers
+			cleaned_text = re.sub(r'={2,}[^=]+={2,}', '', cleaned_text)
+			# extra whitespace
+			cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
+			tile = {"id": myresult[0], "sections": [ {"type": "item", "q":myresult[1]}, {"type": "text","title": myresult[2],"url": 'https://'+myresult[3]+'.wikiquote.org/wiki/'+myresult[2].replace(' ','_'),'text':cleaned_text}], "controls": [{"type":"buttons", "entries":[{"type": "green","decision": "yes","label": "Match", "api_action": {'action': "wbsetsitelink", "id": myresult[1],"linksite": myresult[3]+'wikiquote',"linktitle": myresult[2]}}, {"type": "white", "decision": "skip", "label": "Skip"}, {"type": "blue", "decision": "no", "label": "No"}]}]}#'q:'+myresult[3]
+			tiles.append(tile)
+			i += 1
+			if i >= int(num):
+				finished = 1
 	# print(json.dumps({"tiles":tiles}))
 	print(callback + " ( " + json.dumps(tiles) + ")\n")
 elif action == 'log_action':
