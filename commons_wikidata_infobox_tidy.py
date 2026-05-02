@@ -18,7 +18,9 @@ maxnum = 10000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 repo = commons.data_repository()  # this is a DataSite object
+repo.login()
 manual = False
 templates = ['Wikidata box', 'Інфабокс','Wdbox','Wikidata infobox', 'Infobox Wikidata', 'Infobox wikidata', 'WI', 'Wdbox', 'Wikidatainfobox']
 others = ['mainw','Mainw', 'Interwiki from Wikidata', 'interwiki from Wikidata', 'label', 'Label', 'object location', 'Object location', "Interwiki from Wikidata", "interwiki from Wikidata", "Interwiki from wikidata", "interwiki from wikidata", "PeopleByName", "peopleByName", "Authority control", "authority control", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "en", 'Individual aircraft', 'individual aircraft', 'Wikidata place','wikidata place', 'Articles via Wikidata', 'Articles via Wikidata |P301=']
@@ -70,20 +72,16 @@ def migratecat(targetcat):
     for i in range(0,len(others)):
         target_text = target_text.replace("{{"+others[i]+"}}", "")
         if wd_item != 0:
+            target_text = re.sub( r"\{\{\s*" + others[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  "",  target_text)
+            target_text = re.sub( r"\{\{\s*" + others[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  "",  target_text)
             target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + "}}", "")
             target_text = target_text.replace("{{" + others[i] + "|" + wd_item.title() + " }}", "")
-            target_text = target_text.replace("{{" + others[i] + "|Wikidata=" + wd_item.title() + "}}", "")
-            target_text = target_text.replace("{{" + others[i] + "|wikidata=" + wd_item.title() + "}}", "")
-            target_text = target_text.replace("{{" + others[i] + "| Wikidata=" + wd_item.title() + "}}", "")
-            target_text = target_text.replace("{{" + others[i] + "| wikidata=" + wd_item.title() + "}}", "")
             target_text = target_text.replace("{{" + others[i] + wd_item.title() + "}}", "")
         if wd_item2 != 0:
+            target_text = re.sub( r"\{\{\s*" + others[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*\)",  "",  target_text)
+            target_text = re.sub( r"\{\{\s*" + others[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item2.title() + r"\s*\)",  "",  target_text)
             target_text = target_text.replace("{{" + others[i] + "|" + wd_item2.title() + "}}", "")
             target_text = target_text.replace("{{" + others[i] + "|" + wd_item2.title() + " }}", "")
-            target_text = target_text.replace("{{" + others[i] + "|Wikidata=" + wd_item2.title() + "}}", "")
-            target_text = target_text.replace("{{" + others[i] + "|wikidata=" + wd_item2.title() + "}}", "")
-            target_text = target_text.replace("{{" + others[i] + "| Wikidata=" + wd_item2.title() + "}}", "")
-            target_text = target_text.replace("{{" + others[i] + "| wikidata=" + wd_item2.title() + "}}", "")
             target_text = target_text.replace("{{" + others[i] + wd_item2.title() + "}}", "")
         target_text = target_text.replace("{{" + others[i] + "| }}", "")
         target_text = target_text.replace("{{" + others[i] + " | }}", "")
@@ -99,58 +97,23 @@ def migratecat(targetcat):
 
     for i in range(0,len(wikidatainfobox)):
         if wd_item != 0:
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|defaultsort=no|qid="+wd_item.title(),'{{Wikidata Infobox|defaultsort=no')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid="+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid= "+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid ="+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid = "+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid="+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid = "+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid ="+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid= "+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid="+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid ="+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid = "+wd_item.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"||qid="+wd_item.title()+"\n",'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\n qid="+wd_item.title()+"\n",'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\nqid="+wd_item.title()+"\n",'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\nqid="+wd_item.title(),'{{Wikidata Infobox')
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*qid\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*wikidata\s*=\s*" + wd_item.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+
         if wd_item2 != 0:
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item2.title() + r"\s*\)",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text,  re.MULTILINE)
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|"+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid="+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|qid= "+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid="+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid ="+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"| qid = "+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid="+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid = "+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid ="+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" |qid= "+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid="+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid ="+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+" | qid = "+wd_item2.title(),'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"||qid="+wd_item2.title()+"\n",'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\n qid="+wd_item2.title()+"\n",'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\nqid="+wd_item2.title()+"\n",'{{Wikidata Infobox')
-            # target_text = target_text.replace("{{"+wikidatainfobox[i]+"|\nqid="+wd_item2.title(),'{{Wikidata Infobox')
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|\s*\|?\s*Wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*qid\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox}}',  target_text)
+            target_text = re.sub( r"\{\{\s*" + wikidatainfobox[i] + r"\s*\|?\s*wikidata\s*=\s*" + wd_item2.title() + r"\s*",  '{{Wikidata Infobox',  target_text)
+
         target_text = target_text.replace("{{"+wikidatainfobox[i],'{{Wikidata Infobox')
         target_text = target_text.replace("{{ "+wikidatainfobox[i],'{{Wikidata Infobox')
         target_text = target_text.replace("{{"+wikidatainfobox[i].replace(" ","_"),'{{Wikidata Infobox')
         target_text = target_text.replace("{{ "+wikidatainfobox[i].replace(" ","_"),'{{Wikidata Infobox')
-
     lines = target_text.splitlines()
     insertline = 0
     i = 0
@@ -168,7 +131,6 @@ def migratecat(targetcat):
         target_text = target_text.replace('\n\n\n','\n')
         target_text = target_text.replace('\n\n\n','\n')
         target_text = target_text.replace('\n\n{{Wikidata Infobox','\n{{Wikidata Infobox')
-        # target_text = target_text.replace('\n\n','\n')
 
     # Time to save it
     if (target_text != targetcat.get()):
@@ -199,7 +161,7 @@ def migratecat(targetcat):
 # Check for Wikidata= uses
 candidates = []
 try:
-    candidates = search_entities(commons, "insource:/\{Wikidata Infobox\|Wikidata/",limit=500)
+    candidates = search_entities(commons, r"insource:/\{Wikidata Infobox\|Wikidata/",limit=1000)
 except:
     null = 0
 for candidate in candidates['query']['search']:
@@ -215,7 +177,7 @@ for candidate in candidates['query']['search']:
 # Check for wikidata= uses
 candidates = []
 try:
-    candidates = search_entities(commons, "insource:/\{Wikidata Infobox\|wikidata/",limit=500)
+    candidates = search_entities(commons, r"insource:/\{Wikidata Infobox\|wikidata/",limit=1000)
 except:
     null = 0
 for candidate in candidates['query']['search']:
