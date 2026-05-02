@@ -7,6 +7,7 @@ import pywikibot
 from pywikibot import pagegenerators
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 
 targetcat = 'Category:Featured pictures by creator'
 destinationpage = 'Commons:Featured pictures/Statistics/Featured pictures by creator'

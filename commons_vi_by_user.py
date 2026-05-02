@@ -7,6 +7,7 @@ import pywikibot
 from pywikibot import pagegenerators
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 
 targetcat = 'Category:Valued images by user'
 destinationpage = 'Commons:Valued images by user'

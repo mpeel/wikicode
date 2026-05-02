@@ -3,6 +3,7 @@ import re
 import datetime
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 
 pagenames = ['Commons:Quality images candidates/candidate list']
 reportpagename = 'Commons:Quality images candidates/statistics'
@@ -10,7 +11,7 @@ reportpagename = 'Commons:Quality images candidates/statistics'
 for i in range(0,7):
 	pagenames.append((datetime.datetime.utcnow()-datetime.timedelta(days=i)).strftime("Commons:Quality images candidates/Archives %B %d %Y"))
 
-userRE = re.compile("\[\[[Uu]ser:([^\|\]]+)[^\]]*\]\]")
+userRE = re.compile(r"\[\[[Uu]ser:([^\|\]]+)[^\]]*\]\]")
 nominators = {}
 reviewers = {}
 for pagename in pagenames:
@@ -97,9 +98,6 @@ for key, value in reviewers.items():
 	if key not in users_done:
 		report_page = report_page + '\n|- style="background-color:lightgreen'
 		report_page = report_page + '\n| ' + key + ' || 0 || ' + str(value) + '||' + str(value)
-		# print(key + " " + str(value))
-# print(nominators)
-# print(reviewers)
 report_page = report_page + '\n|}\n[[Category:Quality images]]'
 print(report_page)
 reportingpage = pywikibot.Page(commons, reportpagename)
