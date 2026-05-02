@@ -63,45 +63,41 @@ for targetcat in targetcats:
     value = 0
 
     for i in range(0,len(templates)):
-        try:
-            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*wikidata\s*=\s*([^}]+)\}\}"
-            match = re.search(pattern, target_text, re.IGNORECASE)
+        value = 0
+        pattern = (r"\{\{\s*" + re.escape(templates[i]) + r".*?\|\s*wikidata\s*=\s*([^|\n}]*)")
+        match = re.search(pattern, target_text, re.IGNORECASE | re.DOTALL)
+        if match:
+            value = match.group(1)
+        if value != 0 and id_val == 0:
+            id_val = value
+        value = 0
+        if id_val == 0:
+            pattern = (r"\{\{\s*" + re.escape(templates[i]) + r".*?\|\s*qid\s*=\s*([^|\n}]*)")
+            match = re.search(pattern, target_text, re.IGNORECASE | re.DOTALL)
             if match:
                 value = match.group(1)
             if value != 0 and id_val == 0:
                 id_val = value
-        except:
-            null = 1
-        try:
-            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*qid\s*=\s*([^}]+)\}\}"
-            match = re.search(pattern, target_text, re.IGNORECASE)
+        value = 0
+        if id_val == 0:
+            pattern = (r"\{\{\s*" + re.escape(templates[i]) + r".*?\|\s*1\s*=\s*([^|\n}]*)")
+            match = re.search(pattern, target_text, re.IGNORECASE | re.DOTALL)
             if match:
                 value = match.group(1)
             if value != 0 and id_val == 0:
                 id_val = value
-        except:
-            null = 1
-        try:
-            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*1\s*=\s*([^}]+)\}\}"
-            match = re.search(pattern, target_text, re.IGNORECASE)
+        value = 0
+        if id_val == 0:
+            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*([^|}=]+)\s*([^|\n}]*)"
+            match = re.search(pattern, target_text, re.IGNORECASE | re.DOTALL)
             if match:
                 value = match.group(1)
             if value != 0 and id_val == 0:
                 id_val = value
-        except:
-            null = 1
-        try:
-            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*([^|}=]+)\s*\}\}"
-            match = re.search(pattern, target_text, re.IGNORECASE)
-            if match:
-                value = match.group(1)
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
+
     id_val = str(id_val).strip().replace('qid=','').replace('qid =','').strip()
     print(id_val)
-    if id_val != 0 and "defaultsort" not in id_val:
+    if id_val != "0" and "defaultsort" not in id_val:
         id_val = id_val.strip()
         try:
             candidate_item = pywikibot.ItemPage(repo, id_val)
