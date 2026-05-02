@@ -7,7 +7,6 @@
 
 import pywikibot
 from pywikibot.data import api
-import numpy as np
 import time
 import string
 from pywikibot import pagegenerators
