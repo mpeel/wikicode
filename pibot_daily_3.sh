@@ -1,7 +1,7 @@
 #!/bin/bash
 source /home/pi/.profile
 source /home/pi/.bashrc
-cd /home/pi/Documents/git/wikicode/
+cd /home/pi/Documents/git/wikicode/pibot/
 
 python3 commons_qi_by_user.py
 python3 commons_fi_by_user.py
