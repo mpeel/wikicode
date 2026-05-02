@@ -3,8 +3,7 @@
 # Import commons sitelinks for the infobox QIDs
 # Mike Peel     10-Jun-2018      v1
 # Mike Peel     31-Oct-2020      v2, tidy
-
-from __future__ import unicode_literals
+# Mike Peel     02-May-2026      v3, convert to regex
 
 import pywikibot
 from pywikibot.data import api
@@ -16,6 +15,7 @@ import urllib
 import pprint
 import csv
 from pibot_functions import *
+import re
 
 templates = ["individual aircraft", "Individual aircraft","Wikidata person", "wikidata person", "On Wikidata", "on Wikidata", "In Wikidata", "in Wikidata", "Wikidata", "wikidata", "Authority control", "authority control", "Ac", "ac", "Wikidata Infobox", "Wikidata infobox", "wikidata infobox", "wikidata Infobox", "Infobox Wikidata", "infobox Wikidata", "Infobox wikidata", "infobox wikidata", 'Wikidata place', 'wikidata place', 'Object location', 'object location']
 
@@ -24,8 +24,10 @@ def prettyPrint(variable):
     pp.pprint(variable)
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 
 database = 0
 existing_uses = {}
@@ -63,215 +65,37 @@ for targetcat in targetcats:
 
     for i in range(0,len(templates)):
         try:
-            value = (target_text.split("{{"+templates[i]+"|Wikidata="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-            # print '1'
-        try:
-            value = (target_text.split("{{"+templates[i]+"|wikidata="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-            # print '1'
-        try:
-            value = (target_text.split("{{"+templates[i]+"|qid="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
+            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*wikidata\s*=\s*([^}]+)\}\}"
+            match = re.search(pattern, target_text, re.IGNORECASE)
+            if match:
+                value = match.group(1)
             if value != 0 and id_val == 0:
                 id_val = value
         except:
             null = 1
         try:
-            value = (target_text.split("{{"+templates[i]+"| qid ="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
+            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*qid\s*=\s*([^}]+)\}\}"
+            match = re.search(pattern, target_text, re.IGNORECASE)
+            if match:
+                value = match.group(1)
             if value != 0 and id_val == 0:
                 id_val = value
         except:
             null = 1
         try:
-            value = (target_text.split("{{"+templates[i]+"|qid ="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
+            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*1\s*=\s*([^}]+)\}\}"
+            match = re.search(pattern, target_text, re.IGNORECASE)
+            if match:
+                value = match.group(1)
             if value != 0 and id_val == 0:
                 id_val = value
         except:
             null = 1
         try:
-            value = (target_text.split("{{"+templates[i]+"| qid="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+" |qid="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+" | qid ="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+" |qid ="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"\n|qid = "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"\n| qid = "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"\n| qid= "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"|\n   qid = "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"\n|Wikidata = "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"\n| Wikidata = "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"\n|wikidata = "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+"\n| wikidata = "))[1].split("\n}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+" | qid="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 1
-        try:
-            value = (target_text.split("{{"+templates[i]+" |1="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 2
-            # print '2'
-        try:
-            value = (target_text.split("{{"+templates[i]+"|1="))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
-            if value != 0 and id_val == 0:
-                id_val = value
-        except:
-            null = 3
-            # print '3'
-        try:
-            value = (target_text.split("{{"+templates[i]+"|"))[1].split("}}")[0]
-            try:
-                value = value.split('|')[0]
-            except:
-                null = 1
+            pattern = r"\{\{\s*" + re.escape(templates[i]) + r"\s*\|\s*([^|}=]+)\s*\}\}"
+            match = re.search(pattern, target_text, re.IGNORECASE)
+            if match:
+                value = match.group(1)
             if value != 0 and id_val == 0:
                 id_val = value
         except:
