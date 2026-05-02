@@ -3,7 +3,7 @@
 # Import commons sitelinks for the infobox QIDs
 # Mike Peel     10-Jun-2018      v1
 # Mike Peel     31-Oct-2020      v2, tidy
-# Mike Peel     02-May-2026      v3, convert to regex
+# Mike Peel     02-May-2026      v3, convert to regex, add extra searches
 
 import pywikibot
 from pywikibot.data import api
@@ -22,39 +22,25 @@ def prettyPrint(variable):
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(variable)
 
-wikidata_site = pywikibot.Site("wikidata", "wikidata")
-wikidata_site.login()
-repo = wikidata_site.data_repository()  # this is a DataSite object
-commons = pywikibot.Site('commons', 'commons')
-commons.login()
+def search_entities(site, itemtitle,limit=100,offset=0):
+     params = { 'action' :'query',
+                'list': 'search',
+                'format' : 'json',
+                'srlimit': limit,
+                'sroffset': offset,
+                'srnamespace': 14,
+                'srsearch': itemtitle}
+     request = api.Request(site=site, parameters=params)
+     return request.submit()
 
-database = 0
-existing_uses = {}
-if database:
-    print('Loading database...')
-    with open('commons_wikidata_infobox_uses.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        existing_uses = {rows[0] for rows in reader}
-    print('Database loaded!')
-
-
-category = 'Category:Uses of Wikidata Infobox with manual qid'
-cat = pywikibot.Category(commons,category)
-targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
-
-
-for targetcat in targetcats:
-    if targetcat.title() in existing_uses:
-        print('In database')
-        continue
-
+def checkcat(targetcat):
     print(targetcat.title())
     target_text = targetcat.get()
 
     try:
         wd_item = pywikibot.ItemPage.fromPage(targetcat)
         print('Category has Wikidata item attached already')
-        continue
+        return
     except:
         # print "No Wikidata sitelink found"
         null = 0
@@ -104,7 +90,7 @@ for targetcat in targetcats:
             candidate_item_dict = candidate_item.get()
         except:
             print('Huh - no page found')
-            continue
+            return
 
         try:
             existing_id = candidate_item_dict['claims']['P910']
@@ -125,7 +111,53 @@ for targetcat in targetcats:
                 print(id_val)
                 prettyPrint(candidate_item_dict)
                 print(data)
-                candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
+                input()
+                # candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
             except:
                 print('Edit failed')
+    return
 
+
+wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
+repo = wikidata_site.data_repository()  # this is a DataSite object
+commons = pywikibot.Site('commons', 'commons')
+commons.login()
+
+database = 0
+existing_uses = {}
+if database:
+    print('Loading database...')
+    with open('commons_wikidata_infobox_uses.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        existing_uses = {rows[0] for rows in reader}
+    print('Database loaded!')
+
+# Check for Wikidata= uses
+candidates = []
+try:
+    candidates = search_entities(commons, r"insource:/\{Wikidata Infobox\|Wikidata/",limit=1000)
+except:
+    null = 0
+for candidate in candidates['query']['search']:
+    targetcat = pywikibot.Page(commons, str(candidate['title']))
+    checkcat(targetcat)
+
+# Check for wikidata= uses
+candidates = []
+try:
+    candidates = search_entities(commons, r"insource:/\{Wikidata Infobox\|wikidata/",limit=1000)
+except:
+    null = 0
+for candidate in candidates['query']['search']:
+    targetcat = pywikibot.Page(commons, str(candidate['title']))
+    checkcat(targetcat)
+
+category = 'Category:Uses of Wikidata Infobox with manual qid'
+cat = pywikibot.Category(commons,category)
+targetcats = pagegenerators.SubCategoriesPageGenerator(cat, recurse=False);
+for targetcat in targetcats:
+    if targetcat.title() in existing_uses:
+        print('In database')
+        continue
+    checkcat(targetcat)
