@@ -111,8 +111,7 @@ def checkcat(targetcat):
                 print(id_val)
                 prettyPrint(candidate_item_dict)
                 print(data)
-                input()
-                # candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
+                candidate_item.editEntity(data, summary=u'Add commons sitelink based on QID on Commons')
             except:
                 print('Edit failed')
     return
