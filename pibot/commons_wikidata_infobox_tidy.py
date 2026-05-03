@@ -2,7 +2,6 @@
 # -*- coding: utf-8  -*-
 # Tidy up calls to Wikidata infoboxes on Commons
 # Started 19 June 2018 by Mike Peel
-from __future__ import unicode_literals
 
 import pywikibot
 import numpy as np

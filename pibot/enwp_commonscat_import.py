@@ -3,8 +3,6 @@
 # Check for consistency in commons category usage
 # Mike Peel     01-Mar-2018      v1 - start
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -18,8 +16,10 @@ maxnum = 10000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 langcode = 'en'
 enwp = pywikibot.Site(langcode, 'wikipedia')
 debug = 0
