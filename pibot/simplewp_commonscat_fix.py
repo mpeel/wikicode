@@ -8,8 +8,6 @@
 # Mike Peel     13-Apr-2019      v1.4 - add matches to the wikidata game database
 # Mike Peel     15-Jun-2019      v1.5 - tweaks + handle cases with no wikidata or commons category
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -32,9 +30,12 @@ maxnum = 1000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 enwp = pywikibot.Site('simple', 'wikipedia')
+enwp.login()
 debug = 0
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']

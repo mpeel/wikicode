@@ -4,9 +4,9 @@ source /home/pi/.bashrc
 cd /home/pi/Documents/git/wikicode/pibot/
 
 python3 enwp_commonscat_import.py
+python3 enwp_commonscat_fix.py
 
 # Come back to these
-# /usr/bin/python3 enwp_commonscat_fix.py
 # /usr/bin/python3 simplewp_commonscat_fix.py
 # /usr/bin/python3 enwp_wikidata_import_shortdesc.py
 # /usr/bin/python3 commonscat_check.py
