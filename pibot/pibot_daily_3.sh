@@ -7,8 +7,6 @@ python3 commons_qi_by_user.py
 python3 commons_fi_by_user.py
 python3 commons_vi_by_user.py
 python3 qic_count_nom_vote.py
-# Come back to these...
-#/usr/bin/python3 enwp_commonscat_import.py
 #/usr/bin/python3 commonscat_copy_from_P373.py
 
 # Disabled due to mul

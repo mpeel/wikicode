@@ -9,8 +9,6 @@
 # Mike Peel     15-Jun-2019      v1.5 - tweaks + handle cases with no wikidata or commons category
 # Mike Peel     24-Apr-2020      v1.6 - handle cases where the link is the pagename, and disable tiles for now
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -18,6 +16,7 @@ import string
 from pywikibot import pagegenerators
 import urllib
 from pibot_functions import *
+
 # import mysql.connector
 # from database_login import *
 
@@ -33,16 +32,19 @@ maxnum = 100000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 enwp = pywikibot.Site('en', 'wikipedia')
+enwp.login()
 debug = 0
 trip = 1
 templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', 'commons category', 'Commons category', 'commons cat', 'Commons cat', 'Commons category-inline', 'commons category-inline', 'Commons cat-inline', 'commons cat-inline', 'commonscat-inline', 'Commonscat-inline', 'Commons category inline', 'commons category inline', 'commons-cat-inline', 'Commons-cat-inline', 'Commons cat inline', 'commons cat inline', 'commonscat inline', 'Commonscat inline', 'Commons Category', 'commons Category','commonscatinline', 'Commonscatinline']
 
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
-targetcats = ['Commons category link is the pagename‎', 'Commons category link is defined as the pagename‎', 'Commons category link is locally defined‎']
+targetcats = ['Commons category link is the pagename', 'Commons category link is defined as the pagename', 'Commons category link is locally defined']
 
 for categories in range(0,2):
 	for targetcat in targetcats:
