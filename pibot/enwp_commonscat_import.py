@@ -54,7 +54,12 @@ for targetcat in targetcats:
 			print('https://'+langcode+'.wikipedia.org/wiki/'+page.title().replace(' ','_'))
 
 			# Get the candidate page
-			target_text = page.get()
+			try:
+				target_text = page.get()
+			except:
+				print('Error fetching page')
+				continue
+
 			id_val = 0
 			abort = 0
 			null = 0
