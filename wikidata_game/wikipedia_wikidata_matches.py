@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8  -*-
-# import pip
 import os
 import json
-# pip.main(['list'])
 import pywikibot
 import mysql.connector
 from pywikibot import pagegenerators
@@ -17,6 +15,7 @@ for arg in args:
 	if len(t)>1: k,v=arg.split('='); GET[k]=v
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 enwiki = pywikibot.Site('en', 'wikipedia')
 simplewiki = pywikibot.Site('simple', 'wikipedia')
@@ -30,6 +29,10 @@ plwiki = pywikibot.Site('pl', 'wikipedia')
 svwiki = pywikibot.Site('sv', 'wikipedia')
 eowiki = pywikibot.Site('eo', 'wikipedia')
 dagwiki = pywikibot.Site('dag', 'wikipedia')
+mlwiki = pywikibot.Site('ml', 'wikipedia')
+afwiki = pywikibot.Site('af', 'wikipedia')
+cywiki = pywikibot.Site('cy', 'wikipedia')
+etwiki = pywikibot.Site('et', 'wikipedia')
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -44,14 +47,13 @@ if not callback:
 	callback = ''
 num = GET.get('num')
 if not num:
-	num = 1
-if int(num) > 5:
-	num = 5
+	num = 10
+if int(num) > 50:
+	num = 10
 lang = GET.get('lang')
 if action == 'desc':
 	print("Content-type: application/json\n\n")
-	print(callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'simple':'Simple','pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano','nl':'Nederlands','pl':'Polski','sv':'Svenska','eo':'Esperanto','dag':'Dagbanli'}}]}) + " )\n")
-
+	print(callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'simple':'Simple','pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano','nl':'Nederlands','pl':'Polski','sv':'Svenska','eo':'Esperanto','dag':'Dagbanli','ml':'Malayalam','af':'Afrikaans','cy':'Welsh','et':'Estonian'}}]}) + " )\n")
 elif action == 'tiles':
 	print("Content-type: application/json\n\n")
 	i = 0
@@ -87,6 +89,16 @@ elif action == 'tiles':
 			torun = 'sv'
 		elif itemtype == 'eo':
 			torun = 'eo'
+		elif itemtype == 'dag':
+			torun = 'dag'
+		elif itemtype == 'ml':
+			torun = 'ml'
+		elif itemtype == 'af':
+			torun = 'af'
+		elif itemtype == 'cy':
+			torun = 'cy'
+		elif itemtype == 'et':
+			torun = 'et'
 	while finished == 0:
 		if torun == 'any':
 			sql = 'SELECT * FROM newarticles WHERE done = 0 ORDER BY RAND() LIMIT 1'
@@ -96,28 +108,52 @@ elif action == 'tiles':
 		myresult = mycursor.fetchone()
 		if myresult[3] == 'en':
 			site = enwiki
+			enwiki.login()
 		elif myresult[3] == 'simple':
 			site = simplewiki
+			simplewiki.login()
 		elif myresult[3] == 'de':
 			site = dewiki
+			dewiki.login()
 		elif myresult[3] == 'pt':
 			site = ptwiki
+			ptwiki.login()
 		elif myresult[3] == 'es':
 			site = eswiki
+			eswiki.login()
 		elif myresult[3] == 'fr':
 			site = frwiki
+			frwiki.login()
 		elif myresult[3] == 'it':
 			site = itwiki
+			itwiki.login()
 		elif myresult[3] == 'nl':
 			site = nlwiki
+			nlwiki.login()
 		elif myresult[3] == 'pl':
 			site = plwiki
+			plwiki.login()
 		elif myresult[3] == 'sv':
 			site = svwiki
+			svwiki.login()
 		elif myresult[3] == 'eo':
 			site = eowiki
+			eowiki.login()
 		elif myresult[3] == 'dag':
 			site = dagwiki
+			dagwiki.login()
+		elif myresult[3] == 'ml':
+			site = mlwiki
+			mlwiki.login()
+		elif myresult[3] == 'af':
+			site = afwiki
+			afwiki.login()
+		elif myresult[3] == 'cy':
+			site = cywiki
+			cywiki.login()
+		elif myresult[3] == 'et':
+			site = etwiki
+			etwiki.login()
 		else:
 			continue
 		# Make sure it doesn't have an ID yet
@@ -167,6 +203,17 @@ elif action == 'tiles':
 			# exit()
 			continue
 
+		sitelink = ''
+		try:
+			sitelink = candidate_item_dict['sitelinks'][myresult[3]+'wiki']
+		except:
+			sitelink = ''
+
+		if sitelink != '':
+			print(myresult)
+			print('Has sitelink')
+			exit()
+			
 		skip = 0
 		try:
 			sitelink = candidate_item_dict['sitelinks'][myresult[3]+'wiki']

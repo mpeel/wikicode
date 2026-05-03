@@ -1,24 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8  -*-
-# import pip
 import os
 import json
-# pip.main(['list'])
 import pywikibot
 import mysql.connector
 from database_login import *
 
 GET={}
 args=os.getenv("QUERY_STRING").split('&')
-# print(args)
 
 for arg in args: 
 	t=arg.split('=')
 	if len(t)>1: k,v=arg.split('='); GET[k]=v
-
-wikidata_site = pywikibot.Site("wikidata", "wikidata")
-repo = wikidata_site.data_repository()  # this is a DataSite object
-commons = pywikibot.Site('commons', 'commons')
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -52,7 +45,6 @@ for val in myresult:
 	total += int(val[1])
 print("<tr><td>" + str(total) + "</td><td>Total</td></tr>")
 print("</table>")
-
 
 mycursor.execute('SELECT user, count(*) as NUM FROM candidates GROUP BY user ORDER BY NUM DESC')
 myresult = mycursor.fetchall()

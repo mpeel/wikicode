@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 # -*- coding: utf-8  -*-
-# import pip
 import os
 import json
 import re
-# pip.main(['list'])
 import pywikibot
 import mysql.connector
 from pywikibot import pagegenerators
@@ -18,12 +16,18 @@ for arg in args:
 	if len(t)>1: k,v=arg.split('='); GET[k]=v
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 enwiki = pywikibot.Site('en', 'wikiquote')
+enwiki.login()
 ptwiki = pywikibot.Site('pt', 'wikiquote')
+ptwiki.login()
 dewiki = pywikibot.Site('de', 'wikiquote')
+dewiki.login()
 eswiki = pywikibot.Site('es', 'wikiquote')
+eswiki.login()
 frwiki = pywikibot.Site('fr', 'wikiquote')
+frwiki.login()
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -38,13 +42,13 @@ if not callback:
 	callback = ''
 num = GET.get('num')
 if not num:
-	num = 5
-if int(num) > 5:
-	num = 5
+	num = 10
+if int(num) > 50:
+	num = 10
 lang = GET.get('lang')
 if action == 'desc':
 	print("Content-type: application/json\n\n")
-	print(callback + " ( " + json.dumps({'label': {'en':'New Wikiquote article and category matches'}, 'description': {'en':'Match new Wikiquote pages with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these pages, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikiquote-logo.svg/80px-Wikiquote-logo.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano'}}]}) + " )\n")
+	print(callback + " ( " + json.dumps({'label': {'en':'New Wikiquote article and category matches'}, 'description': {'en':'Match new Wikiquote pages with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these pages, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikiquote-logo.svg/120px-Wikiquote-logo.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano'}}]}) + " )\n")
 
 elif action == 'tiles':
 	print("Content-type: application/json\n\n")

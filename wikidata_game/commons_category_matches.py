@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8  -*-
-# import pip
 import os
 import json
-# pip.main(['list'])
 import pywikibot
 import mysql.connector
 from pywikibot import pagegenerators
@@ -18,8 +16,10 @@ for arg in args:
 	if len(t)>1: k,v=arg.split('='); GET[k]=v
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -36,14 +36,11 @@ if not callback:
 	callback = ''
 num = GET.get('num')
 if not num:
-	num = 1
-# if int(num) > 100:
-# 	num = 100
-if int(num) > 5:
-	num = 5
+	num = 10
+if int(num) > 50:
+	num = 10
 lang = GET.get('lang')
 if action == 'desc':
-	# print('desc')
 	print("Content-type: application/json\n\n")
 	print(callback + " ( " + json.dumps({'label': {'en':'Commons category matches'}, 'description': {'en':'Match Commons categories with Wikidata items, and add the commons sitelink to Wikidata.'}, 'instructions': {'en':'These matches look plausible. But are they really? Please help us to reject the bad ones by clicking "No" - and if you are sure that it is right, add the link to Wikidata using "Match". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to commons:User:Mike Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/120px-Commons-logo.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'Q1':'Any'}}]}) + " )\n") #, 'Q5':'Person', 'Q16521':'Taxon'
 elif action == 'tiles':

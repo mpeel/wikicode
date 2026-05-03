@@ -1,24 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8  -*-
-# import pip
 import os
 import json
-# pip.main(['list'])
 import pywikibot
 import mysql.connector
 from database_login import *
 
 GET={}
 args=os.getenv("QUERY_STRING").split('&')
-# print args
 
 for arg in args:
 	t=arg.split('=')
 	if len(t)>1: k,v=arg.split('='); GET[k]=v
-
-wikidata_site = pywikibot.Site("wikidata", "wikidata")
-repo = wikidata_site.data_repository()  # this is a DataSite object
-commons = pywikibot.Site('commons', 'commons')
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -30,7 +23,7 @@ mycursor = mydb.cursor()
 
 print("Content-type: text/html\n\n")
 
-mycursor.execute('SELECT decision, count(*) as NUM FROM newwikiquote GROUP BY decision ORDER BY NUM DESC')
+mycursor.execute('SELECT decision, count(*) as NUM FROM newarticles GROUP BY decision ORDER BY NUM DESC')
 myresult = mycursor.fetchall()
 print('<table style="border:1px solid black;">')
 total = 0
@@ -54,7 +47,7 @@ print("<tr><td>" + str(total) + "</td><td>Total</td></tr>")
 print("</table>")
 
 
-mycursor.execute('SELECT user, count(*) as NUM FROM newwikiquote GROUP BY user ORDER BY NUM DESC')
+mycursor.execute('SELECT user, count(*) as NUM FROM newarticles GROUP BY user ORDER BY NUM DESC')
 myresult = mycursor.fetchall()
 print('<table style="border:1px solid black;">')
 for val in myresult:
@@ -68,7 +61,7 @@ for val in myresult:
 	print("</td></tr>")
 print("</table>")
 
-mycursor.execute('SELECT site, count(*) as NUM FROM newwikiquote WHERE done=0 GROUP BY site ORDER BY NUM DESC')
+mycursor.execute('SELECT site, count(*) as NUM FROM newarticles WHERE done=0 GROUP BY site ORDER BY NUM DESC')
 myresult = mycursor.fetchall()
 print('<table style="border:1px solid black;">')
 total = 0
