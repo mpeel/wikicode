@@ -580,7 +580,7 @@ def pageReferences(page='', lang=''):
 
 def pageIsBiography(page='', lang=''):
 	if lang == 'en' or lang == 'simple':
-		if re.search('(?im)Category\s*:\s*\d+ animal (births|deaths)', page.text):
+		if re.search(r'(?im)Category\s*:\s*\d+ animal (births|deaths)', page.text):
 			return False
 		if 'racehorse' in page.text:
 			return False
@@ -589,7 +589,7 @@ def pageIsBiography(page='', lang=''):
 				if re.search(r'(?im)(\'{3} \(born \d|Category\s*:\s*\d+ (births|deaths)|Category\s*:\s*Living people|birth_date\s*=|birth_place\s*=|death_date\s*=|death_place\s*=|Category\s*:\s*People from)', page.text):
 					return True
 	elif lang == 'de':
-		if re.search('(?im)(Catégorie|Category)\s*:\s*Individueller', page.text):
+		if re.search(r'(?im)(Catégorie|Category)\s*:\s*Individueller', page.text):
 			return False
 		elif not page.title().startswith('Liste '):
 			if len(page.title().split(' ')) <= 5:
@@ -599,7 +599,7 @@ def pageIsBiography(page='', lang=''):
 		if 'Décès' in page.title():
 			# Probably a list item.
 			return False
-		if re.search('(?im)(Catégorie|Category)\s*:\s*Animal (né|mort)', page.text):
+		if re.search(r'(?im)(Catégorie|Category)\s*:\s*Animal (né|mort)', page.text):
 			return False
 		elif not page.title().startswith('Liste ') and not page.title().startswith('Listes '):
 			if len(page.title().split(' ')) <= 5:
@@ -612,7 +612,7 @@ def pageIsBiography(page='', lang=''):
 				if re.search(r'(?im)((Categoria|Category)\s*:\s*(Naturais|Nascidos|Pessoas vivas|Mortos))', page.text):
 					return True
 	elif lang == 'es':
-		if re.search('(?im)(Categoría|Category)\s*:\s*Animales', page.text):
+		if re.search(r'(?im)(Categoría|Category)\s*:\s*Animales', page.text):
 			return False
 		elif not page.title().startswith('Lista') and not page.title().startswith('Mortos em'):
 			if len(page.title().split(' ')) <= 5:
@@ -682,7 +682,7 @@ def main():
 			if item:
 				print('Page has item')
 				print('https://www.wikidata.org/wiki/%s' % (item.title()))
-				if (datetime.datetime.now()-item.editTime()).seconds < 120:
+				if (datetime.datetime.now()-item.latest_revision.timestamp).seconds < 120:
 					print('... but is being edited')
 				else:
 					# test = input('Continue?')
