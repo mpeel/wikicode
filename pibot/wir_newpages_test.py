@@ -4,9 +4,9 @@ import datetime
 import dateparser
 from wir_newpages import *
 
-lang = 'en'
-article = 'Donald Broadnax'
-enwp_site = 'enwiki'
+lang = 'pt'
+article = 'Gholamreza Mehrabi'
+enwp_site = 'ptwiki'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')

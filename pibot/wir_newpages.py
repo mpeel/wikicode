@@ -655,10 +655,12 @@ def addBiographyClaims(repo='', wikisite='', item='', page='', lang=''):
 
 def main():
 	wdsite = pywikibot.Site('wikidata', 'wikidata')
+	wdsite.login()
 	repo = wdsite.data_repository()
 	langs = ['simple', 'it', 'es', 'en', 'fr', 'pt'] #, 'de'
 	for lang in langs:
 		wikisite = pywikibot.Site(lang, 'wikipedia')
+		wikisite.login()
 		total = 100
 		if len(sys.argv) >= 2:
 			total = int(sys.argv[1])
