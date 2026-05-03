@@ -158,13 +158,14 @@ for page in pages:
 		continue
 
 	# Get the description from Wikidata
+	no_wikidata_description = False
 	try:
 		wikidata_description = item_dict['descriptions']['en']
 	except:
-		null = 0
+		no_wikidata_description = True
 
 	# Save it to Wikidata
-	if wikidata_description == '':
+	if no_wikidata_description:
 		# We have no en description on Wikidata, so we can add the enwp one
 		print(enwiki_description)
 		# See if we want to add this to the list to double-check
