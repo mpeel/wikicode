@@ -3,6 +3,9 @@ source /home/pi/.profile
 source /home/pi/.bashrc
 cd /home/pi/Documents/git/wikicode/pibot/
 
+python3 wir_newpages_duplicity.py
+python3 wir_newpages_category.py
+python3 wir_newpages_special.py
 python3 commons_qi_by_user.py
 python3 commons_fi_by_user.py
 python3 commons_vi_by_user.py
@@ -37,10 +40,6 @@ python3 qic_count_nom_vote.py
 # /usr/bin/python3 wikidata_p1754_inverse.py
 # /usr/bin/python3 astrocoords_fix_globe.py
 # /usr/bin/python3 astrocoords_copy_to_P376.py
-
-# /usr/bin/python3 wir_newpages_duplicity.py
-# /usr/bin/python3 wir_newpages_category.py
-# /usr/bin/python3 wir_newpages_special.py
 
 # Disabled due to mul
 #/usr/bin/python3 wikidata_import_labels_from_commons.py

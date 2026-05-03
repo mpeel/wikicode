@@ -8,13 +8,14 @@ import pywikibot
 from wir_newpages import *
 import requests
 
-
 wdsite = pywikibot.Site('wikidata', 'wikidata')
+wdsite.login()
 repo = wdsite.data_repository()
 langs = ['it', 'simple', 'pt','en','de','es']
 exclusions = ['Category:','Template:','Wikipedia:','Help:','Portal:','Book:','Module:','Gadget:']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
+	wikisite.login()
 	pages = wikisite.querypage('UnconnectedPages')
 	for page in pages:
 		print(page.title())
@@ -151,4 +152,3 @@ for lang in langs:
 					page.touch()
 				except:
 					null = 0
-				# exit()

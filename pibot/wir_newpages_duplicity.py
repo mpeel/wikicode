@@ -31,14 +31,12 @@ def parseduplicity(url,lang='en'):
 
 
 wdsite = pywikibot.Site('wikidata', 'wikidata')
+wdsite.login()
 repo = wdsite.data_repository()
 langs = ['it', 'simple', 'es','en', 'fr', 'de','pt']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
-	total = 1000
-	if len(sys.argv) >= 2:
-		total = int(sys.argv[1])
-
+	wikisite.login()
 	pages = parseduplicity('https://wikidata-todo.toolforge.org/duplicity.php?cat=&mode=list&wiki='+lang+'wiki',lang=lang)
 	print(pages)
 	for pagename in pages:
@@ -162,4 +160,3 @@ for lang in langs:
 					page.touch()
 				except:
 					null = 0
-				# exit()

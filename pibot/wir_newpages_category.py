@@ -8,12 +8,13 @@ import pywikibot
 from wir_newpages import *
 import requests
 
-
 wdsite = pywikibot.Site('wikidata', 'wikidata')
+wdsite.login()
 repo = wdsite.data_repository()
 langs = ['en','de', 'es', 'simple', 'fr']
 for lang in langs:
 	wikisite = pywikibot.Site(lang, 'wikipedia')
+	wikisite.login()
 	if lang == 'en':
 		targetcats = ['Category:Date of birth not in Wikidata', 'Category:Date of death not in Wikidata','Category:Articles without Wikidata item']
 	elif lang == 'de':
@@ -160,4 +161,3 @@ for lang in langs:
 						page.touch()
 					except:
 						null = 0
-					# exit()

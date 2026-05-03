@@ -10,7 +10,9 @@ enwp_site = 'ptwiki'
 
 # Connect to enwiki
 enwiki = pywikibot.Site(lang, 'wikipedia')
+enwiki.login()
 repo = enwiki.data_repository()  # this is a DataSite object
+repo.login()
 page = pywikibot.Page(enwiki, article)
 # for cat in page.categories():
 # 	print(cat.title())
