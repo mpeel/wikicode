@@ -8,6 +8,7 @@ python3 enwp_commonscat_fix.py
 python3 simplewp_commonscat_fix.py
 python3 enwp_wikidata_import_shortdesc.py
 python3 commonscat_check.py
+python3 commonscat_copy_from_P373.py
 
 # Come back to these
 # # Disabled due to mul

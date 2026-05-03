@@ -3,8 +3,6 @@
 # Check for consistency in commons category usage
 # Mike Peel     01-Mar-2018      v1 - start
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -23,8 +21,10 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 debug = 1
 for i in range(0,numsteps):
 	print('Starting at ' + str(i*stepsize))
@@ -57,9 +57,6 @@ for i in range(0,numsteps):
    '    }\n'\
 	'    MINUS {?commonslink schema:about ?item . ?commonslink schema:isPartOf <https://commons.wikimedia.org/> . } \n'\
 	'}'
-	# '    MINUS {?item wdt:P910 [] }\n'\
-	# '}'
-
 	print(query)
 
 	try:
@@ -71,7 +68,6 @@ for i in range(0,numsteps):
 			except:
 				print('Huh - no page found')
 				continue
-
 
 			print("\n" + qid)
 			print(page.labels)
