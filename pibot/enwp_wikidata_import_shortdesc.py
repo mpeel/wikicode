@@ -29,9 +29,10 @@ targetcat = 'Category:Short description with empty Wikidata description'
 
 # Set up the wikimedia site links
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
-commons = pywikibot.Site('commons', 'commons')
 wikipedia = pywikibot.Site('en', 'wikipedia')
+wikipedia.login()
 
 # Fetch the exclusion list for lower case for the first letter
 page = pywikibot.Page(repo, 'User:Pi bot/lowercase_exceptions')
