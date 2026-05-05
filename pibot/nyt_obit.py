@@ -1,26 +1,28 @@
 #!/usr/bin/python
 # -*- coding: utf-8  -*-
-# 
+#
 # Script to fetch Guardian obit RSS feed, and cross-compare with Wikidata
 # Mike Peel    26 Feb 2017    Started
 # Mike Peel    18 Mar 2017    Bug fixes (catch more titles in nameattempt, unicode issue)
 # Mike Peel    14 Apr 2017    Tweaks (split on ':')
 # Mike Peel     2 Jul 2017    Bug fix (catch blank nameattempt)
-# Mike Peel    17 Oct 2020    Update to python3
+# Mike Peel    17 Oct 2020    Update to Python 3
+# Mike Peel    18 Aug 2022    Try-except for Wikidata statements
 import datetime
 import feedparser
 import pywikibot
 
 # Get the page we want to save the table to
 site = pywikibot.Site('en', 'wikipedia')
+site.login()
 repo = site.data_repository()
-page = pywikibot.Page(site, u"User:Mike Peel/Guardian obits")
+page = pywikibot.Page(site, u"User:Mike Peel/NYT obits")
 
 now = datetime.datetime.now()
-text = u'This page follows the [https://www.theguardian.com/tone/obituaries/ Guardian Obituaries] website (by its [https://www.theguardian.com/tone/obituaries/rss RSS feed]), makes an attempt to identify names from the titles, and add links to possible articles and the corresponding Guardian obituary. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The code [[User:Mike Peel/Guardian obit script|is available on-wiki]]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Name !! Wikidata !! Guardian obit !! Reference code !! Other sources\n'
+text = u'This page follows the [https://www.nytimes.com/section/obituaries New York Times] website (by its [https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/obituaries/rss.xml RSS feed]), makes an attempt to identify names from the titles, and add links to possible articles and the corresponding Guardian obituary. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The code [[User:Mike Peel/Guardian obit script|is available on-wiki]]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Name !! Wikidata !! NYT obit !! Reference code !! Other sources\n'
 
 # Independent RSS feed doesn't work!
-rss_url = ["https://www.theguardian.com/tone/obituaries/rss"]#, "http://www.independent.co.uk/news/obituaries/rss"]
+rss_url = ["https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/obituaries/rss.xml"]#, "http://www.independent.co.uk/news/obituaries/rss"]
 entries = []
 for i in range(0,len(rss_url)):
 	feed = feedparser.parse(rss_url[i])
@@ -33,6 +35,7 @@ for item in entries:
 	nameattempt = nameattempt.split(u'–',1)[0]
 	nameattempt = nameattempt.split(u'|',1)[0]
 	nameattempt = nameattempt.split(u':',1)[0]
+	nameattempt = nameattempt.split(u',',1)[0]
 	nameattempt = nameattempt.split(u"’s",1)[0]
 	test = nameattempt.split(u"The",1)
 	if len(test) == 2:
@@ -48,7 +51,7 @@ for item in entries:
 	nameattempt = nameattempt.strip()
 	print(nameattempt)
 	# Reformat the date
-	date = datetime.datetime.strptime(item['published'], '%a, %d %b %Y %H:%M:%S %Z').strftime('%d %b %Y')
+	date = datetime.datetime.strptime(item['published'].replace('+0000','').strip(), '%a, %d %b %Y %H:%M:%S').strftime('%d %b %Y')
 
 	# Let's see if we can fetch the page from Wikidata
 	if nameattempt != '':
@@ -79,16 +82,22 @@ for item in entries:
 			wd_id = wd_item.getID()
 			text = text + '[[:d:' + wd_id + '|' + wd_id + ']]'
 			if 'P569' in wd_item.claims:
-				birth_date = wd_item.claims['P569'][0].getTarget()
-				birth_date2 = birth_date.toTimestr()
-				birth_date2 = birth_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				try:
+					birth_date = wd_item.claims['P569'][0].getTarget()
+					birth_date2 = birth_date.toTimestr()
+					birth_date2 = birth_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				except:
+					birth_date2 = "<br />"
 				text = text + "<br />b: " + birth_date2
 			if 'P570' in wd_item.claims:
-				death_date = wd_item.claims['P570'][0].getTarget()
-				death_date2 = death_date.toTimestr()
-				death_date2 = death_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				try:
+					death_date = wd_item.claims['P570'][0].getTarget()
+					death_date2 = death_date.toTimestr()
+					death_date2 = death_date2.replace("+0000000",'').replace('T00:00:00Z','')
+				except:
+					death_date2 = '<br />'
 				text = text + "<br />d: " + death_date2
-		text = text + ' || [' + item['link'] + ' ' + item['title'].replace("|","{{!}}") + '], ' + date +' || <nowiki>{{cite news | url = ' + item['link'] + ' | title = ' + item['title'].replace("|","{{!}}") + ' | work = [[The Guardian]] | date = ' + date + '}}</nowiki> || {{Find sources|' + nameattempt + '}}\n'
+		text = text + ' || [' + item['link'] + ' ' + item['title'].replace("|","{{!}}") + '], ' + date +' || <nowiki>{{cite news | url = ' + item['link'] + ' | title = ' + item['title'].replace("|","{{!}}") + ' | work = [[The New York Times]] | date = ' + date + '}}</nowiki> || {{Find sources|' + nameattempt + '}}\n'
 
 text = text + u"\n|}\n"
 

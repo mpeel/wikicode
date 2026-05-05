@@ -1,0 +1,13 @@
+SHELL=/bin/bash
+TERM=xterm
+PYTHONIOENCODING=UTF-8
+LANG=en_US.UTF-8
+LC_ALL=en_US.UTF-8
+0 * * * * /home/pi/Documents/git/wikicode/pibot/pibot_hourly.sh >/home/pi/hourly.log 2>&1
+0 5 * * * /home/pi/Documents/git/wikicode_admin/pibot_admin_daily.sh >/home/pi/daily_admin.log 2>&1
+0 6 * * * /home/pi/Documents/git/wikicode/pibot/pibot_daily.sh >/home/pi/daily.log 2>&1
+0 3 * * 1,5 /home/pi/Documents/git/wikicode/pibot/pibot_weekly.sh >/home/pi/weekly.log 2>&1
+0 3 1 * * /home/pi/Documents/git/wikicode/pibot/pibot_monthly.sh >/home/pi/monthly.log 2>&1
+#44 4 * * * /home/pi/Documents/git/wikicode/touch_wlm_brazil.sh >/home/pi/touch_wlm_brazil.log 2>&1
+#0 7 * * ',5 /home/pi/weekly_cron.sh >/home/pi/weekly_other.log 2>&1
+

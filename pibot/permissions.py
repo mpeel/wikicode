@@ -14,9 +14,6 @@ import pywikibot
 import urllib
 import sys
 
-# reload(sys)
-# sys.setdefaultencoding('utf-8')
-
 # Fetch the spreadsheet
 url = 'https://docs.google.com/spreadsheets/d/1DruVc7T9ZqTcfGwFAlxQrBMR4QBSD_DtjpDtGqMAAi0/pub?output=csv'
 response = urllib.request.urlopen(url)
@@ -25,6 +22,7 @@ cr = csv.reader(response)
 
 # Get the page we want to save the table to
 site = pywikibot.Site('meta', 'meta')
+site.logi()
 repo = site.data_repository()
 page = pywikibot.Page(site, u"WMF Advanced Permissions")
 

@@ -3,13 +3,17 @@ source /home/pi/.profile
 source /home/pi/.bashrc
 cd /home/pi/Documents/git/wikicode/pibot/
 
-python3 wir_newpages_duplicity.py
-python3 wir_newpages_category.py
-python3 wir_newpages_special.py
+python3 permissions.py
+python3 guardian_obit.py
+python3 nyt_obit.py
 python3 commons_qi_by_user.py
 python3 commons_fi_by_user.py
 python3 commons_vi_by_user.py
 python3 qic_count_nom_vote.py
+# Not working
+#python3 wir_newpages_duplicity.py
+#python3 wir_newpages_category.py
+#python3 wir_newpages_special.py
 
 # To check
 # /usr/bin/python3 wikidata_import_infobox_qid.py
@@ -24,9 +28,6 @@ python3 qic_count_nom_vote.py
 # /usr/bin/python3 commons_category_coords.py
 # /usr/bin/python3 commons_category_coords_from_cat.py
 
-# /usr/bin/python3 permissions.py
-# /usr/bin/python3 guardian_obit.py
-# /usr/bin/python3 nyt_obit.py
 # /usr/bin/python3 wikidata_bad_p373.py
 # /usr/bin/python3 commons_defaultsort_conflicts.py
 # /usr/bin/python3 enwp_commonscat_import.py
