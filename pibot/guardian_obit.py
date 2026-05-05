@@ -18,7 +18,7 @@ repo = site.data_repository()
 page = pywikibot.Page(site, u"User:Mike Peel/Guardian obits")
 
 now = datetime.datetime.now()
-text = u'This page follows the [https://www.theguardian.com/tone/obituaries/ Guardian Obituaries] website (by its [https://www.theguardian.com/tone/obituaries/rss RSS feed]), makes an attempt to identify names from the titles, and add links to possible articles and the corresponding Guardian obituary. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The code [[User:Mike Peel/Guardian obit script|is available on-wiki]]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Name !! Wikidata !! Guardian obit !! Reference code !! Other sources\n'
+text = u'This page follows the [https://www.theguardian.com/tone/obituaries/ Guardian Obituaries] website (by its [https://www.theguardian.com/tone/obituaries/rss RSS feed]), makes an attempt to identify names from the titles, and add links to possible articles and the corresponding Guardian obituary. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The code [https://github.com/mpeel/wikicode/blob/master/pibot/guardian_obit.py is available]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Name !! Wikidata !! Guardian obit !! Reference code !! Other sources\n'
 
 # Independent RSS feed doesn't work!
 rss_url = ["https://www.theguardian.com/tone/obituaries/rss"]#, "http://www.independent.co.uk/news/obituaries/rss"]

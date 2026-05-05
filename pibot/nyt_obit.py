@@ -19,7 +19,7 @@ repo = site.data_repository()
 page = pywikibot.Page(site, u"User:Mike Peel/NYT obits")
 
 now = datetime.datetime.now()
-text = u'This page follows the [https://www.nytimes.com/section/obituaries New York Times] website (by its [https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/obituaries/rss.xml RSS feed]), makes an attempt to identify names from the titles, and add links to possible articles and the corresponding Guardian obituary. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The code [[User:Mike Peel/Guardian obit script|is available on-wiki]]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Name !! Wikidata !! NYT obit !! Reference code !! Other sources\n'
+text = u'This page follows the [https://www.nytimes.com/section/obituaries New York Times] website (by its [https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/obituaries/rss.xml RSS feed]), makes an attempt to identify names from the titles, and add links to possible articles and the corresponding Guardian obituary. It was last updated at ' + str(datetime.date(now.year, now.month, now.day)) + '. The code [https://github.com/mpeel/wikicode/blob/master/pibot/nyt_obit.py is available on-wiki]. For any maintenance issues, please leave a note for [[User talk:Mike Peel|the bot operator]].\n{| class="wikitable sortable"\n!Name !! Wikidata !! NYT obit !! Reference code !! Other sources\n'
 
 # Independent RSS feed doesn't work!
 rss_url = ["https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/section/obituaries/rss.xml"]#, "http://www.independent.co.uk/news/obituaries/rss"]
