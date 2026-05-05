@@ -22,7 +22,7 @@ cr = csv.reader(response)
 
 # Get the page we want to save the table to
 site = pywikibot.Site('meta', 'meta')
-site.logi()
+site.login()
 repo = site.data_repository()
 page = pywikibot.Page(site, u"WMF Advanced Permissions")
 
