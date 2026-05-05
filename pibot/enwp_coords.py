@@ -78,7 +78,9 @@ def calc_coord(params):
 # lang = 'pt'
 lang = 'en'
 wiki = pywikibot.Site(lang, 'wikipedia')
+wiki.login()
 repo = wiki.data_repository()
+repo.login()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
 debug = False
 numedited = 0
