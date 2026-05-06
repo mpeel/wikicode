@@ -10,7 +10,6 @@ cd /home/pi/Documents/git/wikicode/pibot/
 /home/pi/venv/bin/python3 commons_fi_by_user.py
 /home/pi/venv/bin/python3 commons_vi_by_user.py
 /home/pi/venv/bin/python3 qic_count_nom_vote.py
-/home/pi/venv/bin/python3 enwp_coords.py
 
 
 
