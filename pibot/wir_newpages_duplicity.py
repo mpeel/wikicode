@@ -15,7 +15,8 @@ def parseduplicity(url,lang='en'):
 	except:
 		print('Problem fetching page!')
 		return 0
-	# print websitetext
+	print(websitetext)
+	exit()
 	split = websitetext.split("<tr><td nowrap style='text-align:right;font-family:Courier;'>")
 	i = 0
 	returnlist = []
