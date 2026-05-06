@@ -3,4 +3,4 @@ source /home/pi/.profile
 source /home/pi/.bashrc
 cd /home/pi/Documents/git/wikicode/pibot/
 
-python3 wir_newpages.py
+/home/pi/venv/bin/python3 wir_newpages.py

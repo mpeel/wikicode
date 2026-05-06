@@ -3,14 +3,14 @@ source /home/pi/.profile
 source /home/pi/.bashrc
 cd /home/pi/Documents/git/wikicode/pibot/
 
-python3 permissions.py
-python3 guardian_obit.py
-python3 nyt_obit.py
-python3 commons_qi_by_user.py
-python3 commons_fi_by_user.py
-python3 commons_vi_by_user.py
-python3 qic_count_nom_vote.py
-python3 enwp_coords.py
+/home/pi/venv/bin/python3 permissions.py
+/home/pi/venv/bin/python3 guardian_obit.py
+/home/pi/venv/bin/python3 nyt_obit.py
+/home/pi/venv/bin/python3 commons_qi_by_user.py
+/home/pi/venv/bin/python3 commons_fi_by_user.py
+/home/pi/venv/bin/python3 commons_vi_by_user.py
+/home/pi/venv/bin/python3 qic_count_nom_vote.py
+/home/pi/venv/bin/python3 enwp_coords.py
 
 
 
