@@ -3,8 +3,6 @@
 # Remove text in brackets from human item labels 
 # Mike Peel     21-Dec-2020      v1
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -21,6 +19,7 @@ debug = False
 
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
 for i in range(0,numsteps):
