@@ -3,8 +3,6 @@
 # Remove bad P373 links
 # Mike Peel     17-Jun-2019      v1 - start
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -17,8 +15,10 @@ maxnum = 1000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 debug = 0
 attempts = 0
 count = 0
@@ -26,7 +26,7 @@ count = 0
 for option in range(0,2):
 	candidates = []
 	if option == 1:
-		reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P910')
+		reportpage = pywikibot.Page(repo, 'Wikidata:Database reports/Constraint violations/P1753')
 		text = reportpage.get()
 		text = text.split('== "Inverse" violations ==')[1].split('== "Single value" violations ==')[0]
 		lines = text.splitlines()
@@ -39,18 +39,16 @@ for option in range(0,2):
 				continue
 	else:
 		# if option == 2:
-		# This times out, so isn't currently running
-		# ... except we no longer have a choice.
-		query = 'SELECT ?item ?itemLabel ?should_link_via_P301_to ?should_link_via_P301_toLabel '\
+		query = 'SELECT ?item ?itemLabel ?should_link_via_P1754_to ?should_link_via_P1754_toLabel '\
 		'WHERE {'\
-		'?should_link_via_P301_to wdt:P910 ?item .'\
-		'FILTER NOT EXISTS { ?item wdt:P301 ?should_link_via_P301_to } .'\
+		'?should_link_via_P1754_to wdt:P1753 ?item .'\
+		'FILTER NOT EXISTS { ?item wdt:P1754 ?should_link_via_P1754_to } .'\
 		'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
 		'}'
 		# else:
 		# This query no longer works per T274982
 		# 	query = 'SELECT DISTINCT ?item ?itemLabel WHERE {'\
-		# 	'?statement wikibase:hasViolationForConstraint wds:P910-87F11688-D962-490C-B67C-627142687E18 .'\
+		# 	'?statement wikibase:hasViolationForConstraint wds:P1753-69FC3185-EFCA-4F00-B3D8-8F09DE2AAD76 .'\
 		# 	'?item ?p ?statement .'\
 		# 	'FILTER( ?item NOT IN ( wd:Q4115189, wd:Q13406268, wd:Q15397819 ) ) .'\
 		# 	'SERVICE wikibase:label { bd:serviceParam wikibase:language "en" } .'\
@@ -72,23 +70,11 @@ for option in range(0,2):
 			continue
 		qid = page.title()
 		print("\nhttp://www.wikidata.org/wiki/" + qid)
-		if 'Property' in qid:
-			print('Property, skipping')
-			continue
 		# print(item_dict)
-		trip = 0
 		try:
-			if 'Property' in item_dict['labels']['enwiki']:
-				trip = 1
+			p301 = item_dict['claims']['P1753']
 		except:
-			null = 0
-		if trip:
-			continue
-
-		try:
-			p301 = item_dict['claims']['P910']
-		except:
-			print('No P910')
+			print('No P1753')
 			continue
 		for clm in p301:
 			val = clm.getTarget()
@@ -100,19 +86,19 @@ for option in range(0,2):
 				continue
 
 			try:
-				p910 = target_dict['claims']['P301']
+				p910 = target_dict['claims']['P1754']
 				continue
 			except:
-				print('No P301 in target')
+				print('No P1754 in target')
 
-			newclaim = pywikibot.Claim(repo, 'P301')
+			newclaim = pywikibot.Claim(repo, 'P1754')
 			newclaim.setTarget(page)
 			if debug == 1:
 				text = input("Save link? ")
 			else:
 				text = 'y'
 			if text != 'n':
-				val.addClaim(newclaim, summary=u'Adding reciprocal P301 value to match P910 in target')
+				val.addClaim(newclaim, summary=u'Adding reciprocal P1754 value to match P1753 in target')
 				nummodified += 1
 
 			if nummodified >= maxnum:

@@ -9,6 +9,7 @@ from pywikibot import pagegenerators
 
 # Connect to commons
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 catname = 'Category:Uses of MonumentID for Brazil with no picture on Wikidata'
 
 cat = pywikibot.Category(commons,catname)

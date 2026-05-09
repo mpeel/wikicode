@@ -15,7 +15,9 @@ maxnum = 10000
 nummodified = 0
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 repo = commons.data_repository()  # this is a DataSite object
+repo.login()
 debug = 1
 manual = 0
 savemessage = "Disable defaultsort from infobox to avoid conflict"

@@ -3,8 +3,6 @@
 # Remove bad P373 links
 # Mike Peel     17-Jun-2019      v1 - start
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -17,8 +15,10 @@ maxnum = 1000
 nummodified = 0
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 debug = 0
 attempts = 0
 count = 0

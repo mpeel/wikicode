@@ -3,8 +3,6 @@
 # Find cases where the sitelink move was attempted but failed
 # Mike Peel     24-May-2019      v1
 
-from __future__ import unicode_literals
-
 import pywikibot
 from pywikibot.data import api
 import numpy as np
@@ -20,8 +18,10 @@ from pibot_functions import *
 seen = []
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 
 user = pywikibot.User(wikidata_site,'Pi bot')
 targetcats = user.contributions(total=5000);

@@ -71,6 +71,8 @@ catredirect_templates = ["category redirect", "Category redirect", "seecat", "Se
 
 def do_check(page,create=True, search=True):
 	print('https://commons.wikimedia.org/wiki/'+page.title().replace(' ','_'))
+	if ' in ' in page.title() or ' of ' in page.title():
+		return 0
 	# See if we have a Wikidata item already
 	try:
 		wd_item = pywikibot.ItemPage.fromPage(page)
@@ -165,6 +167,11 @@ def do_check(page,create=True, search=True):
 					data = {'sitelinks': [{'site': 'commonswiki', 'title': page.title()}]}
 					targetpage.editEntity(data, summary=u'Add commons sitelink')
 					return 1
+				if '{{Wikidata Infobox}}' not in page.text:
+					test = input('No infobox, add?')
+					if test != 'n':
+						page.text = '{{Wikidata Infobox}}\n' + page.text
+						page.save('Add {{Wikidata Infobox}}')
 
 	# if 'in Tenerife' in page.title():
 	# 	return 0
@@ -179,15 +186,25 @@ def do_check(page,create=True, search=True):
 			if text == 'c':
 				items.append(['P31','Q4167836'])
 			test = newitem(page, items)
+			if '{{Wikidata Infobox}}' not in page.text:
+				test = input('No infobox, add?')
+				if test != 'n':
+					page.text = '{{Wikidata Infobox}}\n' + page.text
+					page.save('Add {{Wikidata Infobox}}')
+
 			return 1
 	return 0
 
 # targetcats = ['Category:La Palma']
 # targetcats = ['Category:San Cristóbal de La Laguna']
-targetcats = ['Category:Santa Cruz de La Palma']
+# targetcats = ['Category:Santa Cruz de La Palma']
 # targetcats = ['Category:Museums in La Palma']
 # targetcats = ['Category:Uses of Wikidata Infobox with manual qid']
 # targetcats = ['Category:Tenerife']
+# targetcats = ['Category:Chapel-en-le-Frith']
+temp = input('Target category?')
+targetcats = [temp]
+# targetcats = ['Category:Ruislip Lido']
 numchecked = 0
 catschecked = 0
 create = True

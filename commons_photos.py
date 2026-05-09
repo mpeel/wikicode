@@ -14,7 +14,7 @@ from pywikibot import pagegenerators
 site = pywikibot.Site('commons', 'commons')
 repo = site.data_repository()  # this is a DataSite object
 
-cats = ['Category:Photos by Mike Peel','Category:Figures by Mike Peel','Category:Presentations by Mike Peel']
+cats = ['Category:Photos by Mike Peel']#,'Category:Figures by Mike Peel','Category:Presentations by Mike Peel']
 for catname in cats:
 	cat = pywikibot.Category(site,catname)
 	# print(cat)

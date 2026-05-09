@@ -4,8 +4,6 @@
 # Mike Peel     10-Jun-2018      v1
 # Mike Peel     17 Oct 2020      python3
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -22,8 +20,10 @@ maximum = 2000000
 numsteps = int(maximum / stepsize)
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 debug = 0
 # query = 'SELECT ?item ?categoryitem ?commonscategory WHERE { ?item wdt:P910 ?categoryitem . ?commonscategory schema:about ?item . ?commonscategory schema:isPartOf <https://commons.wikimedia.org/> . FILTER REGEX(STR(?commonscategory), "https://commons.wikimedia.org/wiki/Category:") . }'
 # if debug:

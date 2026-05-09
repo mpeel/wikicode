@@ -10,7 +10,8 @@ from pywikibot import pagegenerators
 # Connect to commons
 commons = pywikibot.Site('commons', 'commons')
 
-template = pywikibot.Page(commons, 'Template:Mechanical Curator image')
+# template = pywikibot.Page(commons, 'Template:Mechanical Curator image')
+template = pywikibot.Page(commons, 'Module:No globals')
 pages = template.embeddedin()
 for result in pages:
 	print(result.title())

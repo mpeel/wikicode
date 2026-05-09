@@ -42,7 +42,7 @@ templates = ['commonscat', 'Commonscat', 'commonscategory', 'Commonscategory', '
 catredirect_templates = ["category redirect", "Category redirect", "seecat", "Seecat", "see cat", "See cat", "categoryredirect", "Categoryredirect", "catredirect", "Catredirect", "cat redirect", "Cat redirect", "catredir", "Catredir", "redirect category", "Redirect category", "cat-red", "Cat-red", "redirect cat", "Redirect cat", "category Redirect", "Category Redirect", "cat-redirect", "Cat-redirect"]
 
 # targetcats = ['Category:Commons category link is defined as the pagename','Category:Commons category link is on Wikidata using P373','Category:Commons category link is locally defined‎']
-targetcats = ['Category:Commons category link is locally defined‎']
+targetcats = ['Category:Commons category link is locally defined']
 
 for categories in range(0,2):
 	for targetcat in targetcats:

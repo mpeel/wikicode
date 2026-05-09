@@ -11,7 +11,9 @@ import urllib
 
 globes = ['Q111', 'Q193', 'Q308', 'Q313', 'Q319', 'Q324', 'Q339', 'Q405', 'Q596', 'Q2565', 'Q3030', 'Q3123', 'Q3134', 'Q3143', 'Q3169', 'Q3257', 'Q3303', 'Q3322', 'Q3332', 'Q3338', 'Q3343', 'Q3352', 'Q3359', 'Q6604', 'Q7547', 'Q7548', 'Q11558', 'Q15034', 'Q15037', 'Q15040', 'Q15047', 'Q15050', 'Q15662', 'Q16081', 'Q16711', 'Q16765', 'Q17751', 'Q17754', 'Q17958', 'Q17975', 'Q107556', 'Q149012', 'Q149374', 'Q149417', 'Q150249', 'Q158244', 'Q510728', 'Q844672', 'Q1385178']
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 repo = commons.data_repository()
+repo.login()
 
 for i in range(0,len(globes)):
 	globe_item = pywikibot.ItemPage(repo, globes[i])

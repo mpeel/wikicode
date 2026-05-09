@@ -21,7 +21,7 @@ database = True
 manual = True
 maxnum = 1000000
 usetemplate = 0
-usecategory = 0
+usecategory = 1
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
@@ -208,7 +208,8 @@ elif usecategory:
 	# targetcats = ['Category:Santa Cruz de Tenerife']
 	# targetcats = ['Category:Cultural heritage monuments in Norway with known IDs']#['Category:São Vicente (São Paulo)']
 	# New style of category walker
-	targetcats = ['Category:Cemeteries in New Zealand by region']
+	# targetcats = ['Category:Cemeteries in New Zealand by region']
+	# targetcats = ['Category:Tallinn']
 	numchecked = 0
 	catschecked = 0
 	i = 0

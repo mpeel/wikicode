@@ -21,23 +21,19 @@ cd /home/pi/Documents/git/wikicode/pibot/
 /home/pi/venv/bin/python3 wikidata_new_from_wikipedia_query_category.py
 /home/pi/venv/bin/python3 wikidata_new_from_wikiquote_query.py
 /home/pi/venv/bin/python3 commons_category_coords.py
-
-# To check
-# /usr/bin/python3 commons_category_coords_from_cat.py
-
-# /usr/bin/python3 wikidata_bad_p373.py
-# /usr/bin/python3 commons_defaultsort_conflicts.py
-# /usr/bin/python3 enwp_commonscat_import.py
-# /usr/bin/python3 commonscat_p910_tidy.py
-# /usr/bin/python3 commonscat_move_from_P910.py
-# /usr/bin/python3 commonscat_move_from_P1754.py
-# /usr/bin/python3 doublecheck_move.py
-# /usr/bin/python3 wikidata_p301_inverse.py
-# /usr/bin/python3 wikidata_p910_inverse.py
-# /usr/bin/python3 wikidata_p1753_inverse.py
-# /usr/bin/python3 wikidata_p1754_inverse.py
-# /usr/bin/python3 astrocoords_fix_globe.py
-# /usr/bin/python3 astrocoords_copy_to_P376.py
+/home/pi/venv/bin/python3 commons_category_coords_from_cat.py
+/home/pi/venv/bin/python3 wikidata_bad_p373.py
+/home/pi/venv/bin/python3 commons_defaultsort_conflicts.py
+/home/pi/venv/bin/python3 commonscat_p910_tidy.py
+/home/pi/venv/bin/python3 commonscat_move_from_P910.py
+/home/pi/venv/bin/python3 commonscat_move_from_P1754.py
+/home/pi/venv/bin/python3 doublecheck_move.py
+/home/pi/venv/bin/python3 wikidata_p301_inverse.py
+/home/pi/venv/bin/python3 wikidata_p910_inverse.py
+/home/pi/venv/bin/python3 wikidata_p1753_inverse.py
+/home/pi/venv/bin/python3 wikidata_p1754_inverse.py
+/home/pi/venv/bin/python3 astrocoords_fix_globe.py
+/home/pi/venv/bin/python3 astrocoords_copy_to_P376.py
 
 # Not working
 #python3 wir_newpages_duplicity.py
