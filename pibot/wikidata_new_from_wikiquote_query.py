@@ -56,6 +56,7 @@ def parseduplicity(url,lang='en'):
 	return returnlist
 
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 
 wikipedias = ['en','pt','fr','de','es','it']

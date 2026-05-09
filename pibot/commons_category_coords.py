@@ -94,7 +94,9 @@ def check_match(lat1, lon1, prec1, lat2, lon2, prec2):
 		return False
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 repo = commons.data_repository()
+repo.login()
 globe_item = pywikibot.ItemPage(repo, 'Q2')
 
 coord_templates = ['Object location']
