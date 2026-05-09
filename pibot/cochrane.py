@@ -34,6 +34,7 @@ checkedpages = {}
 reportpage = 'Wikipedia:WikiProject_Medicine/Cochrane_update'
 
 site = pywikibot.Site('en', 'wikipedia')
+site.login()
 
 # First clean up the report page
 report = pywikibot.Page(site, reportpage)

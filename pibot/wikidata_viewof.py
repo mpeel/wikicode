@@ -4,7 +4,6 @@
 # 12 December 2020 - started
 # 17 December 2020 - bot version
 # 29 December 2020 - adapt to cover more properties
-from __future__ import unicode_literals
 
 import pywikibot
 import numpy as np
@@ -15,7 +14,9 @@ from pywikibot.data import api
 import urllib
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 repo = commons.data_repository()  # this is a DataSite object
+repo.login()
 maxnum = 5000
 j = 0
 debug = False

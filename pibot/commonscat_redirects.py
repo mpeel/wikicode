@@ -4,8 +4,6 @@
 # Mike Peel     08-Feb-2018      v1 - start
 # Mike Peel     26-Mar-2018      Change recurse to 'False', shouldn't need to look in subcategories.
 
-from __future__ import unicode_literals
-
 import pywikibot
 import numpy as np
 import time
@@ -20,7 +18,9 @@ skipto = 'Category:Austrobaileyaceae'
 trap = 0
 
 commons = pywikibot.Site('commons', 'commons')
-repo = commons.data_repository()  # this is a DataSite object
+commons.login()
+repo = commons.data_repository()
+repo.login()
 # report = pywikibot.Page(commons, reportpage)
 # if trap != 1:
 #     report.text = ''

@@ -21,8 +21,10 @@ trip = 1
 
 # Sites
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
+wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 
 # Functions
 def search_entities(site, itemtitle):

@@ -3,7 +3,6 @@
 # Create new Wikidata items
 # Started 25 August 2018 by Mike Peel
 # 3 November 2018 - focus on people for now
-from __future__ import unicode_literals
 
 import pywikibot
 import numpy as np
@@ -14,7 +13,9 @@ from pywikibot.data import api
 import urllib
 
 commons = pywikibot.Site('commons', 'commons')
+commons.login()
 repo = commons.data_repository()  # this is a DataSite object
+repo.login()
 
 statedin = pywikibot.Claim(repo, u'P143')
 itis = pywikibot.ItemPage(repo, "Q565")

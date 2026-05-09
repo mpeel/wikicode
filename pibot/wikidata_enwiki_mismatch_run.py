@@ -8,7 +8,7 @@ nextmonth = ((now.replace(day=1) + datetime.timedelta(days=32)).replace(day=1)).
 print(today)
 print(nextmonth)
 
-os.system("python3 wikidata_enwiki_mismatch.py > wikidata_enwiki_mismatch_"+today+"_log.csv")
+os.system("/home/pi/venv/bin/python3 wikidata_enwiki_mismatch.py > wikidata_enwiki_mismatch_"+today+"_log.csv")
 
 os.system(' curl -X POST "https://mismatch-finder.toolforge.org/api/imports" \
 -H "Accept: application/json" \

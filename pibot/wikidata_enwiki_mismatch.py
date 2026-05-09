@@ -10,7 +10,9 @@ import datetime
 
 lang = 'en'
 wiki = pywikibot.Site(lang, 'wikipedia')
+wiki.login()
 repo = wiki.data_repository()
+repo.login()
 debug = False
 maxpercat=5000
 

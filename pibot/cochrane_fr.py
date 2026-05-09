@@ -26,6 +26,7 @@ def update_report(page, old_pmid, new_pmid, previousreports):
 checkedpages = {}
 
 site = pywikibot.Site('fr', 'wikipedia')
+site.login()
 
 # First clean up the report page
 report = pywikibot.Page(site, reportpage)
