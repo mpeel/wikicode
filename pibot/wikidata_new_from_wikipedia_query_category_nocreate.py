@@ -263,7 +263,7 @@ for prefix in wikipedias:
 				continue
 			# Check for the last edit time
 			try:
-				lastedited = page.editTime()
+				lastedited = page.latest_revision.timestamp
 			except:
 				print('Unable to get last edited time')
 				continue
