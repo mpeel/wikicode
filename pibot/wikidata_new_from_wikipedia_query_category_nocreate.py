@@ -100,7 +100,7 @@ def get_unconnected(site, offset,number):
 
 for prefix in wikipedias:
 	wikipedia = pywikibot.Site(prefix, 'wikipedia')
-
+	wikipedia.login()
 	ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
 	ftp.cwd('wiki')
 	ftp.retrbinary("RETR "+prefix+"wp_categories.csv" ,open(prefix+'wp_categories.csv', 'wb').write)
