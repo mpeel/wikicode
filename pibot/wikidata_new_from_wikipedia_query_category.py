@@ -101,6 +101,7 @@ def get_unconnected(site, offset,number):
 
 for prefix in wikipedias:
 	wikipedia = pywikibot.Site(prefix, 'wikipedia')
+	wikipedia.login()
 
 	ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
 	ftp.cwd('wiki')
