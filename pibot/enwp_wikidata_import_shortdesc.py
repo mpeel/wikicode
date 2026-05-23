@@ -42,19 +42,22 @@ lowercase_exceptions = items.split()
 # Fetch the exclusion list for bad enwp short descriptions
 page = pywikibot.Page(repo, 'User:Pi bot/shortdesc_exclusions')
 items = page.text
-shortdesc_exclusions = items.split('\n')
-print(shortdesc_exclusions)
+shortdesc_exclusions = [
+    line.strip().lower()
+    for line in items.splitlines()
+    if line.strip()
+]rint(shortdesc_exclusions)
 
 # List of words to add to the double-check report
 page = pywikibot.Page(repo, 'User:Pi bot/doublecheck_words')
 items = page.text
-doublecheck_words = items.split('\n')
+doublecheck_words = items.splitlines()
 print(doublecheck_words)
 
 # List of starting words to add to the double-check report
 page = pywikibot.Page(repo, 'User:Pi bot/doublecheck_start_words')
 items = page.text
-doublecheck_start_words = items.split('\n')
+doublecheck_start_words = items.splitlines()
 print(doublecheck_start_words)
 
 cat = pywikibot.Category(wikipedia, targetcat)
@@ -111,7 +114,7 @@ for page in pages:
 	print(enwiki_description)
 
 	# Check that the short description isn't in the exclusion list
-	if enwiki_description.strip() in shortdesc_exclusions:
+	if enwiki_description.strip().lower() in shortdesc_exclusions:
 		print('enwiki description is in the exclusion list, skipping')
 		continue
 
