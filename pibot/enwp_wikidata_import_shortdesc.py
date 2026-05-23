@@ -46,7 +46,8 @@ shortdesc_exclusions = [
     line.strip().lower()
     for line in items.splitlines()
     if line.strip()
-]rint(shortdesc_exclusions)
+]
+print(shortdesc_exclusions)
 
 # List of words to add to the double-check report
 page = pywikibot.Page(repo, 'User:Pi bot/doublecheck_words')
