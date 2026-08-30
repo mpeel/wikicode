@@ -37,7 +37,7 @@ random = False
 usequery = False
 usetemplate = ''#'Creator'#'Individual aircraft'
 usequarry = ''#'quarry.csv'
-quarry_reference = 'commons_infobox_candidates_old.txt'
+quarry_reference = 'commons_infobox_candidates_new_old.txt'
 usequarry2 = 'commons_infobox_candidates_new.txt'
 useimport = '' #'import.csv'
 newstyle = False
@@ -499,7 +499,7 @@ else:
             print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
             break
 
-shutil.copyfile('commons_infobox_candidates.txt', 'commons_infobox_candidates_old.txt')
+shutil.copyfile('commons_infobox_candidates_new.txt', 'commons_infobox_candidates_new_old.txt')
 print('Done! Edited ' + str(nummodified) + ' entries')
 
 # EOF
