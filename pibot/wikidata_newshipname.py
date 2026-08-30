@@ -100,6 +100,7 @@ def check_ship_cat(targetcat):
 		except:
 			print('Unable to run the query! Skipping this one.')
 		count = 0
+		try:
 		for testpage in generator:
 			wd_item = testpage
 			count+=1
@@ -193,7 +194,10 @@ for target in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 			continue
 	else:
 		trip = 1
-	returnval = check_ship_cat(target)
+	try:
+		returnval = check_ship_cat(target)
+	except:
+		continue
 	# if returnval != 0:
 	# 	i += returnval
 	# 	time.sleep(5)
