@@ -100,7 +100,6 @@ def check_ship_cat(targetcat):
 		except:
 			print('Unable to run the query! Skipping this one.')
 		count = 0
-		try:
 		for testpage in generator:
 			wd_item = testpage
 			count+=1
