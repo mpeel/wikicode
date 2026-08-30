@@ -37,7 +37,7 @@ with conn.cursor() as cur:
 	" WHERE tl.tl_target_id IS NULL"\
 	" AND ("\
 	"	SELECT cl1.cl_from"\
-	"	FROM categorylinks AS cl1 WHERE cl1.cl_to = 'Category_redirects'  AND cl_type = 'subcat'"\
+	"	FROM categorylinks AS cl1 join linktarget cllt on cllt.lt_namespace = 15 and cllt.lt_it = cl1.cl_target_id WHERE cllt.lt_title = 'Category_redirects'  AND cl_type = 'subcat'"\
   	"	AND cl1.cl_from = p1.page_id"\
 	"	LIMIT 1"\
 	") IS NULL")
