@@ -182,7 +182,10 @@ for result in pagegenerators.SubCategoriesPageGenerator(cat, recurse=False):
 			continue
 		else:
 			trip = 1
-	nummodified += do_date_find(result)
+	try:
+		nummodified += do_date_find(result)
+	except:
+		continue
 	if nummodified >= maxnum:
 		print('Reached the maximum of ' + str(maxnum) + ' entries modified, quitting!')
 		break
