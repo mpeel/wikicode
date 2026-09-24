@@ -63,7 +63,10 @@ for pagename in pagenames:
 				# print(line_parts)
 				user = userRE.search(line)
 				# print(user)
-				nominator = user.group(1)
+				try:
+					nominator = user.group(1)
+				except:
+					pass
 				try:
 					nominators[nominator] = nominators[nominator] + 1
 					# print(nominators[nominator])
