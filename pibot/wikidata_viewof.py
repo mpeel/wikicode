@@ -28,7 +28,7 @@ def search_entities(site, itemtitle,limit=100,offset=0):
 				'srlimit': limit,
 				'sroffset': offset,
 				'srnamespace': 14,
-				'srwhat': 'title',
+				'srsearch': 'intitle:' + itemtitle
 				'srsearch': itemtitle}
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
