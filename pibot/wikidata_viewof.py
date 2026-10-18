@@ -59,9 +59,22 @@ def newitem(category, items,cat=True):
 			print("That didn't work")
 	return candidate_item
 
-searchstrings = ["View_of","Views_of","View_from","Views_from", "(exterior)", "(interior)", ", interior", "- Exterior", "- Interior", ":Exterior_of", ":Interior_of"]
-properties = [ 'P8596', 'P7561', 'P8596', 'P7561', 'P8989','P8989','P8933','P8933','P8596', 'P7561', 'P7561']
-combines = ['Q1385033','Q2998430', 'Q1385033','Q2998430','Q2075301','Q2075301','Q2075301','Q2075301','Q1385033','Q2998430','Q2998430']
+# Search term: (Wikidata property, category combines topics)
+search_config = {
+    "View_of":      ("P8989", "Q2075301"),
+    "Views_of":     ("P8989", "Q2075301"),
+    "View_from":    ("P8933", "Q2075301"),
+    "Views_from":   ("P8933", "Q2075301"),
+    "(exterior)":   ("P8596", "Q1385033"),
+    "(interior)":   ("P7561", "Q2998430"),
+    ", interior":   ("P7561", "Q2998430"),
+    "- Exterior":   ("P8596", "Q1385033"),
+    "- Interior":   ("P7561", "Q2998430"),
+    ":Exterior_of": ("P8596", "Q1385033"),
+    ":Interior_of": ("P7561", "Q2998430"),
+}
+
+searchstrings = list(search_config)
 for k in range(0,len(searchstrings)):
 	offset = 0
 	step = 100
@@ -75,7 +88,15 @@ for k in range(0,len(searchstrings)):
 		for result in candidates['query']['search']:
 			targetcat = pywikibot.Page(commons, str(result['title']))
 			print('https://commons.wikimedia.org/wiki/'+targetcat.title().replace(" ", "_"))
-			if searchstrings[k].replace("_"," ").replace('"','') in targetcat.title():
+			title = targetcat.title(with_ns=False).lower()
+			term = searchstrings[k].replace("_", " ").lstrip(":").lower()
+
+			if term.startswith(("(", ",", "-")):
+			    matches = title.endswith(term)
+			else:
+			    matches = title.startswith(term)
+
+			if matches:
 				try:
 					wd_item = pywikibot.ItemPage.fromPage(targetcat)
 					item_dict = wd_item.get()
@@ -89,10 +110,7 @@ for k in range(0,len(searchstrings)):
 				# Skip '.. by ..' categories
 				if ' by ' in targetcat.title().lower():
 					continue
-				# Skip 'of ... from' categories
-				if i < 4 and 'from' in targetcat.title().lower():
-					continue
-				if 'of'  in targetcat.title().lower() and 'from'  in targetcat.title().lower():
+   				if 'of'  in targetcat.title().lower() and 'from' in targetcat.title().lower():
 					continue
 
 				for parentcat in targetcat.categories():
@@ -128,7 +146,8 @@ for k in range(0,len(searchstrings)):
 					# Start assembling the Wikdata entry
 					target_text = targetcat.get()
 					items = [['P31','Q4167836']] # Instance of Wikimedia category
-					items.append(['P971',combines[k]]) # combines exterior/interior/view
+					prop, combine = search_config[searchstrings[k]]
+					items.append(['P971', combine])
 					items.append(['P971',target]) # combines parentcat
 					print(items)
 
@@ -138,7 +157,7 @@ for k in range(0,len(searchstrings)):
 					# 	test = 'y'
 					# if test == 'y':
 					new_item = newitem(targetcat, items)
-					newclaim = pywikibot.Claim(repo, properties[k])
+					newclaim = pywikibot.Claim(repo, prop)
 					newclaim.setTarget(new_item)
 					wd_item.addClaim(newclaim, summary=u'Setting '+properties[k]+' value')
 					j += 1
