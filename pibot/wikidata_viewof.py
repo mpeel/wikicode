@@ -28,6 +28,7 @@ def search_entities(site, itemtitle,limit=100,offset=0):
 				'srlimit': limit,
 				'sroffset': offset,
 				'srnamespace': 14,
+				'srwhat': 'title',
 				'srsearch': itemtitle}
 	 request = api.Request(site=site, parameters=params)
 	 return request.submit()
@@ -76,10 +77,9 @@ search_config = {
 
 searchstrings = list(search_config)
 for k in range(0,len(searchstrings)):
-	offset = 0
 	step = 100
-	for i in range(0,100):
-		offset += step
+	for i in range(100):
+		offset = i * step
 		# View of, Views of, View from, Views from
 		try:
 			candidates = search_entities(commons, searchstrings[k],limit=step,offset=offset)
@@ -92,9 +92,9 @@ for k in range(0,len(searchstrings)):
 			term = searchstrings[k].replace("_", " ").lstrip(":").lower()
 
 			if term.startswith(("(", ",", "-")):
-			    matches = title.endswith(term)
+				matches = title.endswith(term)
 			else:
-			    matches = title.startswith(term)
+				matches = title.startswith(term)
 
 			if matches:
 				try:
@@ -108,10 +108,10 @@ for k in range(0,len(searchstrings)):
 				test = 'n'
 
 				# Skip '.. by ..' categories
-				if ' by ' in targetcat.title().lower():
+				if ' by ' in title:
 					continue
-   				if 'of'  in targetcat.title().lower() and 'from' in targetcat.title().lower():
-					continue
+				if ' of ' in title and ' from ' in title:
+    				continue
 
 				for parentcat in targetcat.categories():
 					if target == '' and 'view' not in parentcat.title().lower() and 'interior' not in parentcat.title().lower() and 'exterior' not in parentcat.title().lower() and 'wikidata' not in parentcat.title().lower() and 'page' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower() and 'disambig' not in parentcat.text.lower() and 'base mérimée' not in parentcat.text.lower():
@@ -140,6 +140,7 @@ for k in range(0,len(searchstrings)):
 							test = 'y'
 						if test == 'y':
 							target = wd_item.title()
+							break
 
 				if target != '':
 					print(target)
@@ -159,7 +160,7 @@ for k in range(0,len(searchstrings)):
 					new_item = newitem(targetcat, items)
 					newclaim = pywikibot.Claim(repo, prop)
 					newclaim.setTarget(new_item)
-					wd_item.addClaim(newclaim, summary=u'Setting '+properties[k]+' value')
+					wd_item.addClaim(newclaim, summary='Setting ' + prop + ' value')
 					j += 1
 					print(j)
 
