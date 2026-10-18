@@ -111,7 +111,7 @@ for k in range(0,len(searchstrings)):
 				if ' by ' in title:
 					continue
 				if ' of ' in title and ' from ' in title:
-    				continue
+					continue
 
 				for parentcat in targetcat.categories():
 					if target == '' and 'view' not in parentcat.title().lower() and 'interior' not in parentcat.title().lower() and 'exterior' not in parentcat.title().lower() and 'wikidata' not in parentcat.title().lower() and 'page' not in parentcat.title().lower() and 'redirect' not in parentcat.title().lower() and 'categor' not in parentcat.title().lower().replace('category:','') and 'redirect' not in parentcat.text.lower() and 'disambig' not in parentcat.text.lower() and 'base mérimée' not in parentcat.text.lower():
