@@ -12,7 +12,7 @@ user = login[1].replace('user = ','').strip()
 password = login[2].replace('password = ','').strip()
 port = 3306
 
-languages = ['en','pt','fr','de','es']#, 'pt', 'de', 'simple','es','fr','it','nl','pl','sv','eo']
+languages = ['en', 'it', 'pl', 'ru', 'cs', 'et', 'uk', 'pt', 'he', 'fr', 'fa', 'es', 'de', 'sr', 'tr', 'az', 'eo', 'sk', 'ca', 'bs', 'zh', 'id', 'ar', 'fi', 'sl', 'lt', 'bn', 'su', 'hy', 'bg', 'ig', 'hr', 'tl', 'uz', 'el', 'nn', 'vi', 'li', 'sv', 'bjn', 'hu', 'as', 'nl', 'ja', 'ko', 'sah', 'la', 'ta', 'hi', 'te', 'guw', 'kn', 'ro', 'th', 'ur', 'gl', 'gu', 'be', 'ka', 'no', 'cy', 'pcm', 'ml', 'sq', 'eu', 'ku', 'ms', 'da', 'bcl', 'sa', 'is', 'gor', 'br', 'mr', 'af', 'ky']
 
 for lang in languages:
 	host = lang+'wikiquote.analytics.db.svc.wikimedia.cloud'
