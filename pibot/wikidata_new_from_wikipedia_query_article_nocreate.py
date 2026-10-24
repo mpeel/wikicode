@@ -91,148 +91,182 @@ def get_unconnected(site, offset,number):
 	 return request.submit()
 
 for prefix in wikipedias:
-	try:
-		wikipedia = pywikibot.Site(prefix, 'wikipedia')
-		wikipedia.login()
+	wikipedia = pywikibot.Site(prefix, 'wikipedia')
+	wikipedia.login()
 
-		ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
-		ftp.cwd('wiki')
-		ftp.retrbinary("RETR "+prefix+"wp_articles.csv" ,open(prefix+'wp_articles.csv', 'wb').write)
-		ftp.quit()
+	ftp = FTP('mikepeel.net',user=ftpuser,passwd=ftppass)
+	ftp.cwd('wiki')
+	ftp.retrbinary("RETR "+prefix+"wp_articles.csv" ,open(prefix+'wp_articles.csv', 'wb').write)
+	ftp.quit()
 
-		# Set up the list of templates to skip
-		# Adapted from https://gerrit.wikimedia.org/g/pywikibot/core/+/HEAD/scripts/newitem.py
-		skipping_templates = set()
-		for item in templates_to_skip:
-			print(item)
-			try:
-				template = wikipedia.page_from_repository(item)
-			except:
+	# Set up the list of templates to skip
+	# Adapted from https://gerrit.wikimedia.org/g/pywikibot/core/+/HEAD/scripts/newitem.py
+	skipping_templates = set()
+	for item in templates_to_skip:
+		print(item)
+		try:
+			template = wikipedia.page_from_repository(item)
+		except:
+			continue
+		if template is None:
+			continue
+		skipping_templates.add(template)
+		# also add redirect templates
+		skipping_templates.update(template.getReferences(follow_redirects=False, with_template_inclusion=False, filter_redirects=True, namespaces=wikipedia.namespaces.TEMPLATE))
+		print(template.title())
+
+	# Start running through unconnected pages
+	nametrip = True
+	# pages = parsequarry('quarry-51946-enwp-articles-without-wikidata-run526568.csv')
+	pages = parsequarry(prefix+"wp_articles.csv")
+
+	count = 0
+	for pagename in pages:
+		pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
+		print(pagename)
+		count += 1
+		if pagename[0] == '"' and pagename[-1] == '"':
+			pagename = pagename[1:-1]
+		print(count)
+		if not nametrip:
+			if 'Crytzer' not in pagename:
 				continue
-			if template is None:
+			else:
+				nametrip = True
+		# if option == 0:
+		# 	page = pagename
+		# else:
+		try:
+			page = pywikibot.Page(wikipedia, pagename)
+		except:
+			continue
+
+		# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
+		# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
+
+		## Part 1 - quick things to check
+
+		# Articles and categories only
+		if page.namespace() != wikipedia.namespaces.MAIN and page.namespace() != wikipedia.namespaces.CATEGORY:
+			# print('bad namespace')
+			continue
+		# Exclude redirects
+		if page.isRedirectPage():
+			# print('is redirect')
+			continue
+		if page.isCategoryRedirect():
+			# print('is redirect')
+			continue
+		if 'WikiProject' in page.title():
+			print("WikiProject")
+			continue
+		if 'sockpuppet' in page.title():
+			print('sockpuppet')
+			continue
+
+		## Part 2 - parse the page info
+		print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
+
+		# Check if we have a Wikidata item already
+		has_sitelink = False
+		try:
+			wd_item = pywikibot.ItemPage.fromPage(page)
+			item_dict = wd_item.get()
+			qid = wd_item.title()
+			print("Has a sitelink already - " + qid)
+			has_sitelink = True
+		except:
+			print(page.title() + ' - no page found')
+		if has_sitelink:
+			continue
+
+		# Check for the last edit time
+		try:
+			lastedited = page.latest_revision.timestamp
+		except:
+			print('Unable to get last edited time')
+			continue
+		lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
+		print('Last edited: ' + str(lastedited_time))
+		if lastedited_time < days_since_last_edit:
+			print('Recently edited ('+str(lastedited_time)+')')
+			continue
+
+		# Check for the creation time
+		old_page = False
+		created = page.oldest_revision.timestamp
+		created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
+		print('Created: ' + str(created_time))
+		if created_time < days_since_creation:
+			print('Recently created ('+str(created_time)+')')
+			# Continue moved to after search
+		elif created_time > 90:
+			old_page = True
+
+
+
+		# Check to see if it contains templates we want to avoid
+		trip = 0
+		for template, _ in page.templatesWithParams():
+			if template in skipping_templates:
+				trip = template.title()
+		if trip != 0:
+			print('Page contains ' + str(trip) + ', skipping')
+			continue
+
+		# Check for #REDIRECT
+		if '#redirect' in page.text.lower():
+			print("Page is a redirect but isn't marked as one")
+			continue
+
+		## Part 3 - look up more information
+
+		# If we have a category, make sure it isn't empty
+		if page.namespace() == wikipedia.namespaces.CATEGORY:
+			if page.isEmptyCategory():
+				# print('Is empty')
 				continue
-			skipping_templates.add(template)
-			# also add redirect templates
-			skipping_templates.update(template.getReferences(follow_redirects=False, with_template_inclusion=False, filter_redirects=True, namespaces=wikipedia.namespaces.TEMPLATE))
-			print(template.title())
-
-		# Start running through unconnected pages
-		nametrip = True
-		# pages = parsequarry('quarry-51946-enwp-articles-without-wikidata-run526568.csv')
-		pages = parsequarry(prefix+"wp_articles.csv")
-
-		count = 0
-		for pagename in pages:
-			pagename = str(pagename[2:-1]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8')
-			print(pagename)
-			count += 1
-			if pagename[0] == '"' and pagename[-1] == '"':
-				pagename = pagename[1:-1]
-			print(count)
-			if not nametrip:
-				if 'Crytzer' not in pagename:
-					continue
-				else:
-					nametrip = True
-			# if option == 0:
-			# 	page = pagename
-			# else:
-			try:
-				page = pywikibot.Page(wikipedia, pagename)
-			except:
-				continue
-
-			# page = pywikibot.Category(wikipedia, 'Category:Assessed-Class Gaul articles')
-			# print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
-
-			## Part 1 - quick things to check
-
-			# Articles and categories only
-			if page.namespace() != wikipedia.namespaces.MAIN and page.namespace() != wikipedia.namespaces.CATEGORY:
-				# print('bad namespace')
-				continue
-			# Exclude redirects
-			if page.isRedirectPage():
-				# print('is redirect')
-				continue
-			if page.isCategoryRedirect():
-				# print('is redirect')
-				continue
-			if 'WikiProject' in page.title():
-				print("WikiProject")
-				continue
-			if 'sockpuppet' in page.title():
-				print('sockpuppet')
-				continue
-
-			## Part 2 - parse the page info
-			print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
-
-			# Check if we have a Wikidata item already
-			has_sitelink = False
-			try:
-				wd_item = pywikibot.ItemPage.fromPage(page)
-				item_dict = wd_item.get()
-				qid = wd_item.title()
-				print("Has a sitelink already - " + qid)
-				has_sitelink = True
-			except:
-				print(page.title() + ' - no page found')
-			if has_sitelink:
-				continue
-
-			# Check for the last edit time
-			try:
-				lastedited = page.latest_revision.timestamp
-			except:
-				print('Unable to get last edited time')
-				continue
-			lastedited_time = (datetime.datetime.now() - lastedited).total_seconds()/(60*60*24)
-			print('Last edited: ' + str(lastedited_time))
-			if lastedited_time < days_since_last_edit:
-				print('Recently edited ('+str(lastedited_time)+')')
-				continue
-
-			# Check for the creation time
-			old_page = False
-			created = page.oldest_revision.timestamp
-			created_time = (datetime.datetime.now() - created).total_seconds()/(60*60*24)
-			print('Created: ' + str(created_time))
-			if created_time < days_since_creation:
-				print('Recently created ('+str(created_time)+')')
-				# Continue moved to after search
-			elif created_time > 90:
-				old_page = True
-
-
-
-			# Check to see if it contains templates we want to avoid
-			trip = 0
-			for template, _ in page.templatesWithParams():
-				if template in skipping_templates:
-					trip = template.title()
-			if trip != 0:
-				print('Page contains ' + str(trip) + ', skipping')
+			if page.isHiddenCategory():
+				# print('Is hidden')
 				continue
 
-			# Check for #REDIRECT
-			if '#redirect' in page.text.lower():
-				print("Page is a redirect but isn't marked as one")
+		# See if search returns any items
+		wikidataEntries = search_entities(repo, page.title(),lang=prefix)
+		if wikidataEntries['search'] != []:
+			print('Search results but old')
+			results = wikidataEntries['search']
+			numresults = len(results)
+			for i in range(0,numresults):
+				qid = results[i]['id']
+				print(qid)
+				try:
+					candidate_item = pywikibot.ItemPage(repo, qid)
+					candidate_item_dict = candidate_item.get()
+				except:
+					print('Huh - no page found')
+				skip = 0
+				incat = 0
+				try:
+					sitelink = get_sitelink_title(candidate_item_dict['sitelinks'][prefix+'wiki'])
+				except:
+					print('Hello')
+					try:
+						# No existing sitelink found, add it to the database as a possibility
+						mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
+						myresult = mycursor.fetchone()
+						print(myresult)
+						if not myresult:
+							sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
+							val = (qid, page.title(),prefix)
+							mycursor.execute(sql, val)
+							mydb.commit()
+					except:
+						print('Something went wrong when adding it to the database!')
+			if lastedited_time < days_since_last_edit_but_search:
+				print('Recently edited with search results ('+str(lastedited_time)+')')
 				continue
-
-			## Part 3 - look up more information
-
-			# If we have a category, make sure it isn't empty
-			if page.namespace() == wikipedia.namespaces.CATEGORY:
-				if page.isEmptyCategory():
-					# print('Is empty')
-					continue
-				if page.isHiddenCategory():
-					# print('Is hidden')
-					continue
-
-			# See if search returns any items
-			wikidataEntries = search_entities(repo, page.title(),lang=prefix)
+		if prefix != 'en':
+			wikidataEntries = search_entities(repo, page.title(),lang='en')
 			if wikidataEntries['search'] != []:
 				print('Search results but old')
 				results = wikidataEntries['search']
@@ -252,7 +286,7 @@ for prefix in wikipedias:
 					except:
 						print('Hello')
 						try:
-							# No existing sitelink found, add it to the database as a possibility
+							# # No existing sitelink found, add it to the database as a possibility
 							mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
 							myresult = mycursor.fetchone()
 							print(myresult)
@@ -266,43 +300,8 @@ for prefix in wikipedias:
 				if lastedited_time < days_since_last_edit_but_search:
 					print('Recently edited with search results ('+str(lastedited_time)+')')
 					continue
-			if prefix != 'en':
-				wikidataEntries = search_entities(repo, page.title(),lang='en')
-				if wikidataEntries['search'] != []:
-					print('Search results but old')
-					results = wikidataEntries['search']
-					numresults = len(results)
-					for i in range(0,numresults):
-						qid = results[i]['id']
-						print(qid)
-						try:
-							candidate_item = pywikibot.ItemPage(repo, qid)
-							candidate_item_dict = candidate_item.get()
-						except:
-							print('Huh - no page found')
-						skip = 0
-						incat = 0
-						try:
-							sitelink = get_sitelink_title(candidate_item_dict['sitelinks'][prefix+'wiki'])
-						except:
-							print('Hello')
-							try:
-								# # No existing sitelink found, add it to the database as a possibility
-								mycursor.execute('SELECT * FROM newarticles WHERE qid="'+qid+'" AND candidate = "' + page.title() + '" AND site = "'+prefix+'"')
-								myresult = mycursor.fetchone()
-								print(myresult)
-								if not myresult:
-									sql = "INSERT INTO newarticles (qid, candidate, site) VALUES (%s, %s, %s)"
-									val = (qid, page.title(),prefix)
-									mycursor.execute(sql, val)
-									mydb.commit()
-							except:
-								print('Something went wrong when adding it to the database!')
-					if lastedited_time < days_since_last_edit_but_search:
-						print('Recently edited with search results ('+str(lastedited_time)+')')
-						continue
 
 		# ... and we're done.
-	except:
-		continue
+	# except:
+	# 	continue
 # EOF
