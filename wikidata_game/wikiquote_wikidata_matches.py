@@ -18,16 +18,34 @@ for arg in args:
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
-enwiki = pywikibot.Site('en', 'wikiquote')
-enwiki.login()
-ptwiki = pywikibot.Site('pt', 'wikiquote')
-ptwiki.login()
-dewiki = pywikibot.Site('de', 'wikiquote')
-dewiki.login()
-eswiki = pywikibot.Site('es', 'wikiquote')
-eswiki.login()
-frwiki = pywikibot.Site('fr', 'wikiquote')
-frwiki.login()
+
+
+wikis = {
+    'en': 'English',
+    'pt': 'Português',
+    'de': 'Deutsch',
+    'es': 'Español',
+    'fr': 'Français',
+    'it': 'Italiano',
+    'nl': 'Nederlands',
+    'pl': 'Polski',
+    'sv': 'Svenska',
+    'eo': 'Esperanto',
+    'ml': 'Malayalam',
+    'af': 'Afrikaans',
+}
+
+additional_wikis = """
+ru cs et uk he fa sr tr az sk ca bs zh id ar fi sl lt bn su hy bg ig hr tl uz el nn vi li bjn hu as ja ko sah la ta hi te guw kn ro th ur gl gu be ka no cy pcm sq eu ku ms da bcl sa is gor br mr af ky
+""".split()
+
+wikis.update({
+	code: code.replace('_', '-')
+	for code in additional_wikis
+	if code not in wikis
+})
+
+sites = {}
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -47,8 +65,9 @@ if int(num) > 50:
 	num = 10
 lang = GET.get('lang')
 if action == 'desc':
+	wiki_options = {'all': 'Any', **wikis}
 	print("Content-type: application/json\n\n")
-	print(callback + " ( " + json.dumps({'label': {'en':'New Wikiquote article and category matches'}, 'description': {'en':'Match new Wikiquote pages with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these pages, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikiquote-logo.svg/120px-Wikiquote-logo.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano'}}]}) + " )\n")
+	print(callback + " ( " + json.dumps({'label': {'en':'New Wikiquote article and category matches'}, 'description': {'en':'Match new Wikiquote pages with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these pages, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikiquote-logo.svg/120px-Wikiquote-logo.svg.png','options': [{'name': 'Entry type','key': 'type','values': wiki_options}]}) + " )\n")
 
 elif action == 'tiles':
 	print("Content-type: application/json\n\n")
@@ -56,64 +75,48 @@ elif action == 'tiles':
 	finished = 0
 	tiles = []
 
-	itemtype = 'Any'
-	try:
-		itemtype = GET.get('type')
-	except:
-		itemtype = 'Any'
-	torun = 'any'
-	if itemtype != 'Any':
-		if itemtype == 'en':
-			torun = 'en'
-		elif itemtype == 'de':
-			torun = 'de'
-		elif itemtype == 'pt':
-			torun = 'pt'
-		elif itemtype == 'es':
-			torun = 'es'
-		elif itemtype == 'fr':
-			torun = 'fr'
-		elif itemtype == 'it':
-			torun = 'it'
-		# elif itemtype == 'nl':
-		# 	torun = 'nl'
-		# elif itemtype == 'pl':
-		# 	torun = 'pl'
-		# elif itemtype == 'sv':
-		# 	torun = 'sv'
-		# elif itemtype == 'eo':
-		# 	torun = 'eo'
+	itemtype = GET.get('type', 'all')
+
+	if itemtype in wikis:
+		torun = itemtype
+	else:
+		torun = 'any'
+
 	while finished == 0:
+
 		if torun == 'any':
-			sql = 'SELECT * FROM newwikiquote WHERE done = 0 ORDER BY RAND() LIMIT 1'
+			placeholders = ','.join(['%s'] * len(wikis))
+			sql = (
+				'SELECT * FROM newwikiquote '
+				'WHERE done = 0 AND site IN (' + placeholders + ') '
+				'ORDER BY RAND() LIMIT 1'
+			)
+			params = tuple(wikis)
 		else:
-			sql = 'SELECT * FROM newwikiquote WHERE done = 0 AND site = "'+torun+'" ORDER BY RAND() LIMIT 1'
-		mycursor.execute(sql)
+			sql = (
+				'SELECT * FROM newwikiquote '
+				'WHERE done = 0 AND site = %s '
+				'ORDER BY RAND() LIMIT 1'
+			)
+			params = (torun,)
+
+		mycursor.execute(sql, params)
 		myresult = mycursor.fetchone()
-		if myresult[3] == 'en':
-			site = enwiki
-		elif myresult[3] == 'simple':
-			site = simplewiki
-		elif myresult[3] == 'de':
-			site = dewiki
-		elif myresult[3] == 'pt':
-			site = ptwiki
-		elif myresult[3] == 'es':
-			site = eswiki
-		elif myresult[3] == 'fr':
-			site = frwiki
-		# elif myresult[3] == 'it':
-		# 	site = itwiki
-		# elif myresult[3] == 'nl':
-		# 	site = nlwiki
-		# elif myresult[3] == 'pl':
-		# 	site = plwiki
-		# elif myresult[3] == 'sv':
-		# 	site = svwiki
-		# elif myresult[3] == 'eo':
-		# 	site = eowiki
-		else:
+
+		if myresult is None:
+			break
+
+		wiki = myresult[3]
+
+		if wiki not in wikis:
 			continue
+
+		if wiki not in sites:
+			sites[wiki] = pywikibot.Site(wiki, 'wikiquote')
+			sites[wiki].login()
+
+		site = sites[wiki]
+
 		# Make sure it doesn't have an ID yet
 		badtile = 0
 		try:
@@ -162,7 +165,7 @@ elif action == 'tiles':
 			continue
 		# no need to create tile if link already exists
 		try:
-			siteLink = candidate_item_dict['siteLinks'][myresult[3]+'wikiquote']
+			siteLink = candidate_item_dict['sitelinks'][myresult[3]+'wikiquote']
 		except:
 			cleaned_text = target.text[0:500]
 			# for template calls {{..}}
