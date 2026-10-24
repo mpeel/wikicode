@@ -17,22 +17,57 @@ for arg in args:
 wikidata_site = pywikibot.Site("wikidata", "wikidata")
 wikidata_site.login()
 repo = wikidata_site.data_repository()  # this is a DataSite object
-enwiki = pywikibot.Site('en', 'wikipedia')
-simplewiki = pywikibot.Site('simple', 'wikipedia')
-ptwiki = pywikibot.Site('pt', 'wikipedia')
-dewiki = pywikibot.Site('de', 'wikipedia')
-eswiki = pywikibot.Site('es', 'wikipedia')
-frwiki = pywikibot.Site('fr', 'wikipedia')
-itwiki = pywikibot.Site('it', 'wikipedia')
-nlwiki = pywikibot.Site('nl', 'wikipedia')
-plwiki = pywikibot.Site('pl', 'wikipedia')
-svwiki = pywikibot.Site('sv', 'wikipedia')
-eowiki = pywikibot.Site('eo', 'wikipedia')
-dagwiki = pywikibot.Site('dag', 'wikipedia')
-mlwiki = pywikibot.Site('ml', 'wikipedia')
-afwiki = pywikibot.Site('af', 'wikipedia')
-cywiki = pywikibot.Site('cy', 'wikipedia')
-etwiki = pywikibot.Site('et', 'wikipedia')
+
+wikis = {
+    'en': 'English',
+    'simple': 'Simple',
+    'pt': 'Português',
+    'de': 'Deutsch',
+    'es': 'Español',
+    'fr': 'Français',
+    'it': 'Italiano',
+    'nl': 'Nederlands',
+    'pl': 'Polski',
+    'sv': 'Svenska',
+    'eo': 'Esperanto',
+    'dag': 'Dagbanli',
+    'ml': 'Malayalam',
+    'af': 'Afrikaans',
+    'cy': 'Welsh',
+    'et': 'Estonian',
+}
+
+additional_wikis = """
+ab ace ady ak als alt ami am ang ann anp an arc ar ary arz ast
+as atj avk av awa ay azb az ban bar bat_smg ba bbc bcl bdr
+be_x_old be bew bg bh bi bjn blk bm bn bol bo bpy br bs btm
+bug bxr ca cbk_zam cdo ceb ce cho chr ch chy ckb co crh csb
+cs cu cv da dga din diq dsb dtp dty dv dz ee el eml eu ext
+fat fa ff fiu_vro fi fj fon fo frp frr fur fy gag gan ga gcr
+gd glk gl gn gom gor got gpe guc gur gu guw gv hak ha haw he
+hif hi ho hr hsb ht hu hy hyw ia iba id ie igl ig ik ilo inh
+io isv is iu jam ja jbo jv kaa kab kai kaj ka kbd kbp kcg
+kge kg ki kk km knc kn koi ko krc ksh ks kus ku kv kw ky lad
+la lb lez lfn lg lij li lld lmo ln lo ltg lt lv mad mag mai
+map_bms mdf mg mhr min mi mk mni mn mnw mos mo mrj mr ms mt
+mwl myv my mzn nah nap nds_nl nds ne new ng nia nn nov no
+nqo nrm nr nso nup nv ny oc olo om or os pag pam pap pa pcd
+pcm pdc pfl pi pms pnb pnt ppl ps pwn qu rki rm rmy rn
+roa_rup roa_tara ro rsk rue ru rw sah sat sa scn sco sc sd
+se sg shi shn sh si skr sk sl smn sm sn so sq srn sr ss stq
+st su sw syl szl szy ta tay tcy tdd tet te tg th tig ti tk
+tl tly tn tok to tpi trv tr ts tt tum tw tyv ty udm ug uk
+ur uz vec vep ve vi vls vo war wa wo wuu xal xh xmf yi yo
+za zea zgh zh_classical zh_min_nan zh_yue zh zu
+""".split()
+
+wikis.update({
+	code: code.replace('_', '-')
+	for code in additional_wikis
+	if code not in wikis
+})
+
+sites = {}
 
 mydb = mysql.connector.connect(
   host=database_host,
@@ -53,109 +88,55 @@ if int(num) > 50:
 lang = GET.get('lang')
 if action == 'desc':
 	print("Content-type: application/json\n\n")
-	print(callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png', 'options': [{'name':'Entry type', 'key':'type', 'values': {'all':'Any', 'en':'English', 'simple':'Simple','pt':'Português','de':'Deutsch','es':'Español','fr':'Français','it':'Italiano','nl':'Nederlands','pl':'Polski','sv':'Svenska','eo':'Esperanto','dag':'Dagbanli','ml':'Malayalam','af':'Afrikaans','cy':'Welsh','et':'Estonian'}}]}) + " )\n")
+	wiki_options = {'all': 'Any', **wikis}
+	print(callback + " ( " + json.dumps({'label': {'en':'New Wikipedia article and category matches'}, 'description': {'en':'Match new Wikipedia articles and categories with Wikidata items, and add the sitelink to Wikidata.'}, 'instructions': {'en':'Pi bot is thinking about creating new items for these articles, but first it wants your help to match them to existing items.<br />If the match is right, please add the link to Wikidata using "Match". If it is clearly wrong, select "No". If you are not sure, press "Skip".<br />Bug reports and feedback should be sent to User:Mike_Peel.'}, 'icon': 'https://upload.wikimedia.org/wikipedia/en/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png','options': [{'name': 'Entry type','key': 'type','values': wiki_options}]}) + " )\n")
 elif action == 'tiles':
 	print("Content-type: application/json\n\n")
 	i = 0
 	finished = 0
 	tiles = []
 
-	itemtype = 'Any'
-	try:
-		itemtype = GET.get('type')
-	except:
-		itemtype = 'Any'
-	torun = 'any'
-	if itemtype != 'Any':
-		if itemtype == 'en':
-			torun = 'en'
-		elif itemtype == 'simple':
-			torun = 'simple'
-		elif itemtype == 'de':
-			torun = 'de'
-		elif itemtype == 'pt':
-			torun = 'pt'
-		elif itemtype == 'es':
-			torun = 'es'
-		elif itemtype == 'fr':
-			torun = 'fr'
-		elif itemtype == 'it':
-			torun = 'it'
-		elif itemtype == 'nl':
-			torun = 'nl'
-		elif itemtype == 'pl':
-			torun = 'pl'
-		elif itemtype == 'sv':
-			torun = 'sv'
-		elif itemtype == 'eo':
-			torun = 'eo'
-		elif itemtype == 'dag':
-			torun = 'dag'
-		elif itemtype == 'ml':
-			torun = 'ml'
-		elif itemtype == 'af':
-			torun = 'af'
-		elif itemtype == 'cy':
-			torun = 'cy'
-		elif itemtype == 'et':
-			torun = 'et'
+	itemtype = GET.get('type', 'all')
+
+	if itemtype in wikis:
+		torun = itemtype
+	else:
+		torun = 'any'
+
 	while finished == 0:
 		if torun == 'any':
-			sql = 'SELECT * FROM newarticles WHERE done = 0 ORDER BY RAND() LIMIT 1'
+			placeholders = ','.join(['%s'] * len(wikis))
+			sql = (
+				'SELECT * FROM newarticles '
+				'WHERE done = 0 AND site IN (' + placeholders + ') '
+				'ORDER BY RAND() LIMIT 1'
+			)
+			params = tuple(wikis)
 		else:
-			sql = 'SELECT * FROM newarticles WHERE done = 0 AND site = "'+torun+'" ORDER BY RAND() LIMIT 1'
-		mycursor.execute(sql)
+			sql = (
+				'SELECT * FROM newarticles '
+				'WHERE done = 0 AND site = %s '
+				'ORDER BY RAND() LIMIT 1'
+			)
+			params = (torun,)
+
+		mycursor.execute(sql, params)
 		myresult = mycursor.fetchone()
-		if myresult[3] == 'en':
-			site = enwiki
-			enwiki.login()
-		elif myresult[3] == 'simple':
-			site = simplewiki
-			simplewiki.login()
-		elif myresult[3] == 'de':
-			site = dewiki
-			dewiki.login()
-		elif myresult[3] == 'pt':
-			site = ptwiki
-			ptwiki.login()
-		elif myresult[3] == 'es':
-			site = eswiki
-			eswiki.login()
-		elif myresult[3] == 'fr':
-			site = frwiki
-			frwiki.login()
-		elif myresult[3] == 'it':
-			site = itwiki
-			itwiki.login()
-		elif myresult[3] == 'nl':
-			site = nlwiki
-			nlwiki.login()
-		elif myresult[3] == 'pl':
-			site = plwiki
-			plwiki.login()
-		elif myresult[3] == 'sv':
-			site = svwiki
-			svwiki.login()
-		elif myresult[3] == 'eo':
-			site = eowiki
-			eowiki.login()
-		elif myresult[3] == 'dag':
-			site = dagwiki
-			dagwiki.login()
-		elif myresult[3] == 'ml':
-			site = mlwiki
-			mlwiki.login()
-		elif myresult[3] == 'af':
-			site = afwiki
-			afwiki.login()
-		elif myresult[3] == 'cy':
-			site = cywiki
-			cywiki.login()
-		elif myresult[3] == 'et':
-			site = etwiki
-			etwiki.login()
-		else:
+
+		if myresult is None:
+			break
+
+		wiki = myresult[3]
+
+		if wiki not in wikis:
 			continue
+
+		if wiki not in sites:
+			sites[wiki] = pywikibot.Site(wiki, 'wikipedia')
+			sites[wiki].login()
+
+		site = sites[wiki]
+
 		# Make sure it doesn't have an ID yet
 		badtile = 0
 		try:
