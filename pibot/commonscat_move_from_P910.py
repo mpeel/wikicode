@@ -59,8 +59,9 @@ for i in range(0,numsteps):
 			print(f"SPARQL error, attempt {attempt + 1}/5: {e}")
 			if attempt == 4:
 				raise
-			time.sleep(30 * (attempt + 1))	bad_commonscat_count = 0
+			time.sleep(30 * (attempt + 1))
 
+	bad_commonscat_count = 0
 	bad_sitelink_count = 0
 	interwiki_conflicts = []
 	for page in generator:
