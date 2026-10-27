@@ -9,13 +9,14 @@ import numpy as np
 import time
 import string
 from pywikibot import pagegenerators
+from pywikibot.exceptions import ServerError
 import urllib
 import time
 from pibot_functions import *
 
 maxnum = 100000
 nummodified = 0
-stepsize =  10000
+stepsize =  1000
 maximum = 2000000
 numsteps = int(maximum / stepsize)
 
@@ -31,7 +32,7 @@ debug = 0
 for i in range(0,numsteps):
 	print('Starting at ' + str(i*stepsize))
 
-	query = 'SELECT ?item ?categoryitem ?commonscategory\n'\
+	query = 'SELECT ?item\n'\
 		'WITH { \n'\
 		'  SELECT ?item ?categoryitem WHERE {\n'\
 		'    ?item wdt:P910 ?categoryitem . \n'\
@@ -46,8 +47,20 @@ for i in range(0,numsteps):
 
 	print(query)
 
-	generator = pagegenerators.WikidataSPARQLPageGenerator(query, site=wikidata_site)
-	bad_commonscat_count = 0
+	for attempt in range(5):
+		try:
+			generator = list(
+				pagegenerators.WikidataSPARQLPageGenerator(
+					query, site=wikidata_site
+				)
+			)
+			break
+		except ServerError as e:
+			print(f"SPARQL error, attempt {attempt + 1}/5: {e}")
+			if attempt == 4:
+				raise
+			time.sleep(30 * (attempt + 1))	bad_commonscat_count = 0
+
 	bad_sitelink_count = 0
 	interwiki_conflicts = []
 	for page in generator:
