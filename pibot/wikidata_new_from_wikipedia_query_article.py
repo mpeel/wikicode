@@ -162,6 +162,9 @@ for prefix in wikipedias:
 		if 'sockpuppet' in page.title():
 			print('sockpuppet')
 			continue
+		if '.css' in page.title():
+			print('css')
+			continue
 
 		## Part 2 - parse the page info
 		print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
