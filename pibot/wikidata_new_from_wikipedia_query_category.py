@@ -227,6 +227,11 @@ for prefix in wikipedias:
 				print('is redirect')
 				continue
 
+			pageprops = page.properties(force=True)
+			if 'expectedUnconnectedPage' in pageprops:
+				print('Expected unconnected page, skipping')
+				continue
+
 
 			## Part 2 - parse the page info
 			print("\n" + "http://"+prefix+".wikipedia.org/wiki/"+page.title().replace(' ','_'))
