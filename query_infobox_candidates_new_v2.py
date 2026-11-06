@@ -192,6 +192,9 @@ try:
                 if page_id in redirect_pages:
                     continue
 
+                if isinstance(page_title, bytes):
+                    page_title = page_title.decode('utf-8')
+
                 output.write(page_title + '\n')
                 total_written += 1
 
