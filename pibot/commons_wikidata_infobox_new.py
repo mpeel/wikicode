@@ -344,7 +344,7 @@ elif usequarry2:
             print(str(target[2:-2]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8'))
             # print(type(unicode(target,"utf-8")))
             # print(unicode(target,"utf-8"))
-            cat = pywikibot.Category(commons,str(target[2:-2]).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8'))
+            cat = pywikibot.Category(commons,str(target).encode('latin1').decode('unicode-escape').encode('latin1').decode('utf-8'))
         except:
             continue
         if cat.title() not in existing_uses:
