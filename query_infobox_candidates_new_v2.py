@@ -95,11 +95,15 @@ try:
             infobox_pages.add(row[0])
 
             if len(infobox_pages) % 1000000 == 0:
-                print(
-                    'Found {:,} categories using Wikidata Infobox'
-                    .format(len(infobox_pages))
-                )
+                memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
 
+                print(
+                    'Found {:,} categories; peak memory: {:.2f} GB'.format(
+                        len(infobox_pages),
+                        memory / (1024 * 1024)
+                    ),
+                    flush=True
+                )
     print(
         'Total categories using Wikidata Infobox: {:,}'
         .format(len(infobox_pages))
