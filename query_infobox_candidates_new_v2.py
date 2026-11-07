@@ -9,6 +9,7 @@
 
 import pymysql
 import configparser
+import resource
 from ftplib import FTP
 from ftplogin import *
 
