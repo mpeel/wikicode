@@ -254,9 +254,9 @@ for prefix in wikipedias:
 				# if pageIsBiography(page,lang=prefix):
 				# 	addBiographyClaims(repo=repo, wikisite=wikipedia, item=wd_item, page=page, lang=prefix)
 				try:
-					page.touch()
+					page.purge(forcelinkupdate=True)
 				except:
-					continue
+					pass
 				continue
 			# Check for the last edit time
 			try:
@@ -450,9 +450,9 @@ for prefix in wikipedias:
 
 			# Touch the page to force an update
 			try:
-				page.touch()
+				page.purge(forcelinkupdate=True)
 			except:
-				null = 0
+				pass
 		except:
 			continue
 

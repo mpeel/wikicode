@@ -194,9 +194,9 @@ for prefix in wikipedias:
 				if pageIsBiography(page,lang=prefix):
 					addBiographyClaims(repo=repo, wikisite=wikipedia, item=wd_item, page=page, lang=prefix)
 			try:
-				page.touch()
+				page.purge(forcelinkupdate=True)
 			except:
-				continue
+				pass
 			continue
 
 		# Check for the last edit time
@@ -433,11 +433,11 @@ for prefix in wikipedias:
 		# 	tracking_page.text = tracking_page.text + "\n* {{Q|" + str(new_item.title()) + "}}"
 		# 	tracking_page.save("Adding " + str(new_item.title()))
 
-		# Touch the page to force an update
+		# Purge the page to force an update
 		try:
-			page.touch()
+			page.purge(forcelinkupdate=True)
 		except:
-			null = 0
+			pass
 
 		# Cut-off at a maximum number of edits
 		print("")

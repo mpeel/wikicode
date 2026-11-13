@@ -181,6 +181,10 @@ for prefix in wikipedias:
 		except:
 			print(page.title() + ' - no page found')
 		if has_sitelink:
+			try:
+				page.purge(forcelinkupdate=True)
+			except:
+				pass
 			continue
 
 		# Check for the last edit time
